@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "572739465343",
+    "project_id": "myapplication-14924"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:572739465343:android:1327ceeba22880d5",
+        "android_client_info": {
+          "package_name": "com.cherry.alok.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "572739465343-trhkd7eqr3im854tqju0sj4udu3blse6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cherry.alok.myapplication",
+            "certificate_hash": "4C1542485F94F911F22E17743516303EF6D4639B"
+          }
+        },
+        {
+          "client_id": "572739465343-ntiktkqs8c3s5chb239nnqokn0n5dbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwcauiVO8X1btqLbdTPKZmyPrOvCDp-Jk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

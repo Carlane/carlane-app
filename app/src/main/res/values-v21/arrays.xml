@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="user_service">
+        <item>Basic</item>
+        <item>Premium</item>
+        <item>Platinum</item>
+    </string-array>
+
+        <string-array name="user_service_captions">
+        <item>All Basic</item>
+        <item>Your car will love it</item>
+        <item>Give your car the luxury look</item>
+
+    </string-array>
+
+</resources>
