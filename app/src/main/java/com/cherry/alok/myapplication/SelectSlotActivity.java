@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.text.Spannable;
 import android.widget.ListView;
@@ -184,7 +185,80 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
         });
         GetSlotInformation();
+        SetCarLogo();
 
+    }
+
+    public void SetCarLogo()
+    {
+        ImageView carlogo = (ImageView) findViewById(R.id.carlogo);
+        String carbrand = SharedData.GetDefaultCarBrand();
+        switch(carbrand)
+        {
+            case "Maruti":
+            {
+                carlogo.setImageResource(R.drawable.logomarutisuzuki);
+            }
+            break;
+            case "Chevrolet":
+            {
+                carlogo.setImageResource(R.drawable.logochevy);
+            }
+            break;
+            case "Fiat":
+            {
+                carlogo.setImageResource(R.drawable.logofiat);
+            }
+            break;
+            case "Ford":
+            {
+                carlogo.setImageResource(R.drawable.logoford2);
+            }
+            break;
+            case "Honda":
+            {
+                carlogo.setImageResource(R.drawable.logohonda);
+            }
+            break;
+            case "Hyundai":
+            {
+                carlogo.setImageResource(R.drawable.logohyundai);
+            }
+            break;
+            case "Mahindra":
+            {
+                carlogo.setImageResource(R.drawable.logomahindra);
+            }
+            break;
+            case "Nissan":
+            {
+                carlogo.setImageResource(R.drawable.logonissan);
+            }
+            break;
+            case "Tata":
+            {
+                carlogo.setImageResource(R.drawable.logotata);
+            }
+            break;
+            case "Toyota    ":
+            {
+                carlogo.setImageResource(R.drawable.logotoyota);
+            }
+            break;
+            case "Skoda":
+            {
+                carlogo.setImageResource(R.drawable.logoskoda);
+             }
+            break;
+            case "Volkswagen":
+            {
+                carlogo.setImageResource(R.drawable.logovw);
+            }
+            break;
+
+
+
+        }
     }
 
 
@@ -193,7 +267,7 @@ public class SelectSlotActivity extends AppCompatActivity {
         current_task = AsyncActivities.INIT_REQ;
 
         String url = "request/"+SharedData.GetUserId()+"/";
-        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition);
+        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&longg=%s&latt=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude);
 
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,selectSlotHandler);
         uniTask.execute();
@@ -333,12 +407,14 @@ public class SelectSlotActivity extends AppCompatActivity {
                 return;
             }
             String driver_name = jsonObject.optString("driver");
+            String driver_mobile = jsonObject.optString("driverphone");
             String joint_name = jsonObject.optString("joint");
             int time_slot  =  Integer.parseInt(jsonObject.optString("time_slot_id").toString());
             int request_status_id = Integer.parseInt(jsonObject.optString("request_status").toString());
             String date  = jsonObject.optString("request_date");
             Bundle order_screen_data = new Bundle();
                 order_screen_data.putString("driver",driver_name);
+                order_screen_data.putString("drivermobile",driver_name);
                 order_screen_data.putString("joint",joint_name);
                 order_screen_data.putInt("request_status",request_status_id);
                 order_screen_data.putInt("slot",time_slot);

@@ -1,13 +1,18 @@
 package com.cherry.alok.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,8 @@ import java.util.List;
 public class OrderActivity extends AppCompatActivity {
     UniversalAsyncTask uniTask;
     private ProgressDialog mProgressDialog;
+    private ProgressBar firstBar = null;
+
     private void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -48,23 +55,20 @@ public class OrderActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_order);
             Bundle bundle = getIntent().getExtras();
-           // HandleBundleDataForUI(bundle);
+            // HandleBundleDataForUI(bundle);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         setTitle("Order");
 
-        if(SharedData.GetDefaultCarNo() != null)
-        {
+        if (SharedData.GetDefaultCarNo() != null) {
             Init_StatusUpdate();
-        }
-        else
-        {
+        } else {
             InitCarDetailsInfoReq();
         }
 
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.querystatus_fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.querystatus_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +76,8 @@ public class OrderActivity extends AppCompatActivity {
 
             }
         });
+        firstBar = (ProgressBar) findViewById(R.id.firstBar);
+        firstBar.setMax(8);
     }
 
  /*   private void HandleBundleDataForUI(Bundle bndl)
@@ -91,22 +97,41 @@ public class OrderActivity extends AppCompatActivity {
         UpdateSlotText(slot);
     }*/
 
-    public void UpdateDriverNameText(String driver)
-    {
+    public void UpdateDriverNameText(String driver) {
         TextView driver_text = (TextView) findViewById(R.id.driver_name_text);
         driver_text.setText(driver);
     }
 
-    public void UpdateRequestStatus(int request_status)
-    {
-        TextView status_text = (TextView) findViewById(R.id.current_status_text);
-        status_text.setText(SharedData.GetRequestStatus(request_status));
+    public void UpdateRequestStatus(int request_status) {
+        /*TextView status_text = (TextView) findViewById(R.id.current_status_text);
+        status_text.setText(SharedData.GetRequestStatus(request_status));*/
     }
 
-    public void UpdateServiceTypeText()
-    {
-        TextView service_text = (TextView)findViewById(R.id.service_type);
+    public void UpdateServiceTypeText() {
+        TextView service_text = (TextView) findViewById(R.id.service_type);
         service_text.setText(SharedData.GetServiceName());
+    }
+
+    public void UpdateDriverMobile(final String driver_mobile) {
+        TextView driver_mobile_text = (TextView) findViewById(R.id.driver_phone_value);
+        driver_mobile_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + driver_mobile));
+                if (ActivityCompat.checkSelfPermission(getBaseContext(), android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                startActivity(intent);
+            }
+        });
+        driver_mobile_text.setText(driver_mobile);
     }
 
     public  void UpdateCarRegText()
@@ -221,6 +246,7 @@ public class OrderActivity extends AppCompatActivity {
 
             int status_id  =  Integer.parseInt(jsonObject.optString("request_status").toString());
             UpdateRequestStatus(status_id);
+            firstBar.setProgress(status_id);
             if(status_id ==8)
             {
                 //Need to update user status in app db and switch to location map
@@ -228,9 +254,9 @@ public class OrderActivity extends AppCompatActivity {
                 SharedData.HandleNavigation(R.id.nav_location, this);
             }
 
-            String driver = jsonObject.optString("driverfirstname").toString() + jsonObject.optString("driverlastname").toString();
+            String driver = jsonObject.optString("driverfirstname").toString() +" "+ jsonObject.optString("driverlastname").toString();
             UpdateDriverNameText(driver);
-
+            String driver_mobile = jsonObject.optString("drivermobile").toString() ;//drivermobile
             String date = jsonObject.optString("date").toString();
             int slot =  Integer.parseInt(jsonObject.optString("timeslot").toString());
 
@@ -239,6 +265,7 @@ public class OrderActivity extends AppCompatActivity {
             UpdateCarRegText();
             UpdateCarModelText();
             UpdateDateText(date);
+            UpdateDriverMobile(driver_mobile);
             UpdateSlotText(slot);
 
             SharedData.UpdateUserStatusInDb(3);//Update

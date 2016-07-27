@@ -197,6 +197,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 LatLng center = mMap.getCameraPosition().target;
+                SharedData.SetRequestLocation(center);
                 Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
                 startActivity(selectSlot);
 
@@ -420,6 +421,11 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion <= android.os.Build.VERSION_CODES.LOLLIPOP_MR1){
+            // Do something for lollipop and above versions
+            locationPermissionsStatus = true;// this variable will be evaluated only in marshamallow and avove
+        }
         if(launchingMapActivity == true)
         {
             launchingMapActivity = false;
@@ -438,7 +444,11 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                     gpsOffDlg.cancel();
                     gpsOffDlg = null;
                 }
-                AnimateCameraToLocation(loc);
+                if(placeSelectorCausedPause == false) {
+                    AnimateCameraToLocation(loc);
+
+                }
+                placeSelectorCausedPause = false;
                 UiChangeOnNoLocation(false);
             }
 
@@ -504,13 +514,13 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     public void onProviderDisabled(String provider) {
 
     }
-
+    boolean placeSelectorCausedPause = false;
     @Override
     public void onPlaceSelected(Place place) {
         //Log.i(TAG, "Place Selected: " + place.getName());
 
         LatLng userLocation= place.getLatLng();
-
+        placeSelectorCausedPause = true;
         mapMarker.setPosition(userLocation);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(userLocation)      // Sets the center of the map to Mountain View

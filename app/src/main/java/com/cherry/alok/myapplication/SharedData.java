@@ -282,12 +282,24 @@ public class SharedData {
                     if (intent_addCar == null) {
                         intent_addCar = new Intent(currentActivity, Activity_AddCar.class);
                     }
+                    if(clearStackOfLastActivity)
+                    {
+                        clearStackOfLastActivity = false;
+                        intent_addCar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent_addCar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
                     currentActivity.startActivity(intent_addCar);
 
                     // Handle the camera action
                 } else if (id == R.id.nav_location) {
                     if (intent_location == null) {
                         intent_location = new Intent(currentActivity, LocationActivityMap.class);
+                    }
+                    if(clearStackOfLastActivity)
+                    {
+                        clearStackOfLastActivity = false;
+                        intent_location.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent_location.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     }
                     currentActivity.startActivity(intent_location);
 
@@ -324,7 +336,7 @@ public class SharedData {
                 {
                     if (intent_pastorders == null) {
                         intent_pastorders = new Intent(currentActivity, OrderActivity.class);
-
+                    }
                         intent_pastorders.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent_pastorders.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -333,7 +345,7 @@ public class SharedData {
                             intent_pastorders.putExtras(dataToSend);
                         }
                         currentActivity.startActivity(intent_pastorders);
-                    }
+
                 }
                 //currentActivity.finish();;
                 currentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -352,8 +364,16 @@ public class SharedData {
         intent_addCar = null;
         intent_location = null;
     }
-
-
+    static boolean clearStackOfLastActivity = false;
+    public static void HandleNavigation(int id, Activity object , boolean clearStack) {
+        clearStackOfLastActivity = clearStack;
+        currentActivity = object;
+        Message msgObj = sharedDataHandler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putInt("navigateTo", id);
+        msgObj.setData(b);
+        sharedDataHandler.sendMessageDelayed(msgObj, 400);
+    }
 
     public static void HandleNavigation(int id, Activity object) {
         currentActivity = object;

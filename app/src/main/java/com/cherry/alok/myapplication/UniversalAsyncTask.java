@@ -41,10 +41,10 @@ public class UniversalAsyncTask extends AsyncTask<ArrayList<String>,Void,HashMap
     public UniversalAsyncTask(String URL , String requestType , String urlParameter , Handler handler)
     {
         typeOfRequest = requestType;
-        userUrl = "http://54.213.65.235/"+ URL;
+        //userUrl = "http://54.213.65.235/"+ URL;
         //userUrl = "https://apigwuat.icicibank.com:8443/trnorder";
         //
-        //userUrl = "http://192.168.0.102:8000/"+ URL;
+       userUrl = "http://192.168.0.100:8000/"+ URL;
         uiHandler =  handler;
         urlParams = urlParameter;
     }

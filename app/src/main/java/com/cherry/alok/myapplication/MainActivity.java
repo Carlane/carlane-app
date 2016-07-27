@@ -59,14 +59,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(introIntent);
 
         }
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,8 +68,8 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         imgProfilePic = (ImageView)findViewById(R.id.imageView);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        /*NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);*/
 
         //dummy
         //  SharedData.DeleteAllUser();
@@ -106,17 +99,17 @@ public class MainActivity extends AppCompatActivity
             if(userStatus == SharedData.UserStatus.NewProfile.getID())
             {
                 //go to add profile and car page
-                SharedData.HandleNavigation(R.id.nav_add_car,this);
+                SharedData.HandleNavigation(R.id.nav_add_car,this, true);
             }
             if(userStatus == SharedData.UserStatus.CarProfile.getID())
             {
                 //go to location screen
-                SharedData.HandleNavigation(R.id.nav_location,this);
+                SharedData.HandleNavigation(R.id.nav_location,this , true);
 
             }
             if(userStatus == SharedData.UserStatus.RequestPending.getID())
             {
-                SharedData.HandleNavigation(R.id.nav_order,this);
+                SharedData.HandleNavigation(R.id.nav_order,this , true);
             }
 
         }

@@ -43,6 +43,7 @@
                         android:layout_weight="0.5"
                         >
                         <ImageView
+                            android:id="@+id/carlogo"
                             android:layout_width="50dp"
                             android:layout_height="40dp"
                             android:layout_weight="0.2"
@@ -88,6 +89,7 @@
                             android:shadowRadius="1.5"
                             android:shadowDx="1"
                             android:shadowDy="1"
+                            style="@style/ButtonStylePositive"
                             />
                     </LinearLayout>
 

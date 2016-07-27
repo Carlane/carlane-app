@@ -1,9 +1,7 @@
 {
   "project_info": {
     "project_number": "572739465343",
-    "firebase_url": "https://myapplication-14924.firebaseio.com",
-    "project_id": "myapplication-14924",
-    "storage_bucket": "myapplication-14924.appspot.com"
+    "project_id": "myapplication-14924"
   },
   "client": [
     {
@@ -23,10 +21,6 @@
           }
         },
         {
-          "client_id": "572739465343-rer78luqikq4tl3l0l3i5tcpe3pc05fb.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
           "client_id": "572739465343-ntiktkqs8c3s5chb239nnqokn0n5dbnj.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -41,16 +35,11 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "572739465343-rer78luqikq4tl3l0l3i5tcpe3pc05fb.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 2
+          "status": 1
         }
       }
     }

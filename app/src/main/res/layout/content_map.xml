@@ -36,14 +36,15 @@
            android:layout_height="wrap_content"
            android:background="@layout/map_round_corner"
            android:onClick="locationFinalized"
-           android:minWidth="250dp"
+           android:minWidth="200dp"
            android:paddingLeft="2dp"
            android:paddingRight="2dp"
            android:layout_marginBottom="50dp"
-           android:text=" Set your Location "
+           android:text=" Set Flag As PickUp Location ---> "
            android:layout_gravity="center_horizontal|center_vertical"
            android:gravity="center_horizontal"
            android:textColor="@android:color/white" />
+
        <ImageView
            android:id="@+id/confirm_address_map_custom_marker"
            android:layout_width="wrap_content"

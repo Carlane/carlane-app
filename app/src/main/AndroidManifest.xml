@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -55,6 +56,16 @@
         <activity android:name=".SelectSlotActivity" />
         <activity android:name=".OrderActivity" />
         <activity android:name=".OrderReview"></activity>
+        <service android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".FirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

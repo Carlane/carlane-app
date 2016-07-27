@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -129,8 +130,9 @@ public class SignInFragment extends Fragment implements
                     .build();
         }
             SignInButton signInButton = (SignInButton) signInRootView.findViewById(R.id.sign_in_button);
-            signInButton.setSize(SignInButton.SIZE_STANDARD);
-            signInButton.setScopes(gso.getScopeArray());
+            signInButton.setSize(SignInButton.COLOR_DARK|SignInButton.SIZE_WIDE);
+
+        signInButton.setScopes(gso.getScopeArray());
             signInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,6 +159,21 @@ public class SignInFragment extends Fragment implements
 
         // Inflate the layout for this fragment
         return signInRootView;
+    }
+
+    protected void setGooglePlusButtonText(SignInButton signInButton,
+                                           String buttonText) {
+        for (int i = 0; i < signInButton.getChildCount(); i++) {
+            View v = signInButton.getChildAt(i);
+
+            if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setTextSize(15);
+                tv.setTypeface(null, Typeface.NORMAL);
+                tv.setText(buttonText);
+                return;
+            }
+        }
     }
 
 
@@ -215,8 +232,8 @@ public class SignInFragment extends Fragment implements
         } else {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-            // single sign-on will occur in this branch.
-            showProgressDialog();
+            // single sign-on will occur in this branch.`
+            //showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
@@ -336,7 +353,7 @@ public class SignInFragment extends Fragment implements
                 GoogleSignInAccount acct = result.getSignInAccount();
                 userGoogAcct = acct;
                 updateUI(true);
-
+                showProgressDialog();
                 // Get account information
                 // mFullName = acct.getDisplayName();
                 // mEmail = acct.getEmail();
@@ -344,7 +361,9 @@ public class SignInFragment extends Fragment implements
                 accountStrings.add(acct.getDisplayName());
                 accountStrings.add(acct.getEmail());
                 accountStrings.add(acct.getId());
-
+                 /*Get Firebase Token*/
+                FirebaseInstanceIDService fb_inst = new FirebaseInstanceIDService();
+                String firebasetoken = fb_inst.GetFireBaseToken();
 
                 ArrayList<String> newParams = new ArrayList<String>();
                 String firstname= acct.getDisplayName().split("\\s+")[0];
@@ -359,7 +378,7 @@ public class SignInFragment extends Fragment implements
 
                 boolean val = SharedData.CheckUserExistByName(firstname);
 
-                String urlParameters = String.format("firstname=%s&lastname=%s&email=%s&mobile=%s&token=%s",firstname,lastname,email,mobile,token);//  firstname+"&"+lastname+"&"+email+"&"+mobile+"&"+token;
+                String urlParameters = String.format("firstname=%s&lastname=%s&email=%s&mobile=%s&token=%s&firebasetoken=%s",firstname,lastname,email,mobile,token,firebasetoken);//  firstname+"&"+lastname+"&"+email+"&"+mobile+"&"+token;
 
                 String url = "UserSignUp/";
                 uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,handler);
@@ -412,7 +431,7 @@ public class SignInFragment extends Fragment implements
                         SharedData.UpdateUserIdInDb(userId);
 
                         if(Objects.equals(profile, "NewProfile")) {
-                            SharedData.HandleNavigation(R.id.nav_add_car,getActivity());
+                            SharedData.HandleNavigation(R.id.nav_add_car,getActivity(),true);
                         }
                         else if(Objects.equals(profile, "CarProfile"))
                         {
@@ -420,18 +439,19 @@ public class SignInFragment extends Fragment implements
                             //this case will come when user after sign up and providing car details uninstalls the app , if he installs and uses app again
                             if(CheckCarInDb() == false)
                             {
-                                SharedData.HandleNavigation(R.id.nav_manage , getActivity());
+                                SharedData.HandleNavigation(R.id.nav_manage , getActivity(),true);
                             }
                             else
                             {
                                 //There is car information in DB as well as backend , so go to request page
-                                SharedData.HandleNavigation(R.id.nav_location, getActivity());
+                                SharedData.HandleNavigation(R.id.nav_location, getActivity(),true);
                             }
                         }
                         else if(Objects.equals(profile, "RequestPending"))
                         {
-                            SharedData.HandleNavigation(R.id.nav_order, getActivity());
+                            SharedData.HandleNavigation(R.id.nav_order, getActivity(),true);
                         }
+                        hideProgressDialog();
 
                     }
                     if(userGoogAcct != null) {
@@ -459,6 +479,7 @@ public class SignInFragment extends Fragment implements
 
         }
     };
+
 
     public boolean CheckCarInDb()
     {
