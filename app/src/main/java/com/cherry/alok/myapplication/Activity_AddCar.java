@@ -90,7 +90,7 @@ public class Activity_AddCar extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.addcar_collapsing_toolbar);
-        collapsingToolbar.setTitle("Add Yours");
+        collapsingToolbar.setTitle("Add Your Car");
 
         ImageView header = (ImageView) findViewById(R.id.addcar_header);
 

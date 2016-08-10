@@ -2,6 +2,7 @@ package com.cherry.alok.myapplication;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -9,12 +10,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -36,7 +41,13 @@ public class OrderActivity extends AppCompatActivity {
     UniversalAsyncTask uniTask;
     private ProgressDialog mProgressDialog;
     private ProgressBar firstBar = null;
-
+    enum AsyncActivities
+    {
+        NONE,
+        UPDATE_STATUS,
+        CANCEL_REQUEST,
+    };
+    AsyncActivities current_task = AsyncActivities.NONE;
     private void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -74,35 +85,31 @@ public class OrderActivity extends AppCompatActivity {
             InitCarDetailsInfoReq();
         }
         activity_creation_first = true;
-       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.querystatus_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Init_StatusUpdate();
-
-            }
-        });*/
-//        firstBar = (ProgressBar) findViewById(R.id.firstBar);
-//        firstBar.setMax(8);
-
     }
 
- /*   private void HandleBundleDataForUI(Bundle bndl)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        String driver =  bndl.getString("driver");
-        String joint =  bndl.getString("joint");
-        int request_status =  bndl.getInt("request_status");
-        int slot = bndl.getInt("slot");
-        int daysAhead = bndl.getInt("days_ahead");
+        getMenuInflater().inflate(R.menu.order_screen,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
 
-        UpdateDriverNameText(driver);
-        UpdateRequestStatus(request_status);
-        UpdateServiceTypeText();
-        UpdateCarRegText();
-        UpdateCarModelText();
-        UpdateDateText();
-        UpdateSlotText(slot);
-    }*/
+            case R.id.cancel_order:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                showCancelOrderAlert();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     public void UpdateDriverNameText(String driver) {
         TextView driver_text = (TextView) findViewById(R.id.driver_name_text);
@@ -193,10 +200,20 @@ public class OrderActivity extends AppCompatActivity {
        // showProgressDialog("Fetching Order Details");
         String url = "requestatusinfo/"+SharedData.GetUserId()+"/";
         String urlParameters = String.format("car_reg=%s" ,SharedData.GetDefaultCarNo());
-
+        current_task = AsyncActivities.UPDATE_STATUS;
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,orderScreenHandler);
         uniTask.execute();
         showProgressDialog("Getting Your Order Status");
+    }
+
+    private void Init_CancelRequest()
+    {
+        String url = "requestcancel/"+SharedData.GetUserId()+"/";
+        String urlParameters = String.format("car_reg=%s" ,SharedData.GetDefaultCarNo());
+        current_task = AsyncActivities.CANCEL_REQUEST;
+        uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,orderScreenHandler);
+        uniTask.execute();
+        showProgressDialog("Sending Cancel Request");
     }
 
     private Handler orderScreenHandler = new Handler() {
@@ -205,8 +222,15 @@ public class OrderActivity extends AppCompatActivity {
             String aresponse = msg.getData().getString("taskstatus");
             if(aresponse != null)
             {
-                PostStatusUpdateOperation();
-                hideProgressDialog();
+                if(current_task == AsyncActivities.UPDATE_STATUS) {
+                    PostStatusUpdateOperation();
+                    hideProgressDialog();
+                }
+                if(current_task == AsyncActivities.CANCEL_REQUEST)
+                {
+                    hideProgressDialog();
+                    PostCancelRequestOpertion();
+                }
             }
 
         }
@@ -283,6 +307,50 @@ public class OrderActivity extends AppCompatActivity {
             String message = e.getMessage();
         }
 
+
+    }
+
+    void PostCancelRequestOpertion()
+    {
+        try {
+            String outputStr = uniTask.outputJasonString.toString();
+            JSONObject jsonRootObject = null;
+            try {
+                jsonRootObject = new JSONObject(uniTask.outputJasonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JSONArray jsonArray = jsonRootObject.optJSONArray("response");
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = jsonArray.getJSONObject(0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            int userIdBkEnd = Integer.parseInt(jsonObject.optString("id").toString());
+            String message= jsonObject.optString("reason").toString();
+            Boolean error_in_Result = Boolean.parseBoolean(jsonObject.optString("error").toString());
+            if (error_in_Result == true) {
+                if(message.equalsIgnoreCase("Exception"))
+                PrepareSnack("Sorry ! Unable to Process Cancel Request ! Request Can not be Cancelled After Pick Up");
+                else
+                {
+                    PrepareSnack("Sorry ! Can not Cancel After Pick Up");
+                }
+                return;
+            }
+            else
+            {
+                PrepareSnack("Cancel Initiated  !");
+                SharedData.UpdateUserStatusInDb(2);
+                SharedData.HandleNavigation(R.id.nav_location,this,true);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            String message = e.getMessage();
+        }
 
     }
 
@@ -381,6 +449,52 @@ public class OrderActivity extends AppCompatActivity {
         {
             request_place_img.setImageResource(R.drawable.checkgreen);
         }
+    }
+
+    AlertDialog cancelRequestDlg;
+    public void showCancelOrderAlert() {
+        if(cancelRequestDlg != null && cancelRequestDlg.isShowing())
+        {
+            return;
+        }
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this , R.style.PauseDialog);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Order Cancel");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("Do you really want to cancel the wash request ?");
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.icon_driver_app);
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Yes Cancel Request", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Init_CancelRequest();
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("No !", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+
+                cancelRequestDlg = null;
+                dialog.cancel();
+                Snackbar.make(findViewById(R.id.scroll) , "Thanks for chosing our side !!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        // Showing Alert Message
+        cancelRequestDlg = alertDialog.show();
+    }
+
+    public void PrepareSnack(String message)
+    {
+        Snackbar.make(findViewById(R.id.scroll) , message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
 
