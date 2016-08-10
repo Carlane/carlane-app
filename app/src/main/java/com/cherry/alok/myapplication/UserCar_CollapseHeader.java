@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -136,7 +137,9 @@ public class UserCar_CollapseHeader extends AppCompatActivity implements Navigat
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedData.HandleNavigation(R.id.nav_add_car , UserCar_CollapseHeader.this );
+                /*SharedData.HandleNavigation(R.id.nav_add_car , UserCar_CollapseHeader.this );*/
+                Snackbar.make(findViewById(R.id.usercar_collapse_drawer_layout), "Support for Multiple Car per account will be supported very soon ! Fingers Crossed ", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 

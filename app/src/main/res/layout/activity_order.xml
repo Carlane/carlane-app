@@ -6,9 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="com.cherry.alok.myapplication.OrderActivity"
-    android:orientation="vertical"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <!--<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -290,9 +288,12 @@
         </LinearLayout>
 
         </android.support.v7.widget.CardView>-->
+
+
     <ScrollView
         style="@style/ScrollViewStyle"
-        android:isScrollContainer="false" >
+        android:isScrollContainer="false"
+         >
 
         <LinearLayout
             style="@style/LinearLayoutStyleVerticalNoPadding"
@@ -300,7 +301,7 @@
 
             <TextView
                 android:id="@+id/textview_customerheading"
-                style="@style/TextViewStyleXSmall2"
+                style="@style/TextViewStyleXVerySmall"
                 android:layout_gravity="left"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin" />
 
@@ -368,10 +369,10 @@
 
             <TextView
                 android:id="@+id/textview_recipientheading"
-                style="@style/TextViewStyleXSmall2"
+                style="@style/TextViewStyleXVerySmall"
                 android:layout_gravity="left"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="@dimen/activity_vertical_margin_small" />
 
             <View
                 android:id="@+id/line_recipient"
@@ -419,10 +420,10 @@
 
             <TextView
                 android:id="@+id/textview_transactionheading"
-                style="@style/TextViewStyleXSmall2"
+                style="@style/TextViewStyleXVerySmall"
                 android:layout_gravity="left"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                />
+                android:layout_marginTop="@dimen/activity_vertical_margin_small" />
 
             <View
                 android:id="@+id/line_transaction"
@@ -466,17 +467,245 @@
                     android:layout_weight=".5" />
             </LinearLayout>
 
-
         </LinearLayout>
     </ScrollView>
 
-        <LinearLayout
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="16dp"
             android:baselineAligned="false">
                         <LinearLayout
+                            android:id="@+id/ll_checkimages"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="20dp">
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="horizontal">
+                                        <ImageView
+                                            android:id="@+id/img_request_placed"
+                                            android:layout_width="20dp"
+                                            android:layout_height="20dp"
+                                            android:src="@drawable/checkempty"
+                                            android:layout_marginTop="10dp"/>
+                                        <TextView
+                                            android:id="@+id/text_request_placed"
+                                            style="@style/TextViewStyleReviewValue"
+                                            android:text="Request Placed With Carlane"
+                                            android:layout_height="25dp"
+                                            android:layout_marginTop="10dp"
+                                            android:layout_marginLeft="20dp"
+                                            />
+
+                                    </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_driver_alloc"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_driver_alloc"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="Pick Up Driver Assigned"
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_driver_onway"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_driver_onway"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="Driver On Way To Pick Your Car"
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_vehiclepickedup"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_vehiclepickedup"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="You have handed over your car "
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_vehicle_garage"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_vehicle_garage"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="Your Vehicle Has Reached Garage"
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_servicing_start"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_servicing_start"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="Your Car Detailing Has Started"
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_vehicle_wayback"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_vehicle_wayback"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="Your Car is on way back to you"
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:id="@+id/img_req_complete"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/check_pending"
+                                    android:layout_marginTop="10dp"/>
+                                <TextView
+                                    android:id="@+id/text_req_complete"
+                                    style="@style/TextViewStyleReviewLabel"
+                                    android:text="We have Completed your order."
+                                    android:layout_height="25dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="20dp"
+                                    />
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!--<LinearLayout
+                            android:id="@+id/ll_statustext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Request Completed"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Vehicle On Way back"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Vehicle Servicing Start"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Vehicle At Garage"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Vehicle Picked Up"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Driver OnWay to Garage"
+                                    android:layout_height="25dp"
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Driver Allocated"
+                                    android:layout_height="25dp"
+
+                                    />
+                                <TextView
+
+                                    style="@style/TextViewStyleReviewValueSmall"
+                                    android:text="Request Placed"
+                                    android:layout_height="25dp"
+                                    android:layout_gravity="bottom"
+                                    />
+
+
+
+                        </LinearLayout>-->
+                       <!-- <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
@@ -552,11 +781,17 @@
                                     />
 
 
-                            </LinearLayout>
+                            </LinearLayout>-->
 
 
 
-
+<!--        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/querystatus_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/refresh1" />-->
 
 
 
@@ -565,12 +800,6 @@
         </LinearLayout>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/querystatus_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/refresh1" />
+
 
 </LinearLayout>

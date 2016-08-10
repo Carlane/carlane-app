@@ -5,19 +5,21 @@
         <item
             android:id="@+id/nav_add_car"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Add Cars" />
+            android:title="Add Cars"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_location"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Location" />
+            android:title="Place A Wash Request" />
         <item
             android:id="@+id/nav_service_request"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Service" />
+            android:title="Service"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="My Garage" />
     </group>
 
     <item android:title="Communicate">
@@ -25,15 +27,23 @@
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Share"
+                android:visible="false"/>
             <item
                 android:id="@+id/nav_selectslot"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Send"
+                android:visible="false"/>
             <item
                 android:id="@+id/nav_order"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="Send"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_feedback"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send"
+                android:visible="false"/>
         </menu>
     </item>
 

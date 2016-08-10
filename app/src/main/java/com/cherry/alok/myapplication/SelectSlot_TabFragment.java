@@ -72,16 +72,16 @@ public class SelectSlot_TabFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    String[] slotArray = {"9 AM -12 PM ","12 PM - 2 PM","2PM - 4M","4PM - 6PM"};
+    String[] slotArray = {"9 AM -12 PM ","12 PM - 2 PM","2PM - 4PM","4PM - 6PM"};
 
     Integer[] imageId = {
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black,
-            R.drawable.correct_signal_black
+            R.drawable.check_light,
+            R.drawable.check_light,
+            R.drawable.check_light,
+            R.drawable.check_light,
+            R.drawable.check_light,
+            R.drawable.check_light,
+            R.drawable.check_light
 
     };
     @Override
@@ -120,8 +120,8 @@ public class SelectSlot_TabFragment extends Fragment {
 
                         if(other_imageView != null)
                         {
-                            other_imageView.setVisibility(View.GONE);
-                            other_imageView.setImageResource(R.drawable.correct_signal_black);
+                            //other_imageView.setVisibility(View.GONE);
+                            other_imageView.setImageResource(R.drawable.check_light);
                         }
 
                     }
@@ -140,7 +140,7 @@ public class SelectSlot_TabFragment extends Fragment {
                  if(selected_imageView  != null)
                 {
                     selected_imageView.setVisibility(View.VISIBLE);
-                    selected_imageView .setImageResource(R.drawable.correct_signal_blue);
+                    selected_imageView .setImageResource(R.drawable.checkgreen);
                 }
 
                 for (int i = 0; i < slotArray.length; i++) {
@@ -153,8 +153,8 @@ public class SelectSlot_TabFragment extends Fragment {
 
                     if(other_imageView != null)
                     {
-                        other_imageView.setVisibility(View.GONE);
-                        other_imageView.setImageResource(R.drawable.correct_signal_black);
+                       // other_imageView.setVisibility(View.GONE);
+                        other_imageView.setImageResource(R.drawable.check_light);
                     }
 
                 }

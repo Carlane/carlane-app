@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -431,7 +432,9 @@ public class SignInFragment extends Fragment implements
                         SharedData.UpdateUserIdInDb(userId);
 
                         if(Objects.equals(profile, "NewProfile")) {
+                            SharedData.UpdateUserStatusInDb(1);
                             SharedData.HandleNavigation(R.id.nav_add_car,getActivity(),true);
+
                         }
                         else if(Objects.equals(profile, "CarProfile"))
                         {
@@ -449,7 +452,13 @@ public class SignInFragment extends Fragment implements
                         }
                         else if(Objects.equals(profile, "RequestPending"))
                         {
+                            SharedData.UpdateUserStatusInDb(3);
                             SharedData.HandleNavigation(R.id.nav_order, getActivity(),true);
+                        }
+                        else if(Objects.equals(profile,"FeedbackPending"))
+                        {
+                            SharedData.UpdateUserStatusInDb(4);
+                            SharedData.HandleNavigation(R.id.nav_feedback,getActivity(),true);
                         }
                         hideProgressDialog();
 
@@ -462,6 +471,7 @@ public class SignInFragment extends Fragment implements
                             photoUrl = photoUrl.substring(0,
                                     photoUrl.length() - 2)
                                     + PROFILE_PIC_SIZE;
+                            PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).edit().putString("IMGURL", photoUrl).commit();
                             Message msgObj = sendMessageToMain.obtainMessage();
                             Bundle b = new Bundle();
                             b.putString("picsatus", photoUrl);

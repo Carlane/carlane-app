@@ -32,7 +32,8 @@ public class SharedData {
     {
       NewProfile(1),
       CarProfile(2),
-      RequestPending(3);
+      RequestPending(3),
+      FeedbackPending(4);
         private int id;
 
         UserStatus(int id){
@@ -266,6 +267,7 @@ public class SharedData {
     static Intent intent_startMessage;
     static Intent intent_selectSlot;
     static Intent intent_pastorders;
+    static Intent intent_feedback;
     static DataBaseHelper myDbHelper;
 
     private static Handler sharedDataHandler = new Handler() {
@@ -308,7 +310,15 @@ public class SharedData {
                     if (intent_usercar == null) {
                         intent_usercar = new Intent(currentActivity, UserCar_CollapseHeader.class);
                     }
+                    if(clearStackOfLastActivity)
+                    {
+                        clearStackOfLastActivity = false;
+                        intent_usercar.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent_usercar.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
+
                     currentActivity.startActivity(intent_usercar);
+
 
                 } else if (id == R.id.nav_service_request) {
                     if (intent_services == null) {
@@ -328,9 +338,6 @@ public class SharedData {
                         intent_selectSlot = new Intent(currentActivity, SelectSlotActivity.class);
                     }
                     currentActivity.startActivity(intent_selectSlot);
-
-
-
                 }
                 else if(id == R.id.nav_order)
                 {
@@ -347,6 +354,18 @@ public class SharedData {
                         currentActivity.startActivity(intent_pastorders);
 
                 }
+                else if(id == R.id.nav_feedback)
+                {
+                    if(intent_feedback == null)
+                    {
+                        intent_feedback = new Intent(currentActivity , FeedbackActivity.class);
+                            intent_feedback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent_feedback.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    }
+                    currentActivity.startActivity(intent_feedback);
+
+                }
+
                 //currentActivity.finish();;
                 currentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 

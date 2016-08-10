@@ -19,10 +19,172 @@
         android:contentDescription="Image Of Car"
 
         />-->
-    <com.flaviofaria.kenburnsview.KenBurnsView
+    <!--<com.flaviofaria.kenburnsview.KenBurnsView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/car" />
+        android:src="@drawable/car" />-->
+    <ScrollView
+        android:isScrollContainer="false"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_marginLeft="20dp"
+                                android:layout_weight="0.5">
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:text="Internal"
+                                    android:textSize="20sp"
+                                    android:textAlignment="center"
+                                    android:textColor="@android:color/white" />
+
+                                <TextView
+                                    android:id="@+id/text_1"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:id="@+id/text_2"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:id="@+id/text_3"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:id="@+id/text_4"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:id="@+id/text_5"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:id="@+id/text_6"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:id="@+id/text_7"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:id="@+id/text_8"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:id="@+id/text_9"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    style="@style/TextAppearanceXBasic"/>
+
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:layout_weight="0.5">
+                                <TextView
+                                    android:id="@+id/text_external_0"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:text="External"
+                                    android:textSize="20sp"
+                                    android:textAlignment="center"
+                                    android:textColor="@android:color/white" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_1"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_2"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_3"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_4"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:id="@+id/text_external_5"
+                                    style="@style/TextAppearanceXBasic"/>
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_6"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_7"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_8"
+                                    style="@style/TextAppearanceXBasic" />
+                                <TextView
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/text_external_9"
+                                    style="@style/TextAppearanceXBasic" />
+
+                            </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/cost_text_hatch_sedan"
+                style="@style/TextAppearanceXBasic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hatch Back and Sedan : INR 300"
+                />
+            <TextView
+                android:id="@+id/cost_text_suv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearanceXBasic"
+                />
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

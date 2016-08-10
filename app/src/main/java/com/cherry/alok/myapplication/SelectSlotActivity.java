@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +25,11 @@ import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.text.Spannable;
@@ -64,6 +69,7 @@ public class SelectSlotActivity extends AppCompatActivity {
       SHOW_ANIM,
     };
     AsyncActivities current_task = AsyncActivities.NONE;
+    boolean additional_inst = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +78,7 @@ public class SelectSlotActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         viewPager = (ViewPager) findViewById(R.id.tabdate_viewpager);
         setupTabs();
@@ -106,9 +113,10 @@ public class SelectSlotActivity extends AppCompatActivity {
         });
 
 
+
          /*Set up the Bottom Sheet containing types of services*/
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
+        final View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
@@ -140,6 +148,42 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
 
         });
+        final EditText editText = (EditText)findViewById(R.id.addinst_editText);
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                {
+                    bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
+                }
+                else
+                {
+                    bottomSheet.animate().translationY(slotsView.getHeight()*1).setDuration(1000).start();
+                }
+            }
+        });
+
+
+        TextView atv = (TextView)findViewById(R.id.text_add_inst);
+
+        atv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                additional_inst = true;
+                RollDowntheUi();
+            }
+        });
+
+        Button save_instruction = (Button)findViewById(R.id.save_add_inst);
+        save_instruction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                additional_inst = false;
+                RollUpTheUi();
+
+            }
+        });
+
 
         ((LinearLayout)findViewById(R.id.toplayout)).
                 setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
@@ -189,68 +233,106 @@ public class SelectSlotActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if(additional_inst)
+        {
+            additional_inst = false;
+            RollUpTheUi();
+        }
+        else
+        {
+            NavUtils.navigateUpFromSameTask(this);
+        }
+    }
+
+    public void RollDowntheUi()
+    {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
+        slotsView.animate().translationY(slotsView.getHeight()*-1).setDuration(700).start();
+        bottomSheet.animate().translationY(bottomSheet.getHeight()*1).setDuration(1500).start();
+    }
+
+    public void RollUpTheUi()
+    {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
+        slotsView.animate().translationY(slotsView.getHeight()*0).setDuration(500).start();
+        // behavior.setPeekHeight(0);
+        //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
+    }
+
+    public void AddtionalInstructions_Clicked()
+    {
+        int i=0;
+        i++;
+    }
+
     public void SetCarLogo()
     {
         ImageView carlogo = (ImageView) findViewById(R.id.carlogo);
         String carbrand = SharedData.GetDefaultCarBrand();
-        switch(carbrand)
+
+        switch(carbrand.toLowerCase())
         {
-            case "Maruti":
+            case "maruti":
             {
                 carlogo.setImageResource(R.drawable.logomarutisuzuki);
             }
             break;
-            case "Chevrolet":
+            case "chevrolet":
             {
                 carlogo.setImageResource(R.drawable.logochevy);
             }
             break;
-            case "Fiat":
+            case "fiat":
             {
                 carlogo.setImageResource(R.drawable.logofiat);
             }
             break;
-            case "Ford":
+            case "ford":
             {
                 carlogo.setImageResource(R.drawable.logoford2);
             }
             break;
-            case "Honda":
+            case "honda":
             {
                 carlogo.setImageResource(R.drawable.logohonda);
             }
             break;
-            case "Hyundai":
+            case "hyundai":
             {
                 carlogo.setImageResource(R.drawable.logohyundai);
             }
             break;
-            case "Mahindra":
+            case "mahindra":
             {
                 carlogo.setImageResource(R.drawable.logomahindra);
             }
             break;
-            case "Nissan":
+            case "nissan":
             {
                 carlogo.setImageResource(R.drawable.logonissan);
             }
             break;
-            case "Tata":
+            case "tata":
             {
                 carlogo.setImageResource(R.drawable.logotata);
             }
             break;
-            case "Toyota    ":
+            case "toyota    ":
             {
                 carlogo.setImageResource(R.drawable.logotoyota);
             }
             break;
-            case "Skoda":
+            case "skoda":
             {
                 carlogo.setImageResource(R.drawable.logoskoda);
              }
             break;
-            case "Volkswagen":
+            case "volkswagen":
             {
                 carlogo.setImageResource(R.drawable.logovw);
             }
@@ -265,9 +347,9 @@ public class SelectSlotActivity extends AppCompatActivity {
     public void InitRequest()
     {
         current_task = AsyncActivities.INIT_REQ;
-
+        showProgressDialog("Find A Car Wash Near You");
         String url = "request/"+SharedData.GetUserId()+"/";
-        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&longg=%s&latt=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude);
+        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&latt=%s&longg=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude);
 
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,selectSlotHandler);
         uniTask.execute();
@@ -276,7 +358,7 @@ public class SelectSlotActivity extends AppCompatActivity {
     public void GetSlotInformation()
     {
         SharedData.ReInitSlots();
-        showProgressDialog();
+        showProgressDialog("Fetching Available Slots");
         current_task = AsyncActivities.SELECT_SLOT;
         String url = "slotscheck/"+SharedData.GetUserId()+"/";
         String urlParameters = String.format("serviceid=%s&daysahead=%s" ,Integer.toString(SharedData.GetService()) , currentTabPosition);
@@ -479,10 +561,10 @@ public class SelectSlotActivity extends AppCompatActivity {
     }*/
 
     private ProgressDialog mProgressDialog;
-    private void showProgressDialog() {
+    private void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Fetching Available Slots");
+            mProgressDialog.setMessage(message);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setIndeterminate(true);
         }
@@ -504,13 +586,14 @@ public class SelectSlotActivity extends AppCompatActivity {
             {
                 if(current_task == AsyncActivities.SELECT_SLOT)
                 {
-                    hideProgressDialog();
                     viewPager.setCurrentItem(currentTabPosition);
                     PostOperation();
+                    hideProgressDialog();
                 }
                 else if(current_task == AsyncActivities.INIT_REQ)
                 {
                     PostRequestOperation();
+                    hideProgressDialog();
                 }
             }
             else {

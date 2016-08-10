@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/deep_purple"
+    tools:context="com.cherry.alok.myapplication.FeedbackActivity">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_brand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_gravity="center_horizontal|center_vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <TextView
+            android:id="@+id/label_washrating"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Rate Your Wash Quality"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            style="@style/TextViewStyleXVerySmall"
+            android:theme="@style/Base.CardView"/>
+        <RatingBar
+            android:id="@+id/washrating"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:numStars="9"
+            android:stepSize="1"
+            android:rating="1.0"
+            android:scaleX="0.25"
+            android:scaleY="0.25"
+            />
+                    <View
+                        android:id="@+id/line_recipient"
+                        style="@style/LineViewStyle"
+                        android:layout_marginTop="@dimen/activity_margin_quarter"
+                        android:layout_marginBottom="@dimen/activity_margin_quarter"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+            <TextView
+                android:id="@+id/label_driverrating"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Rate Your Driver Quality"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                style="@style/TextViewStyleXVerySmall"/>
+            <RatingBar
+                android:id="@+id/driverrating"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:numStars="4"
+                android:stepSize="1"
+                android:rating="1.0"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
+                />
+
+
+                            <View
+
+                                style="@style/LineViewStyle"
+                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                android:layout_marginTop="@dimen/activity_margin_quarter"
+                                android:layout_marginBottom="@dimen/activity_margin_quarter"/>
+            <TextView
+                android:id="@+id/label_overallrating"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Rate Your Overall Experience"
+                android:textAlignment="center"
+                android:textSize="15sp"
+
+                style="@style/TextViewStyleXVerySmall"/>
+            <RatingBar
+                android:id="@+id/overallrating"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:numStars="4"
+                android:stepSize="1.0"
+                android:rating="1.0"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
+                />
+
+
+
+
+            <View
+
+                                    style="@style/LineViewStyle"
+                                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                                    android:layout_marginTop="@dimen/activity_margin_quarter"
+                                    android:layout_marginBottom="@dimen/activity_margin_quarter"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/feedback_editText"
+                android:gravity="bottom|left"
+                android:scrollbars="vertical"
+                android:hint="Leave a Comment. Thanks !"
+                android:layout_gravity="center_horizontal"
+                android:maxLength="500"/>
+
+            <Button
+                android:id="@+id/feedback_submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:text="Submit"
+                android:shadowColor="#00ccff"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                style="@style/ButtonStylePositiveFull"
+                />
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

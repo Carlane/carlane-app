@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CarLanez</string>
+    <string name="app_name">MyCarLane</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="desc_google_icon">Logo</string>
-    <string name="title_text">CarLane Sign In</string>
+    <string name="title_text">Welcome To MyCarLane</string>
     <string name="signed_out">CarLane SignOut</string>
     <string name="sign_out">Sign-Out</string>
     <string name="disconnect">Disconnect</string>

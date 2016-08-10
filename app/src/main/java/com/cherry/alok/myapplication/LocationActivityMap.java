@@ -1,85 +1,80 @@
 package com.cherry.alok.myapplication;
 
-import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
 
-import java.io.Serializable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class LocationActivityMap extends AppCompatActivity implements OnMapReadyCallback, PlaceSelectionListener,
-        NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleMap.OnCameraChangeListener {
+        NavigationView.OnNavigationItemSelectedListener, LocationListener, GoogleMap.OnCameraChangeListener,GoogleMap.OnMapLongClickListener,GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     private Marker mapMarker;
@@ -106,7 +101,42 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.map_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        {
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+
+                //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                ImageView nav_back = (ImageView)findViewById(R.id.imageView);
+                Bitmap navImg = SharedData.GetUserpic();
+                if(nav_back!= null)
+                {
+                    if(navImg == null) {
+                        LoadProfileImage lfi = new LoadProfileImage(nav_back);
+                        if (lfi != null) {
+                            lfi.execute();
+                        }
+                    }
+                    RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
+                    drawable.setCircular(true);
+                    nav_back.setImageDrawable(drawable);
+                    //bmImage.setImageBitmap(result);
+                }
+
+                TextView txt = (TextView)findViewById(R.id.userNameText);
+                if(txt != null)
+                {
+                    txt.setText(SharedData.GetUserName());
+                }
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -216,6 +246,12 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
+       /* AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);*/
+
         autocompleteFragment.setHint("Search Pick Up Location");
 
 
@@ -234,6 +270,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
                 Location loc = getLocation();
                 if(loc != null) {
+                    GetCity(new LatLng(loc.getLatitude(),loc.getLongitude()));
                     AnimateCameraToLocation(loc);
                 }
             }
@@ -247,11 +284,13 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         {
             fab.setImageResource(R.drawable.gpserror);
         }
+        if(loc != null)
+        GetCity(new LatLng(loc.getLatitude(),loc.getLongitude()));
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (IsLocationPermissionAllowed())
         {
             try {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1000, this);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1000, this);
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
@@ -264,8 +303,8 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     public void AnimateCameraToLocation(Location loc)
     {
         LatLng latlng = new LatLng(loc.getLatitude(), loc.getLongitude());
-        if(mapMarker == null || mMap == null) return;
-        mapMarker.setPosition(latlng);
+        if(mMap == null) return;
+       // mapMarker.setPosition(latlng);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latlng)      // Sets the center of the map to Mountain View
                 .zoom(17)                   // Sets the zoom
@@ -356,6 +395,44 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         return location;
     }
 
+    public void GetCity(LatLng loc)
+    {
+        Geocoder geoCoder = new Geocoder(this, Locale.getDefault());
+        StringBuilder builder = new StringBuilder();
+        try {
+            List<android.location.Address> address = geoCoder.getFromLocation(loc.latitude, loc.longitude, 1);
+            int maxLines = address.get(0).getMaxAddressLineIndex();
+            for (int i=0; i<maxLines; i++) {
+                String addressStr = address.get(0).getAddressLine(i);
+                String locality = address.get(0).getLocality();
+
+
+                ServiceAvailable(locality.equalsIgnoreCase("hyderabad"));
+
+                builder.append(addressStr);
+                builder.append(" ");
+            }
+
+            String fnialAddress = builder.toString(); //This is the complete address.
+        } catch (IOException e)
+        {
+            String message = e.getMessage();
+        }
+        catch (NullPointerException e) {}
+    }
+
+    public void ServiceAvailable(boolean value)
+    {
+        if(value)
+        {
+            locationText.setText("Set Pin As PickUp Location -->");
+        }
+        else {
+            locationText.setText("Apologies , Our Services Are Not Avaialble in Your Area Right Now");
+        }
+            locationText.setEnabled(value);
+    }
+
     public void UiChangeOnNoLocation(boolean gpsOff)
     {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.map_fab);
@@ -440,6 +517,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             Location loc = getLocation();
             if(loc != null)
             {
+                //GetCity(loc);
                 if(gpsOffDlg != null){
                     gpsOffDlg.cancel();
                     gpsOffDlg = null;
@@ -477,7 +555,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
-        mapMarker.setPosition(latLng);
+       // mapMarker.setPosition(latLng);
         float zoomLevel = 17.0f; //This goes up to 21
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -497,7 +575,17 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
     @Override
     public void onLocationChanged(Location location) {
-        handleNewLocation(location);
+        //handleNewLocation(location);
+    }
+    @Override
+    public void onMapClick(LatLng location) {
+        //handleNewLocation(location);
+        GetCity(location);
+    }
+
+    @Override
+    public void onMapLongClick(LatLng location) {
+        GetCity(location);
     }
 
     @Override
@@ -520,8 +608,9 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         //Log.i(TAG, "Place Selected: " + place.getName());
 
         LatLng userLocation= place.getLatLng();
+        GetCity(userLocation);
         placeSelectorCausedPause = true;
-        mapMarker.setPosition(userLocation);
+       // mapMarker.setPosition(userLocation);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(userLocation)      // Sets the center of the map to Mountain View
                 .zoom(17)                   // Sets the zoom
@@ -536,7 +625,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     public  void onCameraChange(CameraPosition position)
     {
         LatLng center = mMap.getCameraPosition().target;
-        mapMarker.setPosition(center);
+      //  mapMarker.setPosition(center);
 
     }
 
@@ -592,8 +681,8 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
         // Add a marker in Sydney and move the camera
         LatLng hyd = new LatLng(17.361637, 78.374630);
-        mapMarker = mMap.addMarker(new MarkerOptions().//icon(BitmapDescriptorFactory.fromResource(R.drawable.flag3)).
-                position(hyd).draggable(true).title("Car Lane Pick Up"));
+        /*mapMarker = mMap.addMarker(new MarkerOptions().//icon(BitmapDescriptorFactory.fromResource(R.drawable.flag3)).
+                position(hyd).draggable(true).title("Car Lane Pick Up"));*/
       /*  if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -652,6 +741,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                     Location loc = getLocation();
                     if(loc != null)
                     {
+                       // GetCity(loc);
                         if(gpsOffDlg != null){
                             gpsOffDlg.cancel();
                             gpsOffDlg = null;
@@ -711,7 +801,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     {
         int fineLocPermResult = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
         int courseLocPermResult = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(fineLocPermResult != PackageManager.PERMISSION_GRANTED || courseLocPermResult != PackageManager.PERMISSION_GRANTED)
+        if(fineLocPermResult != PackageManager.PERMISSION_GRANTED && courseLocPermResult != PackageManager.PERMISSION_GRANTED)
         {
             return false;
         }
@@ -783,31 +873,117 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.accent_material_light)), "BASIC");
-        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.ripple_material_light)), "PREMIUM");
-        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), "PLATINUM");
+        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.accent_material_light),0), "BASIC");
+        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.ripple_material_light),1), "PREMIUM");
+        adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark),2), "PLATINUM");
         viewPager.setAdapter(adapter);
     }
 
     public static class DummyFragment extends Fragment {
         int color;
         SimpleRecyclerAdapter adapter;
+        View view;
+        int frag_position =0;
 
         public DummyFragment() {
         }
 
         @SuppressLint("ValidFragment")
-        public DummyFragment(int color) {
+        public DummyFragment(int color , int position) {
             this.color = color;
+            frag_position = position;
+
+
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.map_bottomsheet_fragment, container, false);
-
-
-
+            view = inflater.inflate(R.layout.map_bottomsheet_fragment, container, false);
+            SetTexts(frag_position);
             return view;
+        }
+
+        public void SetTexts(int i)
+        {
+            TextView internal_text1 = (TextView)view.findViewById(R.id.text_1);
+            TextView internal_text2 = (TextView)view.findViewById(R.id.text_2);
+            TextView internal_text3 = (TextView)view.findViewById(R.id.text_3);
+            TextView internal_text4 = (TextView)view.findViewById(R.id.text_4);
+            TextView internal_text5 = (TextView)view.findViewById(R.id.text_5);
+            TextView internal_text6 = (TextView)view.findViewById(R.id.text_5);
+
+
+            TextView external_text1 = (TextView)view.findViewById(R.id.text_external_1);
+            TextView external_text2 = (TextView)view.findViewById(R.id.text_external_2);
+            TextView external_text3 = (TextView)view.findViewById(R.id.text_external_3);
+            TextView external_text4 = (TextView)view.findViewById(R.id.text_external_4);
+            TextView external_text5 = (TextView)view.findViewById(R.id.text_external_5);
+            TextView external_text6 = (TextView)view.findViewById(R.id.text_external_6);
+            TextView external_text7 = (TextView)view.findViewById(R.id.text_external_7);
+            TextView external_text8 = (TextView)view.findViewById(R.id.text_external_8);
+            TextView external_text9 = (TextView)view.findViewById(R.id.text_external_9);
+
+
+            TextView text_cost_hatch_Sedan = (TextView)view.findViewById(R.id.cost_text_hatch_sedan);
+            TextView text_cost_suv = (TextView)view.findViewById(R.id.cost_text_suv);
+
+            switch(i)
+            {
+                case 0:
+                {
+                    internal_text1.setText("Mats Wash(rubber Only");
+                    external_text1.setText(" Car exterior foam wash");
+                    external_text2.setText("Car exterior body black fiber parts polish ");
+                    external_text3.setText("Tyre cleaning");
+                    external_text4.setText("Tyre Polish");
+                    external_text5.setText("Glass cleaning");
+                    text_cost_hatch_Sedan.setText("Hatch Back and Sedan : INR 300");
+                    text_cost_suv.setText("LUV MUV and SUV : INR 400");
+
+
+                }
+                break;
+                case 1:
+                {
+                    internal_text1.setText("Mats Wash(rubber Only");
+                    internal_text2.setText("Vaccuming  (except Dickey)");
+                    internal_text3.setText("Total interior car wiping ");
+                    external_text1.setText("Car exterior foam wash");
+                    external_text2.setText("Car exterior body black fiber parts polish ");
+                    external_text3.setText("Tyre cleaning");
+                    external_text4.setText("Tyre Polish");
+                    external_text5.setText("Glass cleaning");
+                    text_cost_hatch_Sedan.setText("Hatch Back and Sedan : INR 350");
+                    text_cost_suv.setText("LUV MUV and SUV : INR 450");
+
+                }
+                break;
+                case 2:
+                {
+                    internal_text1.setText("Mats Wash(rubber Only");
+                    internal_text2.setText("Vaccuming  (except Dickey)");
+                    internal_text3.setText("Total interior car wiping ");
+                    internal_text4.setText("Dash board polish ");
+                    internal_text5.setText("Dickey vacuuming ");
+                    internal_text6.setText("Stepney cleaning & polish ");
+
+                    external_text1.setText("Car exterior foam wash");
+                    external_text2.setText("Car exterior body black fiber parts polish ");
+                    external_text3.setText("Tyre cleaning and Tyre Polish");
+                    external_text4.setText("");
+                    external_text4.setText("Glass cleaning");
+                    external_text5.setText("Engine wash");
+                    external_text6.setText("Alloy Wheels Cleaning");
+                    external_text7.setText("Fuel cap cleaning");
+                    external_text8.setText("Wiper water filling");
+                    text_cost_hatch_Sedan.setText("Hatch Back and Sedan : INR 500");
+                    text_cost_suv.setText("LUV MUV and SUV : INR 550");
+
+                }
+                break;
+            }
+
+
         }
     }
 
@@ -838,6 +1014,49 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    private class LoadProfileImage extends AsyncTask<Void, Void, Bitmap> {
+        ImageView bmImage;
+
+        public LoadProfileImage(ImageView bmImage) {
+            if(bmImage!= null)
+            {
+                this.bmImage = bmImage;
+            }
+        }
+
+        protected Bitmap doInBackground(Void...params) {
+            String urldisplay = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+            Bitmap user_pic = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                user_pic = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            SharedData.SetUserpic(user_pic);
+            return user_pic;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(bmImage!= null)
+            {
+                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),result);
+                drawable.setCircular(true);
+                bmImage.setImageDrawable(drawable);
+                TextView txt = (TextView)findViewById(R.id.userNameText);
+                if(txt != null)
+                {
+                    txt.setText(SharedData.GetUserName());
+                }
+                invalidateOptionsMenu();
+                //bmImage.setImageBitmap(result);
+            }
+        }
+
+
     }
 
 }

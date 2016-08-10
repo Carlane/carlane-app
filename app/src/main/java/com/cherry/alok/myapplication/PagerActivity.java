@@ -1,6 +1,7 @@
 package com.cherry.alok.myapplication;
 
 import android.animation.ArgbEvaluator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -232,7 +233,7 @@ public class PagerActivity extends AppCompatActivity {
 
         ImageView img;
 
-        int[] bgs = new int[]{R.drawable.car, R.drawable.car, R.drawable.car};
+        int[] bgs = new int[]{R.drawable.pager1, R.drawable.pager2, R.drawable.pager3};
         String[] bgs_text = new String[]{"Door Step Pick Up Delivery" ,"Affordable Prices","Great Care Great Service"};
 
 

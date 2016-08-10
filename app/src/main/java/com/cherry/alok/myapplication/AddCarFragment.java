@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,7 @@ public class AddCarFragment extends Fragment {
         carbrandList.add("Fiat");
         carbrandList.add("Ford");
         carbrandList.add("Honda");
-        carbrandList.add("Hyndai");
+        carbrandList.add("Hyundai");
         carbrandList.add("Mahindra");
         carbrandList.add("Maruti");
         carbrandList.add("Nissan");
@@ -124,7 +125,7 @@ public class AddCarFragment extends Fragment {
         carHyundList.add("i20 Elite");
         carHyundList.add("Sante Fe");
         carHyundList.add("Verna");
-        carHyundList.add("Verna 4S Fluidic ");
+        carHyundList.add("Verna 4S Fluidic");
         carHyundList.add("Xcent");
         ////////////////CHEVROLET///////////////////////
 
@@ -293,7 +294,8 @@ public class AddCarFragment extends Fragment {
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         carbrand.setAdapter(dataAdapter);
         carbrand.setSelection(1);
-
+        AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
+        registrationNumberText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         //Obtain the User Id which is passed from parent activity
 
 /*        carbrand.setAdapter(new ArrayAdapter<String>(addCarView.getContext(), android.R.layout.simple_spinner_dropdown_item, items));*/

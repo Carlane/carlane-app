@@ -1,9 +1,12 @@
 package com.cherry.alok.myapplication;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +14,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +53,7 @@ public class OrderActivity extends AppCompatActivity {
             mProgressDialog.hide();
         }
     }
+    boolean activity_creation_first = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,17 +73,18 @@ public class OrderActivity extends AppCompatActivity {
         } else {
             InitCarDetailsInfoReq();
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.querystatus_fab);
+        activity_creation_first = true;
+       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.querystatus_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Init_StatusUpdate();
 
             }
-        });
-        firstBar = (ProgressBar) findViewById(R.id.firstBar);
-        firstBar.setMax(8);
+        });*/
+//        firstBar = (ProgressBar) findViewById(R.id.firstBar);
+//        firstBar.setMax(8);
+
     }
 
  /*   private void HandleBundleDataForUI(Bundle bndl)
@@ -189,6 +196,7 @@ public class OrderActivity extends AppCompatActivity {
 
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,orderScreenHandler);
         uniTask.execute();
+        showProgressDialog("Getting Your Order Status");
     }
 
     private Handler orderScreenHandler = new Handler() {
@@ -246,12 +254,13 @@ public class OrderActivity extends AppCompatActivity {
 
             int status_id  =  Integer.parseInt(jsonObject.optString("request_status").toString());
             UpdateRequestStatus(status_id);
-            firstBar.setProgress(status_id);
+            //firstBar.setProgress(status_id);
+            //31july
             if(status_id ==8)
             {
                 //Need to update user status in app db and switch to location map
-                SharedData.UpdateUserStatusInDb(2);
-                SharedData.HandleNavigation(R.id.nav_location, this);
+               // SharedData.UpdateUserStatusInDb(2);
+                SharedData.HandleNavigation(R.id.nav_feedback, this);//move to feedback screen and not new request start
             }
 
             String driver = jsonObject.optString("driverfirstname").toString() +" "+ jsonObject.optString("driverlastname").toString();
@@ -260,7 +269,7 @@ public class OrderActivity extends AppCompatActivity {
             String date = jsonObject.optString("date").toString();
             int slot =  Integer.parseInt(jsonObject.optString("timeslot").toString());
 
-
+            UpdateCheckIconAndTextAll(status_id);
             UpdateServiceTypeText();
             UpdateCarRegText();
             UpdateCarModelText();
@@ -276,6 +285,105 @@ public class OrderActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    public void UpdateCheckIconAndTextAll(int status_id)
+    {
+        ImageView request_place_img = (ImageView)findViewById(R.id.img_request_placed);
+        TextView request_place_text = (TextView)findViewById(R.id.text_request_placed);
+        if(status_id > 0)
+        {
+            UpdateStatusImage(request_place_img);
+            UpdateStatusText(request_place_text) ;
+        }
+
+
+        ImageView img_driver_alloc = (ImageView)findViewById(R.id.img_driver_alloc);
+        TextView text_request_placed = (TextView)findViewById(R.id.text_driver_alloc);
+        if(status_id > 1)
+        {
+            UpdateStatusImage(img_driver_alloc);
+            UpdateStatusText(text_request_placed) ;
+        }
+
+
+        ImageView img_driver_onway = (ImageView)findViewById(R.id.img_driver_onway);
+        TextView text_driver_onway = (TextView)findViewById(R.id.text_driver_onway);
+        if(status_id > 2)
+        {
+            UpdateStatusImage(img_driver_onway);
+            UpdateStatusText(text_driver_onway) ;
+        }
+
+
+        ImageView img_vehiclepickedup = (ImageView)findViewById(R.id.img_vehiclepickedup);
+        TextView text_vehiclepickedup = (TextView)findViewById(R.id.text_vehiclepickedup);
+        if(status_id > 3)
+        {
+            UpdateStatusImage(img_vehiclepickedup);
+            UpdateStatusText(text_vehiclepickedup) ;
+        }
+
+
+        ImageView img_vehicle_garage = (ImageView)findViewById(R.id.img_vehicle_garage);
+        TextView text_vehicle_garage = (TextView)findViewById(R.id.text_vehicle_garage);
+        if(status_id > 4)
+        {
+            UpdateStatusImage(img_vehicle_garage);
+            UpdateStatusText(text_vehicle_garage) ;
+        }
+
+
+        ImageView img_servicing_start = (ImageView)findViewById(R.id.img_servicing_start);
+        TextView text_servicing_start = (TextView)findViewById(R.id.text_servicing_start);
+        if(status_id > 5)
+        {
+            UpdateStatusImage(img_servicing_start);
+            UpdateStatusText(text_servicing_start) ;
+        }
+
+
+        ImageView img_vehicle_wayback = (ImageView)findViewById(R.id.img_vehicle_wayback);
+        TextView text_vehicle_wayback = (TextView)findViewById(R.id.text_vehicle_wayback);
+        if(status_id > 6)
+        {
+            UpdateStatusImage(img_vehicle_wayback);
+            UpdateStatusText(text_vehicle_wayback) ;
+        }
+
+
+        ImageView img_req_complete = (ImageView)findViewById(R.id.img_req_complete);
+        TextView text_req_complete = (TextView)findViewById(R.id.text_req_complete);
+        if(status_id > 7)
+        {
+            UpdateStatusImage(img_req_complete);
+            UpdateStatusText(text_req_complete) ;
+        }
+    }
+
+    public void UpdateStatusText(TextView request_place_text)
+    {
+        if(request_place_text != null )
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                request_place_text.setTextColor(getResources().getColor(R.color.green , null));
+            }
+            else
+            {
+                request_place_text.setTextColor(getResources().getColor(R.color.green));
+            }
+        }
+    }
+    public void UpdateStatusImage(ImageView request_place_img)
+    {
+        if(request_place_img != null)
+        {
+            request_place_img.setImageResource(R.drawable.checkgreen);
+        }
+    }
+
+
     List<HashMap<String,String>> usercarDetailsMap = new ArrayList<>();
 
     private  Handler orderScreenCarHandler = new Handler() {
@@ -318,6 +426,17 @@ public class OrderActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(activity_creation_first == false)
+        {
+            Init_StatusUpdate();
+        }
+        activity_creation_first = false;
+
+    }
 
     public void PostOperation()
     {

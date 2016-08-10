@@ -5,21 +5,37 @@
     tools:context="com.cherry.alok.myapplication.SignInFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- <ImageView
+             android:id="@+id/section_img"
+             android:layout_width="192dp"
+             android:layout_height="192dp"
+             android:layout_gravity="center"
+             android:adjustViewBounds="true"
+             android:alpha="0.30"
+             android:background="@drawable/ic_flight_24dp"
+             android:scaleType="fitCenter" />-->
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/signin_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/signbck2"
+            android:scaleType="fitCenter"/>
+
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         android:layout_height="match_parent"
-        android:background="@color/blue_grey_900">
+        >
 
-        <ImageView
-            android:id="@+id/google_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="@dimen/g_top_margin"
-            android:contentDescription="@string/desc_google_icon"
-            android:src="@drawable/ic_action_name" />
+
 
 
         <TextView
@@ -29,75 +45,48 @@
             android:layout_marginBottom="10dp"
             android:text="@string/title_text"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/blue_grey_900"
             android:textSize="36sp" />
 
-        <TextView
-            android:id="@+id/status"
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signed_out"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="30dp"
+           />
 
-        <TextView
-            android:id="@+id/detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fadeScrollbars="true"
-            android:gravity="center"
-            android:maxLines="5"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-
-
-
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/sign_out_and_disconnect"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/blue_grey_900">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:layout_gravity="bottom|"
+            tools:visibility="visible">
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/sign_out_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="visible"
-                tools:visibility="gone" />
+                android:layout_weight="1"
+                android:text="@string/sign_out"
+                android:theme="@style/ThemeOverlay.MyDarkButton" />
 
-            <LinearLayout
-                android:id="@+id/sign_out_and_disconnect"
-                android:layout_width="fill_parent"
+            <Button
+                android:id="@+id/disconnect_button"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:layout_weight="1"
+                android:text="@string/disconnect"
+                android:theme="@style/ThemeOverlay.MyDarkButton" />
 
-                <Button
-                    android:id="@+id/sign_out_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/sign_out"
-                    android:theme="@style/ThemeOverlay.MyDarkButton" />
 
-                <Button
-                    android:id="@+id/disconnect_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/disconnect"
-                    android:theme="@style/ThemeOverlay.MyDarkButton" />
-            </LinearLayout>
-
-        </RelativeLayout>
+    </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

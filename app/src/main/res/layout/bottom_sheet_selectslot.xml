@@ -64,12 +64,12 @@
                             android:layout_weight="0.56" />
                         <Button
                             android:id="@+id/carselect"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
 
                             android:layout_weight="0.2"
-                            android:background="@drawable/expand5"
+                            android:background="@drawable/car_option_garage"
                             />
 
                     </LinearLayout>

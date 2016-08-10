@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity
 
         if(userdetailsFromDB.size() <=0)
         {
+            /*Intent intent =new Intent(this,TransparentActivity.class);
+            startActivity(intent);*/
             if (findViewById(R.id.fragment_container) != null)
                     {
                         if (savedInstanceState != null) {
@@ -110,6 +112,10 @@ public class MainActivity extends AppCompatActivity
             if(userStatus == SharedData.UserStatus.RequestPending.getID())
             {
                 SharedData.HandleNavigation(R.id.nav_order,this , true);
+            }
+            if(userStatus == SharedData.UserStatus.FeedbackPending.getID())
+            {
+                SharedData.HandleNavigation(R.id.nav_feedback,this,true);
             }
 
         }
@@ -231,7 +237,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         imgProfilePic = (ImageView)findViewById(R.id.imageView);
                     }
-                    if(imgProfilePic != null)
+                    //if(imgProfilePic != null)
                     {
                         LoadProfileImage lfi =  new LoadProfileImage(imgProfilePic);
                         if(lfi != null) {

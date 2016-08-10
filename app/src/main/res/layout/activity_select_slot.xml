@@ -32,18 +32,100 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:id="@+id/lay_viewpager"
             >
         <android.support.v4.view.ViewPager
             android:id="@+id/tabdate_viewpager"
             android:layout_width="match_parent"
             android:layout_marginTop="16dp"
-            android:layout_height="278dp"
+            android:layout_height="250dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        </LinearLayout>
+        <View
+            android:id="@+id/line_slot"
+            style="@style/LineViewStyleLight"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+        <LinearLayout
+            android:id="@+id/addtion_inst"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="16dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/additional_instruction5"/>
+            <TextView
+                android:id="@+id/text_add_inst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="Your Additional Instructions For Wash"/>
         </LinearLayout>
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addtion_inst2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.CardView
+            android:id="@+id/addtion_inst_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <TextView
+                android:id="@+id/textview_customerline1_key"
+                style="@style/TextViewStyleReviewLabel"
+                android:layout_marginLeft="8dp"
+                android:layout_width="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:text="We will pass your instructions to our joint"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/addinst_editText"
+                android:gravity="bottom|center_horizontal"
+                android:scrollbars="vertical"
+                android:hint="Enter Your Instructions Here"
+                android:layout_gravity="center_horizontal"
+                android:maxLength="500">
+
+                </EditText>
+                <Button
+                    android:id="@+id/save_add_inst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Save Instructions"
+                    android:shadowColor="#00ccff"
+                    android:shadowRadius="0.75"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    style="@style/ButtonStylePositive"
+                    />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+
    <!-- <ProgressBar
         android:id="@+id/loadingdata_progress"
         style="?android:attr/progressBarStyleLarge"
