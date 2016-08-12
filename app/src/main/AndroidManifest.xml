@@ -33,15 +33,6 @@
             android:name=".LocationActivityMap"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UserCarsActivty"
-            android:label="@string/title_activity_user_cars_activty"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cherry.alok.myapplication.MainActivity" />
-        </activity>
-        <activity
             android:name=".PagerActivity"
             android:theme="@style/MyTheme.Detail" />
         <activity
@@ -60,7 +51,7 @@
                 android:value="com.cherry.alok.myapplication.LocationActivityMap" />
 
         </activity>
-        <activity android:name=".OrderActivity" />
+        <activity android:name=".OrderActivity"/>
         <activity android:name=".OrderReview" />
 
         <service android:name=".FirebaseMessagingService">
@@ -78,6 +69,7 @@
             android:name=".TransparentActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".FeedbackActivity"></activity>
+        <activity android:name=".FabHideActivity"  ></activity>
     </application>
 
 </manifest>

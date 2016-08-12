@@ -176,10 +176,18 @@ public class SharedData {
             }
             break;
             case 8:
+            case 9:
+            case 10:
             {
                 request_status = "Request Completed";
             }
             break;
+            case 11:
+            {
+                request_status = "User Cancelled Request";
+            }
+
+
         }
         return request_status;
     }
@@ -268,6 +276,7 @@ public class SharedData {
     static Intent intent_selectSlot;
     static Intent intent_pastorders;
     static Intent intent_feedback;
+    static Intent intent_userRequest;
     static DataBaseHelper myDbHelper;
 
     private static Handler sharedDataHandler = new Handler() {
@@ -364,6 +373,20 @@ public class SharedData {
                     }
                     currentActivity.startActivity(intent_feedback);
 
+                }
+                else if(id == R.id.nav_userrequests)
+                {
+                    try {
+                        if(intent_userRequest == null)
+                        {
+                            intent_userRequest = new Intent(currentActivity , FabHideActivity.class);
+                           // intent_userRequest.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            //intent_userRequest.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        }
+                        currentActivity.startActivity(intent_userRequest);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 //currentActivity.finish();;
