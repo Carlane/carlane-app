@@ -44,14 +44,14 @@
         <activity
             android:name=".Activity_AddCar"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SelectSlotActivity" >
+        <activity android:name=".SelectSlotActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cherry.alok.myapplication.LocationActivityMap" />
-
         </activity>
-        <activity android:name=".OrderActivity"/>
+        <activity android:name=".OrderActivity" />
         <activity android:name=".OrderReview" />
 
         <service android:name=".FirebaseMessagingService">
@@ -68,8 +68,8 @@
         <activity
             android:name=".TransparentActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".FeedbackActivity"></activity>
-        <activity android:name=".FabHideActivity"  ></activity>
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".FabHideActivity" />
     </application>
 
 </manifest>

@@ -16,14 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
-
-
-
-
-/**
- * Created by Suleiman on 14-04-2015.
- */
 public class ServiceHistoryRecyclerAdapter extends RecyclerView.Adapter<ServiceHistoryRecyclerAdapter.VersionViewHolder> {
     List<String> versionModels;
     Boolean isHomeList = false;

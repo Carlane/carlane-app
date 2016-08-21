@@ -22,5 +22,8 @@
     <dimen name="toolbar_double_height">112dp</dimen>
     <dimen name="activity_margin_half">8dp</dimen>
     <dimen name="activity_margin_quarter">4dp</dimen>
+    <dimen name="app_bar_height">200dp</dimen>
+    <dimen name="item_width">200dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

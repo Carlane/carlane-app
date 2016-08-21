@@ -44,7 +44,7 @@ public class UniversalAsyncTask extends AsyncTask<ArrayList<String>,Void,HashMap
         userUrl = "http://54.213.65.235/"+ URL;
         //userUrl = "https://apigwuat.icicibank.com:8443/trnorder";
         //
-       //userUrl = "http://192.168.0.103:8000/"+ URL;
+       //userUrl = "http://192.168.0.101:8000/"+ URL;
         uiHandler =  handler;
         urlParams = urlParameter;
     }

@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -23,13 +26,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cherry.alok.myapplication.dummy.ServiceRecyclerAdapter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,17 +50,27 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
     RecyclerView recyclerView;
     int mutedColor = R.attr.colorPrimary;
     SimpleRecyclerAdapter simpleRecyclerAdapter;
+    ServiceRecyclerAdapter serviceRecyclerAdapter;
     UniversalAsyncTask uniTask = null;
     List<HashMap<String,String>> usercarDetailsMap = new ArrayList<>();
+    BottomSheetBehavior behavior;
+    BottomSheetBehavior behavior_smallbottomsheet;
+    Boolean shownext = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_car_collapse_header);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.anim_toolbar);
+        setContentView(R.layout.activity_services_collapse_header);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.services_anim_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.usercar_collapse_drawer_layout);
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null)
+        {
+            shownext = bundle.getBoolean("shownext");
+            bundle = null;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         {
@@ -88,13 +105,13 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.user_car_nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.services_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Select Yours");
+        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.services_collapsing_toolbar);
+        collapsingToolbar.setTitle("Packages");
 
-        ImageView header = (ImageView) findViewById(R.id.header);
+        ImageView header = (ImageView) findViewById(R.id.services_header);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.header2);
@@ -123,52 +140,236 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.scrollableview);
+        recyclerView = (RecyclerView) findViewById(R.id.services_scrollableview);
 
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-       // usercarDetailsMap =  (List<HashMap<String,String>> )getIntent().getSerializableExtra("userCarMap");
 
-
-
-        if (simpleRecyclerAdapter == null) {
-            simpleRecyclerAdapter = new SimpleRecyclerAdapter(this);
-            recyclerView.setAdapter(simpleRecyclerAdapter);
+        if (serviceRecyclerAdapter == null) {
+            serviceRecyclerAdapter = new ServiceRecyclerAdapter(this);
+            recyclerView.setAdapter(serviceRecyclerAdapter);
         }
 
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.services_cordinatorLayout);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.services_bottom_sheet);
+        View smallbottomSheet = coordinatorLayout.findViewById(R.id.services_smallbottom_sheet);
+        ImageView bottom_sheet_down = (ImageView)findViewById(R.id.down_bottomsheet) ;
+        bottom_sheet_down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
 
 
-        simpleRecyclerAdapter.SetOnItemClickListener(new SimpleRecyclerAdapter.OnItemClickListener() {
+
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior_smallbottomsheet = BottomSheetBehavior.from(smallbottomSheet);
+        if(!shownext)
+        {
+            behavior_smallbottomsheet.setPeekHeight(0);
+            behavior_smallbottomsheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior_smallbottomsheet.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                switch (newState) {
+
+                    case BottomSheetBehavior.STATE_DRAGGING:
+
+                        break;
+
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+
+                        break;
+
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        break;
+
+
+                }
+
+            }
+
+            @Override
+            public void onSlide(View bottomSheet, float slideOffset) {
+
+            }
+
+        });
+
+        Button next_button = (Button)findViewById(R.id.service_select_next);
+        next_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetNavigation();
+
+            }
+        });
+
+
+
+        serviceRecyclerAdapter.SetOnItemClickListener(new ServiceRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
+                Button next_button = (Button)findViewById(R.id.service_select_next);
                 switch (position) {
                     case 0:
+                        //view.animate().translationY(view.getHeight()*1).setDuration(500).start();
+                      //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                        service_cost_small_btmsheet.setText("INR 400");
+
+                        next_button.setEnabled(true);
+                        SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
                     case 1:
+                        //SharedData.SetService(position+1);
+                      //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        service_cost_small_btmsheet.setText("INR 500");
+                        next_button.setEnabled(true);
+                        SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
                     case 2:
+                       // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        service_cost_small_btmsheet.setText("INR 600");
+                        next_button.setEnabled(true);
+                        //SharedData.SetService(position+1);
+                        SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
                     case 3:
                         break;
+                    case 999:
+                    {
+                        SetTexts(position - 999);
+                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                    break;
+                    case 1000:
+                    {
+                        SetTexts(position -999);
+                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                    break;
+                    case 1001:
+                    {
+                        SetTexts(position -999);
+                        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                    break;
 
 
                     default:
                         Toast.makeText(getBaseContext(), "Undefined Click!", Toast.LENGTH_SHORT).show();
                 }
-                String url = "CarInfo/"+SharedData.GetUserId()+"/";
+               /* String url = "CarInfo/"+SharedData.GetUserId()+"/";
                 uniTask = new UniversalAsyncTask(url,"GET","" ,handler);
 
                 ArrayList<String> dummy = new ArrayList<String>();
-                uniTask.execute(dummy);
+                uniTask.execute(dummy);*/
 
 
             }
         });
+
+
+    }
+    private void SetNavigation()
+    {
+        Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
+        startActivity(selectSlot);
+    }
+    public void SetTexts(int i)
+    {
+        TextView service_name_bottomsheet = (TextView)findViewById(R.id.service_name_bottomsheet);
+        ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
+        TextView internal_text1 = (TextView)findViewById(R.id.text_1);
+        TextView internal_text2 = (TextView)findViewById(R.id.text_2);
+        TextView internal_text3 = (TextView)findViewById(R.id.text_3);
+        TextView internal_text4 = (TextView)findViewById(R.id.text_4);
+        TextView internal_text5 = (TextView)findViewById(R.id.text_5);
+        TextView internal_text6 = (TextView)findViewById(R.id.text_5);
+
+
+        TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
+        TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
+        TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
+        TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
+        TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
+        TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
+        TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
+        TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
+        TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
+
+
+        TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
+        TextView text_cost_suv = (TextView)findViewById(R.id.cost_text_suv);
+
+        switch(i)
+        {
+            case 0:
+            {
+                service_name_bottomsheet.setText("Basic Wash");
+                internal_text1.setText("1. Mats Wash(rubber Only");
+                external_text1.setText("1. Car exterior foam wash");
+                external_text2.setText("2. Car exterior body black fiber    parts polish ");
+                external_text3.setText("3. Tyre cleaning");
+                external_text4.setText("4. Tyre Polish");
+                external_text5.setText("5. Glass cleaning");
+                washlogo.setImageResource(R.drawable.lightening);
+
+            }
+            break;
+            case 1:
+            {
+                service_name_bottomsheet.setText("Premium Wash");
+                internal_text1.setText("1. Mats Wash(rubber Only");
+                internal_text2.setText("2. Vaccuming  (except Dickey)");
+                internal_text3.setText("3. Total interior car wiping ");
+                external_text1.setText("1. Car exterior foam wash");
+                external_text2.setText("2. Car exterior body black fiber    parts polish ");
+                external_text3.setText("3. Tyre cleaning");
+                external_text4.setText("4. Tyre Polish");
+                external_text5.setText("5. Glass cleaning");
+                washlogo.setImageResource(R.drawable.balance);
+
+            }
+            break;
+            case 2:
+            {
+                service_name_bottomsheet.setText("Platinum Wash");
+                internal_text1.setText("1. Mats Wash(rubber Only");
+                internal_text2.setText("2. Vaccuming  (except Dickey)");
+                internal_text3.setText("3. Total interior car wiping ");
+                internal_text4.setText("4. Dash board polish ");
+                internal_text5.setText("5. Dickey vacuuming ");
+                internal_text6.setText("6. Stepney cleaning & polish ");
+
+                external_text1.setText("1. Car exterior foam wash");
+                external_text2.setText("2. Car exterior body black fiber    parts polish ");
+                external_text3.setText("3. Tyre cleaning and Tyre Polish");
+                external_text4.setText("");
+                external_text4.setText("4. Glass cleaning");
+                external_text5.setText("5. Engine wash");
+                external_text6.setText("6. Alloy Wheels Cleaning");
+                external_text7.setText("7. Fuel cap cleaning");
+                external_text8.setText("8. Wiper water filling");
+                washlogo.setImageResource(R.drawable.star);
+
+
+            }
+            break;
+        }
+
 
     }
 
@@ -196,7 +397,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         SharedData.HandleNavigation(id,this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.usercar_collapse_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -227,10 +428,10 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     else
                     {
 
-                        PostOperation();
+                        /*PostOperation();
                         Intent usercar_intent = new Intent(getApplicationContext(),UserCar_CollapseHeader.class);
                         usercar_intent.putExtra("userCarMap", (Serializable) usercarDetailsMap);
-                        startActivity(usercar_intent);
+                        startActivity(usercar_intent);*/
 
 
                     }

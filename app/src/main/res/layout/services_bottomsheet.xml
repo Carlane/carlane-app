@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:behavior_peekHeight="0dp"
+    android:elevation="20dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/deep_orange">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:background="@android:color/holo_blue_bright">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/amber"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/activity_horizontal_margin">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.4">
+                    <ImageView
+                        android:id="@+id/down_bottomsheet"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/close"
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="0.2"/>
+                    <TextView
+                        android:id="@+id/service_name_bottomsheet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="BASIC WASH"
+                        android:layout_weight="0.8"
+                        android:gravity="center"
+                        android:textSize="40sp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6">
+                    <ImageView
+                        android:id="@+id/wash_logo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/lightening"
+                        android:layout_marginBottom="10dp"/>
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="0.5">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="Internal"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/text_1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:id="@+id/text_2"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:id="@+id/text_3"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:id="@+id/text_4"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:id="@+id/text_5"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:id="@+id/text_6"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:id="@+id/text_7"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:id="@+id/text_8"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:id="@+id/text_9"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    style="@style/TextAppearanceXBasic16"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5">
+                <TextView
+                    android:id="@+id/text_external_0"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="External"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_1"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_2"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_3"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_4"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_5"
+                    style="@style/TextAppearanceXBasic16"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_6"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_7"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_8"
+                    style="@style/TextAppearanceXBasic16" />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:id="@+id/text_external_9"
+                    style="@style/TextAppearanceXBasic16" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderActivity extends AppCompatActivity {
     UniversalAsyncTask uniTask;
@@ -114,6 +115,19 @@ public class OrderActivity extends AppCompatActivity {
     public void UpdateDriverNameText(String driver) {
         TextView driver_text = (TextView) findViewById(R.id.driver_name_text);
         driver_text.setText(driver);
+    }
+
+    public void UpdateJointLocation() {
+        TextView joint_location_text = (TextView) findViewById(R.id.textview_jointLocation_key_value);
+        joint_location_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = String.format(Locale.ENGLISH, "geo:%10.13f,%10.13f?z=%d&q=%10.13f,%10.13f(%s)",0.0,0.0,15,latt, longg,"MyCarLane Authorized Car Wash Joint");
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
     }
 
     public void UpdateRequestStatus(int request_status) {
@@ -246,7 +260,8 @@ public class OrderActivity extends AppCompatActivity {
         uniTask.execute(dummy);
         showProgressDialog("Fetching Your Order Details");
     }
-
+    double latt = 0.0;
+    double longg =0.0;
     void PostStatusUpdateOperation()
     {
         try {
@@ -258,6 +273,12 @@ public class OrderActivity extends AppCompatActivity {
             }
             catch (JSONException e) {
                 e.printStackTrace();
+            }
+            if(jsonRootObject == null)
+            {
+                Snackbar.make(findViewById(R.id.scroll) , "Seems Like There is Network Connectivity Problem. Try Again", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
             }
             JSONArray jsonArray = jsonRootObject.optJSONArray("response");
             JSONObject jsonObject = null;
@@ -292,7 +313,9 @@ public class OrderActivity extends AppCompatActivity {
             String driver_mobile = jsonObject.optString("drivermobile").toString() ;//drivermobile
             String date = jsonObject.optString("date").toString();
             int slot =  Integer.parseInt(jsonObject.optString("timeslot").toString());
-
+            latt = Double.parseDouble(jsonObject.optString("latt").toString());
+            UpdateJointLocation();
+            longg = Double.parseDouble(jsonObject.optString("longg").toString());
             UpdateCheckIconAndTextAll(status_id);
             UpdateServiceTypeText();
             UpdateCarRegText();
@@ -319,6 +342,12 @@ public class OrderActivity extends AppCompatActivity {
                 jsonRootObject = new JSONObject(uniTask.outputJasonString);
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+            if(jsonRootObject == null)
+            {
+                Snackbar.make(findViewById(R.id.scroll) , "Seems Like There is Network Connectivity Problem. Try Again", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return;
             }
             JSONArray jsonArray = jsonRootObject.optJSONArray("response");
             JSONObject jsonObject = null;

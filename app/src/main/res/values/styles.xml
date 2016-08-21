@@ -10,15 +10,19 @@
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
 
     </style>
+
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
+
     <style name="RobotoSpinnerStyle" parent="android:Widget.Spinner">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
+
     <style name="RobotoSpinnerDDStyle" parent="android:Widget.Spinner.DropDown">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
+
     <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
         <item name="android:fontFamily">sans-serif-condensed</item>
     </style>
@@ -39,14 +43,16 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="windowActionBarOverlay">false</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="MyTheme.Detail" parent="MyTheme"></style>
 
     <style name="MyTheme" parent="Base.MyTheme"></style>
+
     <color name="bg_light">#FAFAFA</color>
 
     <style name="Base.MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -76,22 +82,25 @@
         <item name="android:textColor">@color/orange</item>
         <item name="textAllCaps">false</item>
     </style>
+
     <style name="bb" parent="android:Widget">
         <item name="tabBackground">@drawable/tab_bkground</item>
     </style>
+
     <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowActionBarOverlay">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-        <style name="PauseDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar.MinWidth"> <!--Holo.Dialog">-->
-            <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
-        </style>
 
-        <style name="PauseDialogAnimation">
-            <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-            <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
-        </style>
+    <style name="PauseDialog" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar.MinWidth"> <!--Holo.Dialog">-->
+        <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
+    </style>
 
 
     <!--Wardu-->
@@ -109,6 +118,20 @@
         <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
         <item name="android:paddingBottom">7dp</item>
         <item name="android:background">@drawable/button_backgrnd_cool</item>
+        <item name="android:textAppearance">@style/TextAppearanceButton</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">bottom</item>
+    </style>
+
+    <style name="ButtonStylePositiveBlue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:background">@drawable/button_background_blue</item>
         <item name="android:textAppearance">@style/TextAppearanceButton</item>
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:gravity">center</item>
@@ -146,6 +169,7 @@
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
     </style>
+
     <style name="TextViewStyleReviewLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -154,6 +178,7 @@
         <item name="android:textColor">#c0c0c0</item>
         <item name="android:textSize">18sp</item>
     </style>
+
     <style name="TextViewStyleReviewValue">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -173,11 +198,13 @@
         <item name="android:textSize">10sp</item>
         <item name="android:gravity">right</item>
     </style>
+
     <style name="TextAppearance4">
         <item name="android:textColor">#000000</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">10sp</item>
     </style>
+
     <style name="ScrollViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -192,12 +219,14 @@
         <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
         <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
     </style>
+
     <style name="LinearLayoutStyleVerticalNoPadding">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
+
     <style name="TextViewStyleXSmall2">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -215,30 +244,43 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#34495E</item>
     </style>
+
     <style name="LineViewStyleLight">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#dbdfe2</item>
     </style>
+
     <style name="TextAppearanceXSmall2">
         <item name="android:textColor">#34495E</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="TextAppearanceXSmall34">
         <item name="android:textColor">#ff424242</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
     </style>
+
     <style name="TextAppearanceXVerySmall">
         <item name="android:textColor">#34495E</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">8sp</item>
     </style>
+
     <style name="TextAppearanceXBasic">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+    </style>
+    <style name="TextAppearanceXBasic16">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:inputType">textMultiLine</item>
         <item name="android:singleLine">false</item>
         <item name="android:maxLines">2</item>
@@ -252,8 +294,6 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
-
-
 
 
 </resources>

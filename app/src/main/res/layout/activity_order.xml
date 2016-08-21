@@ -188,6 +188,25 @@
                     android:layout_weight=".5" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_jointLocation"
+                style="@style/LinearLayoutStyleHorizontalReview" >
+
+                <TextView
+                    android:id="@+id/textview_jointLocation_key"
+                    style="@style/TextViewStyleReviewLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:text="Joint Location"/>
+
+                <TextView
+                    android:id="@+id/textview_jointLocation_key_value"
+                    style="@style/TextViewStyleReviewValue"
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:text="Open Location On Map"/>
+            </LinearLayout>
+
         </LinearLayout>
 
 

@@ -277,6 +277,7 @@ public class SharedData {
     static Intent intent_pastorders;
     static Intent intent_feedback;
     static Intent intent_userRequest;
+    static Intent intent_ServicePackages;
     static DataBaseHelper myDbHelper;
 
     private static Handler sharedDataHandler = new Handler() {
@@ -384,6 +385,29 @@ public class SharedData {
                             //intent_userRequest.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         }
                         currentActivity.startActivity(intent_userRequest);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(id == R.id.nav_services)
+                {
+                    try {
+                        if(intent_ServicePackages == null)
+                        {
+                            intent_ServicePackages = new Intent(currentActivity , Activity_Services.class);
+
+                        }
+                        if(dataToSend != null)
+                        {
+                            intent_ServicePackages.putExtras(dataToSend);
+                        }
+                        else
+                        {
+                            Bundle services_screen_data = new Bundle();
+                            services_screen_data.putBoolean("shownext",false);
+                            intent_ServicePackages.putExtras(services_screen_data);
+                        }
+                        currentActivity.startActivity(intent_ServicePackages);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -1,24 +1,33 @@
 package com.cherry.alok.myapplication;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by Suleiman on 14-04-2015.
- */
+
 public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.VersionViewHolder> {
     List<String> versionModels;
     Boolean isHomeList = false;
@@ -88,9 +97,6 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         if (isHomeList) {
             versionViewHolder.brand.setText(user_service_list.get(i));
             versionViewHolder.model.setText(user_service__captions_list.get(i));
-            //versionViewHolder.cardItemLayout.setCardBackgroundColor(R.color.red);
-
-
         }
         else
         {
@@ -101,11 +107,6 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                         versionViewHolder.regNo.setText(currentDetail.get("regno"));
                         String model = versionViewHolder.model.getText().toString();
                         SetImage(versionViewHolder, model);
-                        /*if (versionViewHolder.brand.getText().equals("Maruti")) {
-                            versionViewHolder.carImage.setImageResource(R.drawable.maruti_swift_desire);
-                        } else if (versionViewHolder.brand.getText().equals("hyundai")) {
-                            versionViewHolder.carImage.setImageResource(R.drawable.hyundai_cars);
-                        }*/
                     }
             else
                     {//test-data
@@ -126,6 +127,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
     public void SetImage(VersionViewHolder versionViewHolder , String model)
         {
+
             switch(model)
             {
                 case "A-Star":
@@ -255,6 +257,11 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                 break;
                 case "Aveo UVA":
                 {
+                  /*  LoadProfileImage lfi =  new LoadProfileImage(versionViewHolder.carImage);
+                    if(lfi != null) {
+                        String aResponse = "https://doc-00-8c-docs.googleusercontent.com/docs/securesc/0jkq71fpli9a695n1bef14hh97r2t073/4hbnqhuvuesqv7knoenomj4sp6q7t3hs/1471255200000/11634506716492073008/11634506716492073008/0B-r8xPUnEGoEeF9OTkp2NDBpUzQ?e=download&nonce=vu5u80g55soa0&user=11634506716492073008&hash=94coasc651tailnpheohfrohi7hmam24";
+                        lfi.execute(aResponse);
+                    }*/
                     versionViewHolder.carImage.setImageResource(R.drawable.chevy_aveo);
                 }
                 break;
@@ -567,6 +574,75 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
             }
         }
+
+    private final Handler mainhandler = new Handler() {
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        public void handleMessage(Message msg) {
+
+            String aResponse = msg.getData().getString("picsatus");
+            if(aResponse == null)
+            {
+
+                return;
+            }
+
+            if ((null != aResponse)) {
+                try {
+
+                    //if(imgProfilePic != null)
+                    {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else
+            {
+            }
+
+        }
+    };
+    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+        Bitmap bitmap;
+        Handler uiHandler = null;
+
+        public LoadProfileImage(ImageView bmImage) {
+            if(bmImage!= null)
+            {
+                this.bmImage = bmImage;
+            }
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap user_pic = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                user_pic = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            SharedData.SetUserpic(user_pic);
+            return user_pic;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(bmImage!= null)
+            {
+               // RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),result);
+               // drawable.setCircular(true);
+                bitmap = result;
+
+                bmImage.setImageBitmap(result);
+            }
+
+        }
+    }
 
     @Override
     public int getItemCount() {

@@ -152,6 +152,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         View bottomSheet = coordinatorLayout.findViewById(R.id.map_bottom_sheet);
 
         behavior = BottomSheetBehavior.from(bottomSheet);
+        behavior.setPeekHeight(0);
         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -228,17 +229,10 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             public void onClick(View v) {
                 LatLng center = mMap.getCameraPosition().target;
                 SharedData.SetRequestLocation(center);
-                Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
-                startActivity(selectSlot);
+                /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
+                startActivity(selectSlot);*/
+                SetNavigation();
 
-                // TODO Auto-generated method stub
-                //DO you work here
-                /*SharedData.SetRequestLocation(mapMarker.getPosition());
-                String url = "request/"+SharedData.GetUserId()+"/";
-                String urlParameters = String.format("servicename=%s&servicetype=%s&timeSlotfrom=%s&timeSlotto=%s&geo=%s",SharedData.GetService(),"3","09:00:00","12:00:00","3");
-                uniTask = new UniversalAsyncTask(url,"POST",urlParameters,handler);
-                ArrayList<String> dummy = new ArrayList<String>();
-                uniTask.execute(dummy);*/
             }
         });
 
@@ -298,6 +292,13 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
 
 
+    }
+
+    public void SetNavigation()
+    {
+        Bundle services_screen_data = new Bundle();
+        services_screen_data.putBoolean("shownext",true);
+        SharedData.HandleNavigation(R.id.nav_services,this,services_screen_data);
     }
 
     public void AnimateCameraToLocation(Location loc)
