@@ -5,19 +5,24 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.CalendarContract;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -221,16 +226,56 @@ public class SelectSlotActivity extends AppCompatActivity {
         };
 
         confirm_request = (Button)findViewById(R.id.confirm_request);
+        confirm_request.setText("REQUEST YOUR "+ SharedData.GetServiceName().toUpperCase()+ " WASH");  ;
         confirm_request.setEnabled(false);
         confirm_request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+                int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+                if(userStatus > SharedData.UserStatus.CarProfile.getID())
+                {
+                    showSettingsAlert("Request Ongoing Already","Sorry ! Currently we support only one active request at a time");
+                    return;
+                }
                 InitRequest();
             }
         });
         GetSlotInformation();
         SetCarLogo();
 
+    }
+
+    AlertDialog requestalreadyPlaceDlg;
+    public void showSettingsAlert(String title , String message) {
+        if(requestalreadyPlaceDlg != null && requestalreadyPlaceDlg.isShowing())
+        {
+            return;
+        }
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this , R.style.PauseDialog);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(title);
+
+        // Setting Dialog Message
+        alertDialog.setMessage(message);
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.icon_driver_app);
+
+        // On pressing Settings button
+
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                requestalreadyPlaceDlg = null;
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        requestalreadyPlaceDlg = alertDialog.show();
     }
 
     @Override

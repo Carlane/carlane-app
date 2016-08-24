@@ -34,7 +34,7 @@ public class FeedbackActivity extends AppCompatActivity {
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showProgressDialog();
                 SubmitFeedback();
 
             }
@@ -87,6 +87,7 @@ public class FeedbackActivity extends AppCompatActivity {
             if(aresponse != null)
             {
                 PostRequestOperation();
+                hideProgressDialog();
             }
             else {
 
@@ -99,35 +100,39 @@ public class FeedbackActivity extends AppCompatActivity {
 
     void PostRequestOperation()
     {
-        String outputStr = uniTask.outputJasonString.toString();
-        JSONObject jsonRootObject = null;
-        try
-        {
-            jsonRootObject = new JSONObject(uniTask.outputJasonString);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray jsonArray = jsonRootObject.optJSONArray("response");
-        JSONObject jsonObject = null;
-        try
-        {
-            jsonObject = jsonArray.getJSONObject(0);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        int userIdBkEnd = Integer.parseInt(jsonObject.optString("id").toString());
-        Boolean error_in_Result = Boolean.parseBoolean(jsonObject.optString("error").toString());
-        if(error_in_Result == true)
-        {
-            return;
-        }
-        String driver_name = jsonObject.optString("feedbackid");
+        try {
+            String outputStr = uniTask.outputJasonString.toString();
+            JSONObject jsonRootObject = null;
+            try
+            {
+                jsonRootObject = new JSONObject(uniTask.outputJasonString);
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JSONArray jsonArray = jsonRootObject.optJSONArray("response");
+            JSONObject jsonObject = null;
+            try
+            {
+                jsonObject = jsonArray.getJSONObject(0);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            int userIdBkEnd = Integer.parseInt(jsonObject.optString("id").toString());
+            Boolean error_in_Result = Boolean.parseBoolean(jsonObject.optString("error").toString());
+            if(error_in_Result == true)
+            {
+                return;
+            }
+            String driver_name = jsonObject.optString("feedbackid");
 
-        SharedData.UpdateUserStatusInDb(2);
-        SharedData.HandleNavigation(R.id.nav_location,this,true);
+            SharedData.UpdateUserStatusInDb(2);
+            SharedData.HandleNavigation(R.id.nav_location,this,true);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -149,11 +150,11 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
         /*Set up the Bottom Sheet containing types of services*/
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.laymap_cordinatorLayout);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.map_bottom_sheet);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.location_small_bottomsheet);
 
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setPeekHeight(0);
-        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
         behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -184,12 +185,12 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
         });
 
-        /*Set Up the Tabs In Bottom Sheet*/
+/*        *//*Set Up the Tabs In Bottom Sheet*//*
         final ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
-        setupViewPager(viewPager);
+        //setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        //tabLayout.setupWithViewPager(viewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -218,20 +219,44 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
 
         /*This is the centre black label , on clicking it takes to other screen with current locaion*/
+        Button next_button = (Button)findViewById(R.id.location_select_next);
+        next_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng center = mMap.getCameraPosition().target;//only for simulartor
+                SharedData.SetRequestLocation(center);
+                /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
+                startActivity(selectSlot);*/
+                SetNavigation();
+            }
+        });
+
+        FloatingActionButton next_fab = (FloatingActionButton)findViewById(R.id.dummy_fab);
+        next_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng center = mMap.getCameraPosition().target;//only for simulartor
+                SharedData.SetRequestLocation(center);
+                /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
+                startActivity(selectSlot);*/
+                SetNavigation();
+
+            }
+        });
         locationText = (TextView)findViewById(R.id.locationMarkertext);
         locationText.startAnimation(animation);
         locationText.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                LatLng center = mMap.getCameraPosition().target;
+               /* LatLng center = mMap.getCameraPosition().target;//only for simulartor
                 SharedData.SetRequestLocation(center);
-                /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
-                startActivity(selectSlot);*/
-                SetNavigation();
+                *//*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
+                startActivity(selectSlot);*//*
+                SetNavigation();*/
 
             }
         });
@@ -404,6 +429,8 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             List<android.location.Address> address = geoCoder.getFromLocation(loc.latitude, loc.longitude, 1);
             int maxLines = address.get(0).getMaxAddressLineIndex();
             for (int i=0; i<maxLines; i++) {
+                TextView addressText = (TextView)findViewById(R.id.location_address_text_btmsheet);
+                addressText.setText(address.get(0).getSubLocality() );
                 String addressStr = address.get(0).getAddressLine(i);
                 String locality = address.get(0).getLocality();
 
@@ -806,7 +833,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         {
             return false;
         }
-        return true;
+        return true; //for simulator
     }
 
     private void InitiatePermissionsForLocation(boolean showRationale)

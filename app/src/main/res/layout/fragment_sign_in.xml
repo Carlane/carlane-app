@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- <ImageView
-             android:id="@+id/section_img"
-             android:layout_width="192dp"
-             android:layout_height="192dp"
-             android:layout_gravity="center"
-             android:adjustViewBounds="true"
-             android:alpha="0.30"
-             android:background="@drawable/ic_flight_24dp"
-             android:scaleType="fitCenter" />-->
 
         <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/signin_img"

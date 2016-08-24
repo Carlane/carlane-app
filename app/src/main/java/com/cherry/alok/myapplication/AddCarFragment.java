@@ -442,10 +442,6 @@ public class AddCarFragment extends Fragment {
 
     public ArrayAdapter<String> GetCarModelAdapter(int carmodels)
     {
-        if(carmodels == 1)
-            carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carMarutiList);
-        else
-            carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carHyundList);
         switch(carmodels)
         {
             case 1:

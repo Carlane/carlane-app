@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_info"
-        android:visibility="gone"/>
+        android:src="@drawable/arrow_next_3"
+        android:visibility="visible"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/map_fab"
@@ -59,7 +59,9 @@
         app:layout_anchor="@id/map_fab"
         app:layout_anchorGravity="top"
         android:visibility="gone"/>
-    <include layout="@layout/bottom_sheet"
-        android:id="@+id/map_bottom_sheet"/>
+<!--    <include layout="@layout/bottom_sheet"
+        android:id="@+id/map_bottom_sheet"/>-->
+    <include layout="@layout/location_small_bottomsheet"
+        android:id="@+id/location_small_bottomsheet"/>
 
 </android.support.design.widget.CoordinatorLayout>

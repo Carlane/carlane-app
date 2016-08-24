@@ -51,7 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cherry.alok.myapplication.LocationActivityMap" />
         </activity>
-        <activity android:name=".OrderActivity" />
+        <activity android:name=".OrderActivity" android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".OrderReview" />
 
         <service android:name=".FirebaseMessagingService">

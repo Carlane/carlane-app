@@ -89,7 +89,7 @@
                             android:shadowRadius="1.5"
                             android:shadowDx="1"
                             android:shadowDy="1"
-                            style="@style/ButtonStylePositive"
+                            style="@style/ButtonStylePositiveBlue"
                             />
                     </LinearLayout>
 

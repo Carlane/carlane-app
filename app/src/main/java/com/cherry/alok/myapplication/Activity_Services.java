@@ -224,7 +224,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                         //view.animate().translationY(view.getHeight()*1).setDuration(500).start();
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                        service_cost_small_btmsheet.setText("INR 400");
+                        service_cost_small_btmsheet.setText("BASIC INR 400");
 
                         next_button.setEnabled(true);
                         SetTexts(position);
@@ -233,14 +233,14 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     case 1:
                         //SharedData.SetService(position+1);
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        service_cost_small_btmsheet.setText("INR 500");
+                        service_cost_small_btmsheet.setText("PREMIUM INR 500");
                         next_button.setEnabled(true);
                         SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
                     case 2:
                        // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        service_cost_small_btmsheet.setText("INR 600");
+                        service_cost_small_btmsheet.setText("PLATINUM INR 600");
                         next_button.setEnabled(true);
                         //SharedData.SetService(position+1);
                         SetTexts(position);

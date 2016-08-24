@@ -33,6 +33,10 @@
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Packages" />
             <item
+                android:id="@+id/nav_order"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Ongoing Request" />
+            <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share"
@@ -42,11 +46,7 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="Send"
                 android:visible="false"/>
-            <item
-                android:id="@+id/nav_order"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"
-                android:visible="false"/>
+
             <item
                 android:id="@+id/nav_feedback"
                 android:icon="@drawable/ic_menu_send"

@@ -6,18 +6,29 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -38,9 +50,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public class OrderActivity extends AppCompatActivity {
+public class OrderActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     UniversalAsyncTask uniTask;
-    private ProgressDialog mProgressDialog;
+
     private ProgressBar firstBar = null;
     enum AsyncActivities
     {
@@ -49,6 +61,7 @@ public class OrderActivity extends AppCompatActivity {
         CANCEL_REQUEST,
     };
     AsyncActivities current_task = AsyncActivities.NONE;
+    private ProgressDialog mProgressDialog;
     private void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -71,8 +84,54 @@ public class OrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            setContentView(R.layout.activity_order);
+            setContentView(R.layout.order_parent_layout);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.order_toolbar);
+            setSupportActionBar(toolbar);
             Bundle bundle = getIntent().getExtras();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.order_drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            {
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+
+                    //invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
+
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    ImageView nav_back = (ImageView)findViewById(R.id.imageView);
+                    Bitmap navImg = SharedData.GetUserpic();
+                    if(nav_back!= null)
+                    {
+                        if(navImg == null) {
+                            LoadProfileImage lfi = new LoadProfileImage(nav_back);
+                            if (lfi != null) {
+                                lfi.execute();
+                            }
+                        }
+                        RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
+                        drawable.setCircular(true);
+                        nav_back.setImageDrawable(drawable);
+                        //bmImage.setImageBitmap(result);
+                    }
+
+                    TextView txt = (TextView)findViewById(R.id.userNameText);
+                    if(txt != null)
+                    {
+                        txt.setText(SharedData.GetUserName());
+                    }
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                }
+
+            };
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.order_nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
             // HandleBundleDataForUI(bundle);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,10 +147,23 @@ public class OrderActivity extends AppCompatActivity {
         activity_creation_first = true;
     }
 
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        SharedData.HandleNavigation(id,this);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.order_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        getMenuInflater().inflate(R.menu.order_screen,menu);
+        //getMenuInflater().inflate(R.menu.order_screen,menu);
         return true;
     }
     @Override
@@ -637,6 +709,49 @@ public class OrderActivity extends AppCompatActivity {
             return false;
         }
         return true;
+
+    }
+
+    private class LoadProfileImage extends AsyncTask<Void, Void, Bitmap> {
+        ImageView bmImage;
+
+        public LoadProfileImage(ImageView bmImage) {
+            if(bmImage!= null)
+            {
+                this.bmImage = bmImage;
+            }
+        }
+
+        protected Bitmap doInBackground(Void...params) {
+            String urldisplay = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+            Bitmap user_pic = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                user_pic = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            SharedData.SetUserpic(user_pic);
+            return user_pic;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(bmImage!= null)
+            {
+                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),result);
+                drawable.setCircular(true);
+                bmImage.setImageDrawable(drawable);
+                TextView txt = (TextView)findViewById(R.id.userNameText);
+                if(txt != null)
+                {
+                    txt.setText(SharedData.GetUserName());
+                }
+                invalidateOptionsMenu();
+                //bmImage.setImageBitmap(result);
+            }
+        }
+
 
     }
 
