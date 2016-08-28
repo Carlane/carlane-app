@@ -163,7 +163,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        //getMenuInflater().inflate(R.menu.order_screen,menu);
+        getMenuInflater().inflate(R.menu.order_screen,menu);
         return true;
     }
     @Override

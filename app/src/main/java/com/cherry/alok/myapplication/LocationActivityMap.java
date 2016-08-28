@@ -2,6 +2,7 @@ package com.cherry.alok.myapplication;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -52,6 +54,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -68,9 +71,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.text.Text;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,7 +93,14 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     TextView locationText;
     BottomSheetBehavior behavior;
     Boolean launchingMapActivity ;
-
+    Bundle services_bundle = new Bundle();
+    enum AsyncActivities
+    {
+        NONE,
+        SERVICE_VERSION,
+        LOCATIONBASED_SERVICES,
+    };
+    AsyncActivities current_task = AsyncActivities.NONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,13 +242,17 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LatLng center = mMap.getCameraPosition().target;//only for simulartor
+                LatLng center = mMap.getCameraPosition().target;
+                //LatLng center = center  = new LatLng(17.436922,78.384738);//mMap.getCameraPosition().target;//only for simulartor
                 SharedData.SetRequestLocation(center);
                 /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
                 startActivity(selectSlot);*/
-                SetNavigation();
+                GetServiceVersion();
+                // / GetServicesForUserLocation();
+
             }
         });
+
 
         FloatingActionButton next_fab = (FloatingActionButton)findViewById(R.id.dummy_fab);
         next_fab.setOnClickListener(new View.OnClickListener() {
@@ -323,6 +343,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     {
         Bundle services_screen_data = new Bundle();
         services_screen_data.putBoolean("shownext",true);
+        services_screen_data.putBundle("services",services_bundle);
         SharedData.HandleNavigation(R.id.nav_services,this,services_screen_data);
     }
 
@@ -865,6 +886,53 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         return true;
     }
 
+    public void GetServicesForUserLocation()
+    {
+        String url = "locationservices/"+SharedData.GetUserId()+"/";
+        if(SharedData.GetRequestLocation() == null)
+        {
+
+        }
+        String urlParameters = String.format("latt=%s&longg=%s" ,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude);
+
+        uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,handler);
+
+        ArrayList<String> dummy = new ArrayList<String>();
+        uniTask.execute(dummy);
+        showProgressDialog("Getting Services in your Area");
+    }
+
+    public void GetServiceVersion()
+    {
+        String url = "services_version/"+SharedData.GetUserId()+"/";
+        String val = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("service_version" , "-5.0000");
+        String urlParameters = String.format("service_version=%s" , val);
+
+        uniTask = new UniversalAsyncTask(url,"POST",urlParameters,handler);
+
+        ArrayList<String> dummy = new ArrayList<String>();
+        current_task =  AsyncActivities.SERVICE_VERSION;
+        uniTask.execute(dummy);
+        showProgressDialog("Getting Services in your Area");
+    }
+
+    private ProgressDialog mProgressDialog;
+    private void showProgressDialog(String message) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
     private final Handler handler = new Handler() {
 
         public void handleMessage(Message msg) {
@@ -884,6 +952,28 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                     }
                     else
                     {
+                        switch(current_task)
+                        {
+                            case SERVICE_VERSION:
+                            {
+
+                                hideProgressDialog();
+                                if(IsUpdateRequired())
+                                {
+                                    PostOperation();
+                                }
+                                SetNavigation();
+                            }
+                            break;
+                            case LOCATIONBASED_SERVICES:
+                            {
+                                hideProgressDialog();
+                                PostOperation();
+                                SetNavigation();
+                            }
+                            break;
+
+                        }
 
 
 
@@ -898,6 +988,124 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
         }
     };
+    HashMap<String,String> services_distance_map = new HashMap<String,String>();
+    String updatedVersion = "";
+
+    public boolean IsUpdateRequired()
+    {
+        JSONObject jsonRootObject = null;
+        try
+        {
+            jsonRootObject = new JSONObject(uniTask.outputJasonString);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        JSONArray jsonArray = jsonRootObject.optJSONArray("response");
+        JSONObject jsonObject = null;
+        try
+        {
+            jsonObject = jsonArray.getJSONObject(0);
+            Boolean isversionupdated = jsonObject.getBoolean("isversionupdated");
+            updatedVersion = jsonObject.getString("system_version");
+            return isversionupdated;
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
+    public void PostOperation()
+    {
+
+
+
+
+        JSONArray reposnejSonArray = uniTask.GetOutputResult();
+
+        int count = reposnejSonArray.length();
+        for(int i=0;i<count;i++)
+        {
+            Bundle local_bundle = new Bundle();
+            JSONObject jsonresponseObject = null;
+            try
+            {
+                jsonresponseObject = reposnejSonArray.getJSONObject(i);
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+            Iterator<?> keys = jsonresponseObject.keys();
+            int service_count =0 ;
+            ClearSavedServiceIds(getApplicationContext());
+            while( keys.hasNext() )
+            {
+                String key = (String)keys.next();
+                String[] service_ids = key.split("~");
+                String service_tocheck ;
+
+                try {
+                    //this is the service id+ service name , it will be used as key in shared pre
+                    Integer.parseInt(service_ids[1]);//if this gives exception means other one has value of service id
+                    service_tocheck = service_ids[1];
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    service_tocheck = service_ids[0];
+                }
+
+
+                String value = null;
+                try
+                {
+                    value = jsonresponseObject.getString(key);
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+                //key contains both name and id
+                if(key.contains(service_tocheck))
+                {
+                    //put service id string as key and response map as value
+                    SharedData.UpdateSharedPref(getApplicationContext() , service_tocheck , value);
+                    //Also prepare another shared pref for storing services supported
+                    String saved_service_ids = SharedData.GetSharedPreString(getApplicationContext() , "saved_service_ids");//PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("saved_service_ids" , "");
+                    // add the latest service id
+                    saved_service_ids = saved_service_ids + "~" + service_tocheck;
+
+                    SharedData.UpdateSharedPref(getApplicationContext() , "saved_service_ids" , saved_service_ids);
+                    service_count ++;
+
+                }
+            }
+            SharedData.UpdateSharedPref(getApplicationContext(), "service_count" , service_count);
+            //system_version ,  service_version
+            if(updatedVersion != "")
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_version" , updatedVersion).commit();
+
+            String test1 = SharedData.GetSharedPreString(getApplicationContext() , "1");
+            String test2 = SharedData.GetSharedPreString(getApplicationContext() , "2");
+            String test3 = SharedData.GetSharedPreString(getApplicationContext() , "3");
+            String saved_test = SharedData.GetSharedPreString(getApplicationContext() , "saved_service_ids");
+            int test_count = SharedData.GetSharedPrefValue(getApplicationContext() , "service_count");
+
+        }
+        if(updatedVersion != "")
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_version" , updatedVersion).commit();
+    }
+
+
+    public void ClearSavedServiceIds(Context context)
+    {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("saved_service_ids" , "").commit();
+
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

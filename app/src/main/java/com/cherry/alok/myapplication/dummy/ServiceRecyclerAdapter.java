@@ -15,7 +15,11 @@ import android.widget.TextView;
 import com.cherry.alok.myapplication.R;
 import com.cherry.alok.myapplication.SharedData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +34,9 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
     Context context;
     OnItemClickListener clickListener;
     List<HashMap<String,String>> usercarDetailsMap = new ArrayList<>();
+    HashMap<Integer , String> services_in_area = new HashMap<Integer , String>();
+    List<JSONObject> services_attributes_json =  new ArrayList<JSONObject>();
+
 
 
     public void setHomeActivitiesList(Context context) {
@@ -41,9 +48,10 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
         }
     }
 
-    public ServiceRecyclerAdapter(Context context) {
+    public ServiceRecyclerAdapter(Context context , HashMap<Integer , String> services_map) {
         this.context = context;
         setHomeActivitiesList(context);
+        services_in_area = services_map;
     }
 
 
@@ -75,37 +83,77 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
 
         VersionViewHolder viewHolder = new VersionViewHolder(view);
         viewVersionList.add(viewHolder);
+        GetServicesFromSharedPrefs();
         return viewHolder;
+    }
+    ArrayList<Integer> service_id_list = new ArrayList<Integer>();
+    public void GetServicesFromSharedPrefs()
+    {
+        service_id_list = SharedData.GetSortedServicesFromSharedPrefs(context);
     }
 
     @Override
     public void onBindViewHolder(VersionViewHolder versionViewHolder, int i) {
         {
+
+            JSONObject attributes= SharedData.ParseServiceAttributes(context ,service_id_list.get(i).toString());
+            try {
+                String name = attributes.getString("name");
+                versionViewHolder.service_name.setText(name);
+
+                versionViewHolder.services_description_small.setText(attributes.getString("description"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             if(usercarDetailsMap != null) {
-                switch (i)
+/*                switch (i)
                 {
                     case 0:
                     {
-                        versionViewHolder.service_name.setText("Basic");
+                        GetServicesFromSharedPrefs();
+                        JSONObject attributes= SharedData.ParseServiceAttributes(context ,service_id_list.get(i).toString());
+                        try {
+                            String name = attributes.getString("name");
+                            versionViewHolder.service_name.setText(name);
+
                         versionViewHolder.services_description_small.setText("A power wash for your car with focus mainly on the exteriors surface.");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     break;
                     case 1:
                     {
-                        versionViewHolder.service_name.setText("Premium");
-                        versionViewHolder.services_description_small.setText("A balance of exterior and interior cleaning of your car.");
+                        JSONObject attributes= SharedData.ParseServiceAttributes(context ,service_id_list.get(i).toString());
+                        try {
+                            String name = attributes.getString("name");
+                            versionViewHolder.service_name.setText(name);
+                            versionViewHolder.services_description_small.setText("A balance of exterior and interior cleaning of your car.");
+                        }
+                            catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                     }
                     break;
                     case 2:
                     {
-                        versionViewHolder.service_name.setText("Platinum");
-                        versionViewHolder.services_description_small.setText("A thorough cleaning inside and out.");
+
+                        JSONObject   attributes=SharedData.ParseServiceAttributes(context ,service_id_list.get(i).toString());
+                        try {
+                            String name = attributes.getString("name");
+                        versionViewHolder.service_name.setText(name);
+                        versionViewHolder.services_description_small.setText("");
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                     }
                     break;
 
-                }
+                }*/
 
 
             }
@@ -116,9 +164,13 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
 
     @Override
     public int getItemCount() {
-        return 3;
+        return GetServiceCountFromSharedPref();
     }
 
+    public int GetServiceCountFromSharedPref()
+    {
+       return SharedData.GetSharedPrefValue(context , "service_count");
+    }
 
     class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView service_selected;
@@ -146,6 +198,7 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
             itemView.setOnClickListener(this);
 
         }
+
 
 
         @Override

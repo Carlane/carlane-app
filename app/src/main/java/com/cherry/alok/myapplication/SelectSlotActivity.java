@@ -394,10 +394,21 @@ public class SelectSlotActivity extends AppCompatActivity {
         current_task = AsyncActivities.INIT_REQ;
         showProgressDialog("Find A Car Wash Near You");
         String url = "request/"+SharedData.GetUserId()+"/";
-        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&latt=%s&longg=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude);
+        String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&latt=%s&longg=%s&inst=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude,GetAddtionalInstructions());
 
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,selectSlotHandler);
         uniTask.execute();
+    }
+
+    public String GetAddtionalInstructions()
+    {
+        EditText addtional_inst_text = (EditText)findViewById(R.id.addinst_editText);
+        String instruction = "";
+        if(addtional_inst_text != null)
+        {
+          instruction = addtional_inst_text.getText().toString();
+        }
+        return  instruction;
     }
 
     public void GetSlotInformation()
@@ -529,8 +540,10 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
             int userIdBkEnd = Integer.parseInt(jsonObject.optString("id").toString());
             Boolean error_in_Result = Boolean.parseBoolean(jsonObject.optString("error").toString());
+            String reason = jsonObject.optString("reason");
             if(error_in_Result == true)
             {
+                showSettingsAlert("Error in Request",reason);
                 return;
             }
             String driver_name = jsonObject.optString("driver");
@@ -612,6 +625,10 @@ public class SelectSlotActivity extends AppCompatActivity {
             mProgressDialog.setMessage(message);
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setIndeterminate(true);
+        }
+        else
+        {
+            mProgressDialog.setMessage(message);
         }
 
         mProgressDialog.show();

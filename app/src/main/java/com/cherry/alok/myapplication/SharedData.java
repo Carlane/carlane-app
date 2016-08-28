@@ -2,6 +2,7 @@ package com.cherry.alok.myapplication;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -10,16 +11,22 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by alok on 3/6/16.
@@ -556,6 +563,111 @@ public class SharedData {
     {
         return myDbHelper.FetchUser();
     }
+
+
+    public static void UpdateSharedPref(Context context , String key , int value)
+    {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(key, value).commit();
+    }
+
+    public static int GetSharedPrefValue(Context context , String key)
+    {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(key , 0);
+    }
+
+    public static void UpdateSharedPref(Context context , String key , String value)
+    {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key , value).commit();
+    }
+
+    public static String GetSharedPreString(Context context, String key)
+    {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(key , "");
+    }
+
+
+    public static ArrayList<Integer> GetSortedServicesFromSharedPrefs(Context context)
+    {
+        ArrayList<Integer> service_id_list = new ArrayList<Integer>();
+        String saved_service_ids = SharedData.GetSharedPreString(context , "saved_service_ids");
+        String[] service_id_array = saved_service_ids.split("~");
+
+        for(int i =0 ;i < service_id_array.length ; i++)
+        {
+            try {
+                int x = Integer.parseInt(service_id_array[i]);
+                service_id_list.add(x);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        Collections.sort(service_id_list);
+        //convert each of these string to integers
+        return service_id_list;
+
+    }
+
+    public static JSONObject ParseServiceAttributes(Context context , String key)
+    {
+       String service_attributes =  GetSharedPreString(context, key);
+       service_attributes = "[" + service_attributes + "]";
+        return  PostOperation(service_attributes);
+
+    }
+
+    public static JSONObject PostOperation(String jsonString)
+    {
+        try {
+            String newrespo = "{alternate_driver:"+jsonString+"}";
+            int p =0;
+            p++;
+            JSONObject jsonRootObject = new JSONObject(newrespo);
+            JSONArray reposnejSonArray = jsonRootObject.optJSONArray("alternate_driver");
+
+            JSONArray reposnejSonArray2 = new JSONArray(jsonString);
+
+            int count = reposnejSonArray.length();
+            for(int i=0;i<count;i++)
+            {
+                Bundle local_bundle = new Bundle();
+                JSONObject jsonresponseObject = null;
+                try
+                {
+                    jsonresponseObject = reposnejSonArray.getJSONObject(i);
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+                Iterator<?> keys = jsonresponseObject.keys();
+                return jsonresponseObject;
+/*                while( keys.hasNext() )
+                {
+                    String key = (String)keys.next();
+
+
+
+                    String value = null;
+                    try
+                    {
+                        value = jsonresponseObject.getString(key);
+                    }
+                    catch (JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    String abcd = key +value;
+
+                }*/
+
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
 
 

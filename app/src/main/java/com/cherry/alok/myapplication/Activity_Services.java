@@ -56,6 +56,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
     BottomSheetBehavior behavior;
     BottomSheetBehavior behavior_smallbottomsheet;
     Boolean shownext = false;
+    ArrayList<Integer> service_id_list = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +66,21 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
+        Bundle service_bundle = null;
+        final HashMap<Integer, String> services_status = new HashMap<Integer , String>();
         if(bundle != null)
         {
             shownext = bundle.getBoolean("shownext");
+            service_bundle = bundle.getBundle("services");
+
             bundle = null;
         }
+
+
+        for (String key : service_bundle.keySet()) {
+            services_status.put(Integer.parseInt(key),service_bundle.getString(key)); //To Implement
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -109,7 +120,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         navigationView.setNavigationItemSelectedListener(this);
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.services_collapsing_toolbar);
-        collapsingToolbar.setTitle("Packages");
+        collapsingToolbar.setTitle("Select A Packages");
 
         ImageView header = (ImageView) findViewById(R.id.services_header);
 
@@ -148,7 +159,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
 
         if (serviceRecyclerAdapter == null) {
-            serviceRecyclerAdapter = new ServiceRecyclerAdapter(this);
+            serviceRecyclerAdapter = new ServiceRecyclerAdapter(this , services_status);
             recyclerView.setAdapter(serviceRecyclerAdapter);
         }
 
@@ -214,10 +225,12 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
 
 
+        GetServicesFromSharedPrefs();
         serviceRecyclerAdapter.SetOnItemClickListener(new ServiceRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
+                TextView services_user_notice = (TextView)findViewById(R.id.services_user_notice);
                 Button next_button = (Button)findViewById(R.id.service_select_next);
                 switch (position) {
                     case 0:
@@ -225,8 +238,11 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                         service_cost_small_btmsheet.setText("BASIC INR 400");
+                        {
+                            next_button.setEnabled(true);
+                        }
 
-                        next_button.setEnabled(true);
+
                         SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
@@ -234,14 +250,23 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                         //SharedData.SetService(position+1);
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         service_cost_small_btmsheet.setText("PREMIUM INR 500");
-                        next_button.setEnabled(true);
+                        {
+                            next_button.setEnabled(true);
+                            services_user_notice.setText(services_status.get(position+1));
+                        }
+                        {
+
+                        }
                         SetTexts(position);
                         SharedData.SetService(position+1);
                         break;
                     case 2:
                        // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         service_cost_small_btmsheet.setText("PLATINUM INR 600");
-                        next_button.setEnabled(true);
+                        {
+                            next_button.setEnabled(true);
+                        }
+
                         //SharedData.SetService(position+1);
                         SetTexts(position);
                         SharedData.SetService(position+1);
@@ -283,6 +308,19 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
 
     }
+
+    public JSONObject GetServiceAttributes(int i )
+    {
+
+        JSONObject attributes= SharedData.ParseServiceAttributes(getApplicationContext() ,service_id_list.get(i).toString());
+        return attributes;
+    }
+
+    public void GetServicesFromSharedPrefs()
+    {
+        service_id_list = SharedData.GetSortedServicesFromSharedPrefs(getApplicationContext());
+    }
+
     private void SetNavigation()
     {
         Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
@@ -290,84 +328,89 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
     }
     public void SetTexts(int i)
     {
-        TextView service_name_bottomsheet = (TextView)findViewById(R.id.service_name_bottomsheet);
-        ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
-        TextView internal_text1 = (TextView)findViewById(R.id.text_1);
-        TextView internal_text2 = (TextView)findViewById(R.id.text_2);
-        TextView internal_text3 = (TextView)findViewById(R.id.text_3);
-        TextView internal_text4 = (TextView)findViewById(R.id.text_4);
-        TextView internal_text5 = (TextView)findViewById(R.id.text_5);
-        TextView internal_text6 = (TextView)findViewById(R.id.text_5);
+        try {
+            JSONObject attributes = GetServiceAttributes(i);
+            TextView service_name_bottomsheet = (TextView)findViewById(R.id.service_name_bottomsheet);
+            ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
+            TextView internal_text1 = (TextView)findViewById(R.id.text_1);
+            TextView internal_text2 = (TextView)findViewById(R.id.text_2);
+            TextView internal_text3 = (TextView)findViewById(R.id.text_3);
+            TextView internal_text4 = (TextView)findViewById(R.id.text_4);
+            TextView internal_text5 = (TextView)findViewById(R.id.text_5);
+            TextView internal_text6 = (TextView)findViewById(R.id.text_5);
 
 
-        TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
-        TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
-        TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
-        TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
-        TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
-        TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
-        TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
-        TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
-        TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
+            TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
+            TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
+            TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
+            TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
+            TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
+            TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
+            TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
+            TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
+            TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
 
 
-        TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
-        TextView text_cost_suv = (TextView)findViewById(R.id.cost_text_suv);
+            TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
+            TextView text_cost_suv = (TextView)findViewById(R.id.cost_text_suv);
 
-        switch(i)
-        {
-            case 0:
+            switch(i)
             {
-                service_name_bottomsheet.setText("Basic Wash");
-                internal_text1.setText("1. Mats Wash(rubber Only");
-                external_text1.setText("1. Car exterior foam wash");
-                external_text2.setText("2. Car exterior body black fiber    parts polish ");
-                external_text3.setText("3. Tyre cleaning");
-                external_text4.setText("4. Tyre Polish");
-                external_text5.setText("5. Glass cleaning");
-                washlogo.setImageResource(R.drawable.lightening);
+                case 0:
+                {
+                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
+                    internal_text1.setText("1. "+ attributes.getString("attribute_1"));
+                    external_text1.setText("1. " + attributes.getString("attribute_11"));
+                    external_text2.setText("2. " + attributes.getString("attribute_12"));
+                    external_text3.setText("3. " + attributes.getString("attribute_13"));
+                    external_text4.setText("4. " + attributes.getString("attribute_14"));
+                    external_text5.setText("5. " + attributes.getString("attribute_15"));
+                    washlogo.setImageResource(R.drawable.lightening);
 
+                }
+                break;
+                case 1:
+                {
+                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
+                    internal_text1.setText("1. " + attributes.getString("attribute_1"));
+                    internal_text2.setText("2. " + attributes.getString("attribute_2"));
+                    internal_text3.setText("3. " + attributes.getString("attribute_3"));
+                    external_text1.setText("1. " + attributes.getString("attribute_11"));
+                    external_text2.setText("2. " + attributes.getString("attribute_12"));
+                    external_text3.setText("3. " + attributes.getString("attribute_13"));
+                    external_text4.setText("4. " + attributes.getString("attribute_14"));
+                    external_text5.setText("5. " + attributes.getString("attribute_15"));
+                    washlogo.setImageResource(R.drawable.balance);
+
+                }
+                break;
+                case 2:
+                {
+                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
+                    internal_text1.setText("1. " + attributes.getString("attribute_1"));
+                    internal_text2.setText("2. " + attributes.getString("attribute_2"));
+                    internal_text3.setText("3. " + attributes.getString("attribute_3"));
+                    internal_text4.setText("4. " + attributes.getString("attribute_4"));
+                    internal_text5.setText("5. " + attributes.getString("attribute_5"));
+                    internal_text6.setText("6. " + attributes.getString("attribute_6"));
+
+                    external_text1.setText("1. " + attributes.getString("attribute_11"));
+                    external_text2.setText("2. " + attributes.getString("attribute_12"));
+                    external_text3.setText("3. " + attributes.getString("attribute_13"));
+                    external_text4.setText("");
+                    external_text4.setText("4. " + attributes.getString("attribute_14"));
+                    external_text5.setText("5. " + attributes.getString("attribute_15"));
+                    external_text6.setText("6. " + attributes.getString("attribute_16"));
+                    external_text7.setText("7. " + attributes.getString("attribute_17"));
+                    external_text8.setText("8. " + attributes.getString("attribute_18"));
+                    washlogo.setImageResource(R.drawable.star);
+
+
+                }
+                break;
             }
-            break;
-            case 1:
-            {
-                service_name_bottomsheet.setText("Premium Wash");
-                internal_text1.setText("1. Mats Wash(rubber Only");
-                internal_text2.setText("2. Vaccuming  (except Dickey)");
-                internal_text3.setText("3. Total interior car wiping ");
-                external_text1.setText("1. Car exterior foam wash");
-                external_text2.setText("2. Car exterior body black fiber    parts polish ");
-                external_text3.setText("3. Tyre cleaning");
-                external_text4.setText("4. Tyre Polish");
-                external_text5.setText("5. Glass cleaning");
-                washlogo.setImageResource(R.drawable.balance);
-
-            }
-            break;
-            case 2:
-            {
-                service_name_bottomsheet.setText("Platinum Wash");
-                internal_text1.setText("1. Mats Wash(rubber Only");
-                internal_text2.setText("2. Vaccuming  (except Dickey)");
-                internal_text3.setText("3. Total interior car wiping ");
-                internal_text4.setText("4. Dash board polish ");
-                internal_text5.setText("5. Dickey vacuuming ");
-                internal_text6.setText("6. Stepney cleaning & polish ");
-
-                external_text1.setText("1. Car exterior foam wash");
-                external_text2.setText("2. Car exterior body black fiber    parts polish ");
-                external_text3.setText("3. Tyre cleaning and Tyre Polish");
-                external_text4.setText("");
-                external_text4.setText("4. Glass cleaning");
-                external_text5.setText("5. Engine wash");
-                external_text6.setText("6. Alloy Wheels Cleaning");
-                external_text7.setText("7. Fuel cap cleaning");
-                external_text8.setText("8. Wiper water filling");
-                washlogo.setImageResource(R.drawable.star);
-
-
-            }
-            break;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
 

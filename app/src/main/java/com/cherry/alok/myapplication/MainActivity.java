@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity
         if(userdetailsFromDB.size() <=0) {
             Intent introIntent = new Intent(this, PagerActivity.class);
             startActivity(introIntent);
+            String service_version = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("service_version" , "-0.00001");
+
+            if(Float.parseFloat(service_version )< 0)
+            {
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_version", "0.00000").commit();
+            }
 
         }
 
