@@ -1,11 +1,14 @@
 package com.cherry.alok.myapplication;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -57,6 +60,13 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
     BottomSheetBehavior behavior_smallbottomsheet;
     Boolean shownext = false;
     ArrayList<Integer> service_id_list = new ArrayList<Integer>();
+    enum AsyncActivities
+    {
+        NONE,
+        SERVICE_VERSION,
+    };
+
+    AsyncActivities current_task = AsyncActivities.NONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,20 +76,12 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
-        Bundle service_bundle = null;
         final HashMap<Integer, String> services_status = new HashMap<Integer , String>();
         if(bundle != null)
         {
             shownext = bundle.getBoolean("shownext");
-            service_bundle = bundle.getBundle("services");
-
-            bundle = null;
         }
 
-
-        for (String key : service_bundle.keySet()) {
-            services_status.put(Integer.parseInt(key),service_bundle.getString(key)); //To Implement
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -160,7 +162,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
         if (serviceRecyclerAdapter == null) {
             serviceRecyclerAdapter = new ServiceRecyclerAdapter(this , services_status);
-            recyclerView.setAdapter(serviceRecyclerAdapter);
+
         }
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.services_cordinatorLayout);
@@ -226,6 +228,18 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
 
         GetServicesFromSharedPrefs();
+        if(serviceRecyclerAdapter != null && serviceRecyclerAdapter.GetServiceIdListCount() ==0)
+        {
+            //User does not have any version of services present in his machine , so fire REST API and get some
+            GetServiceVersion();
+
+        }
+        else
+        {
+            SetRecyclerAdapter();
+        }
+
+
         serviceRecyclerAdapter.SetOnItemClickListener(new ServiceRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -307,6 +321,43 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         });
 
 
+    }
+
+    public void SetRecyclerAdapter()
+    {
+        if(serviceRecyclerAdapter != null && recyclerView != null)
+            recyclerView.setAdapter(serviceRecyclerAdapter);
+    }
+
+    public void GetServiceVersion()
+    {
+        String url = "services_version/"+SharedData.GetUserId()+"/";
+        String val = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("service_version" , "-5.0000");
+        String urlParameters = String.format("service_version=%s" , val);
+
+        uniTask = new UniversalAsyncTask(url,"POST",urlParameters,handler);
+
+        ArrayList<String> dummy = new ArrayList<String>();
+        current_task =  AsyncActivities.SERVICE_VERSION;
+        uniTask.execute(dummy);
+        showProgressDialog("Getting Services in your Area");
+    }
+
+    private ProgressDialog mProgressDialog;
+    private void showProgressDialog(String message) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
     }
 
     public JSONObject GetServiceAttributes(int i )
@@ -470,11 +521,25 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     }
                     else
                     {
+                        switch(current_task)
+                        {
+                            case SERVICE_VERSION:
+                            {
 
-                        /*PostOperation();
-                        Intent usercar_intent = new Intent(getApplicationContext(),UserCar_CollapseHeader.class);
-                        usercar_intent.putExtra("userCarMap", (Serializable) usercarDetailsMap);
-                        startActivity(usercar_intent);*/
+                                hideProgressDialog();
+                                if(IsUpdateRequired())
+                                {
+                                    PostOperation();
+                                }
+                                SetRecyclerAdapter();
+                                GetServicesFromSharedPrefs();
+                            }
+                            break;
+
+
+                        }
+
+
 
 
                     }
@@ -487,12 +552,49 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
         }
     };
+
+    String updatedVersion = "";
+    public boolean IsUpdateRequired()
+    {
+        JSONObject jsonRootObject = null;
+        try
+        {
+            jsonRootObject = new JSONObject(uniTask.outputJasonString);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        JSONArray jsonArray = jsonRootObject.optJSONArray("response");
+        JSONObject jsonObject = null;
+        try
+        {
+            jsonObject = jsonArray.getJSONObject(0);
+            Boolean isversionupdated = jsonObject.getBoolean("isversionupdated");
+            updatedVersion = jsonObject.getString("system_version");
+            return isversionupdated;
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
     public void PostOperation()
     {
+
+
+
+
         JSONArray reposnejSonArray = uniTask.GetOutputResult();
+
         int count = reposnejSonArray.length();
         for(int i=0;i<count;i++)
         {
+            Bundle local_bundle = new Bundle();
             JSONObject jsonresponseObject = null;
             try
             {
@@ -503,11 +605,24 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                 e.printStackTrace();
             }
             Iterator<?> keys = jsonresponseObject.keys();
-            String data = new String();
-            HashMap<String,String> responseMap = new HashMap<String,String>();
+            int service_count =0 ;
+            ClearSavedServiceIds(getApplicationContext());
             while( keys.hasNext() )
             {
                 String key = (String)keys.next();
+                String[] service_ids = key.split("~");
+                String service_tocheck ;
+
+                try {
+                    //this is the service id+ service name , it will be used as key in shared pre
+                    Integer.parseInt(service_ids[1]);//if this gives exception means other one has value of service id
+                    service_tocheck = service_ids[1];
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    service_tocheck = service_ids[0];
+                }
+
+
                 String value = null;
                 try
                 {
@@ -517,13 +632,42 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                 {
                     e.printStackTrace();
                 }
+                //key contains both name and id
+                if(key.contains(service_tocheck))
+                {
+                    //put service id string as key and response map as value
+                    SharedData.UpdateSharedPref(getApplicationContext() , service_tocheck , value);
+                    //Also prepare another shared pref for storing services supported
+                    String saved_service_ids = SharedData.GetSharedPreString(getApplicationContext() , "saved_service_ids");//PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("saved_service_ids" , "");
+                    // add the latest service id
+                    saved_service_ids = saved_service_ids + "~" + service_tocheck;
 
+                    SharedData.UpdateSharedPref(getApplicationContext() , "saved_service_ids" , saved_service_ids);
+                    service_count ++;
 
-                responseMap.put(key, value);
-
-                data += value+"-";
+                }
             }
-            usercarDetailsMap.add(responseMap);
+            SharedData.UpdateSharedPref(getApplicationContext(), "service_count" , service_count);
+            //system_version ,  service_version
+            if(updatedVersion != "")
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_version" , updatedVersion).commit();
+
+            String test1 = SharedData.GetSharedPreString(getApplicationContext() , "1");
+            String test2 = SharedData.GetSharedPreString(getApplicationContext() , "2");
+            String test3 = SharedData.GetSharedPreString(getApplicationContext() , "3");
+            String saved_test = SharedData.GetSharedPreString(getApplicationContext() , "saved_service_ids");
+            int test_count = SharedData.GetSharedPrefValue(getApplicationContext() , "service_count");
+
         }
+        if(updatedVersion != "")
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_version" , updatedVersion).commit();
     }
+
+
+    public void ClearSavedServiceIds(Context context)
+    {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("saved_service_ids" , "").commit();
+
+    }
+
 }

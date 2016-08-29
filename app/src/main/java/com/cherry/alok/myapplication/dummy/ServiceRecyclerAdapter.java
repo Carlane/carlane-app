@@ -92,6 +92,11 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
         service_id_list = SharedData.GetSortedServicesFromSharedPrefs(context);
     }
 
+    public Integer GetServiceIdListCount()
+    {
+        return service_id_list.size();
+    }
+
     @Override
     public void onBindViewHolder(VersionViewHolder versionViewHolder, int i) {
         {

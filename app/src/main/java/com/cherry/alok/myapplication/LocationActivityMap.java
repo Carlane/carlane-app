@@ -243,11 +243,12 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             @Override
             public void onClick(View v) {
                 LatLng center = mMap.getCameraPosition().target;
-                //LatLng center = center  = new LatLng(17.436922,78.384738);//mMap.getCameraPosition().target;//only for simulartor
+               // LatLng center = center  = new LatLng(17.436922,78.384738);//mMap.getCameraPosition().target;//only for simulartor
                 SharedData.SetRequestLocation(center);
+                SetNavigation();
                 /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
                 startActivity(selectSlot);*/
-                GetServiceVersion();
+                //GetServiceVersion();
                 // / GetServicesForUserLocation();
 
             }
@@ -343,7 +344,6 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     {
         Bundle services_screen_data = new Bundle();
         services_screen_data.putBoolean("shownext",true);
-        services_screen_data.putBundle("services",services_bundle);
         SharedData.HandleNavigation(R.id.nav_services,this,services_screen_data);
     }
 
