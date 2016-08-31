@@ -75,7 +75,16 @@ public class SignInFragment extends Fragment implements
     private OnFragmentInteractionListener mListener;
     GoogleSignInAccount userGoogAcct;
 
-    public SignInFragment() {
+    public SignInFragment()
+    {
+        if(mGoogleApiClient != null)
+        {
+            try {
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         // Required empty public constructor
     }
 
@@ -124,6 +133,7 @@ public class SignInFragment extends Fragment implements
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
+        mGoogleApiClient = SharedData.GetGoogleApiClient();
         if(mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .enableAutoManage(getActivity() /* FragmentActivity */, (GoogleApiClient.OnConnectionFailedListener) this /* OnConnectionFailedListener */)
@@ -140,21 +150,7 @@ public class SignInFragment extends Fragment implements
                     signIn();
                 }
             });
-            Button signoutBtn = (Button) signInRootView.findViewById(R.id.sign_out_button);
-            signoutBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    signOut();
-                }
-            });
 
-            Button disconnectBtn = (Button) signInRootView.findViewById(R.id.disconnect_button);
-            disconnectBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    revokeAccess();
-                }
-            });
 
 
 
@@ -301,12 +297,12 @@ public class SignInFragment extends Fragment implements
             case R.id.sign_in_button:
                 signIn();
                 break;
-            case R.id.sign_out_button:
+/*            case R.id.sign_out_button:
                 signOut();
                 break;
             case R.id.disconnect_button:
                 revokeAccess();
-                break;
+                break;*/
         }
     }
     private void revokeAccess() {
@@ -331,13 +327,13 @@ public class SignInFragment extends Fragment implements
     private void updateUI(boolean signedIn) {
         try {
             if (signedIn) {
-                getView().findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-                getView().findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
+               // getView().findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+               // getView().findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
             } else {
                 //mStatusTextView.setText(R.string.signed_out);
 
-                getView().findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
+               // getView().findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+               // getView().findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,6 +347,10 @@ public class SignInFragment extends Fragment implements
         if (requestCode == 9001) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
+                if(mGoogleApiClient != null)
+                {
+                    SharedData.SetGoogleApiClient(mGoogleApiClient);
+                }
                 GoogleSignInAccount acct = result.getSignInAccount();
                 userGoogAcct = acct;
                 updateUI(true);

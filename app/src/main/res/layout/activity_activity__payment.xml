@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.cherry.alok.myapplication.Activity_Payment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/payment_message_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="You Need To Pay"
+            android:textAlignment="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/final_cost"
+            android:text="INR "
+            android:textSize="24sp"
+            android:textColor="@color/deep_orange"
+            android:textAlignment="center"/>
+
+
+        </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/payment_message_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    style="@style/LinearLayoutStyleVerticalNoPadding"
+                    android:layout_width="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textview_customerheading"
+                        style="@style/TextViewStyleXVerySmall"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin" />
+
+                    <LinearLayout
+                        android:id="@+id/textview_customerline1"
+                        style="@style/LinearLayoutStyleHorizontalReview" >
+
+                        <TextView
+                            android:id="@+id/textview_customerline1_key"
+                            style="@style/TextViewStyleReviewLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:text="Service Cost"/>
+
+                        <TextView
+                            android:id="@+id/service_cost_value"
+                            style="@style/TextViewStyleReviewValue"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/textview_customerline2"
+                        style="@style/LinearLayoutStyleHorizontalReview" >
+
+                        <TextView
+                            android:id="@+id/textview_customerline2_key"
+                            style="@style/TextViewStyleReviewLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:text="Convenience Charges"/>
+
+                        <TextView
+                            android:id="@+id/convenience_cost_txt"
+                            style="@style/TextViewStyleReviewValue"
+                            android:layout_width="0dp"
+                            android:text="0.0"
+                            android:layout_weight=".5" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/textview_customerline3"
+                        style="@style/LinearLayoutStyleHorizontalReview" >
+
+                        <TextView
+                            android:id="@+id/textview_customerline3_key"
+                            style="@style/TextViewStyleReviewLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:text="Promotion Applied"/>
+
+                        <TextView
+                            android:id="@+id/promo_value"
+                            style="@style/TextViewStyleReviewValue"
+                            android:layout_width="0dp"
+                            android:text="0.0"
+                            android:layout_weight=".5" />
+                    </LinearLayout>
+
+
+
+
+                    <LinearLayout
+                        android:id="@+id/textview_recipientline1"
+                        style="@style/LinearLayoutStyleHorizontalReview" >
+
+                        <TextView
+                            android:id="@+id/textview_recipientline1_key"
+                            style="@style/TextViewStyleReviewLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:text="Tax"/>
+
+                        <TextView
+                            android:id="@+id/tax_value"
+                            style="@style/TextViewStyleReviewValue"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/textview_recipientheading"
+                        style="@style/TextViewStyleXVerySmall"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp" />
+
+                    <View
+                        android:id="@+id/line_recipient"
+                        style="@style/LineViewStyle"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+
+
+                    <LinearLayout
+                        android:id="@+id/textview_recipientline2"
+                        style="@style/LinearLayoutStyleHorizontalReview" >
+
+                        <TextView
+                            android:id="@+id/textview_recipientline2_key"
+                            style="@style/TextViewStyleReviewLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:text="Total"/>
+
+                        <TextView
+                            android:id="@+id/total_value"
+                            style="@style/TextViewStyleReviewValue"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5" />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/textview_recipientheading2"
+                        style="@style/TextViewStyleXVerySmall"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="4dp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Payment Methods"
+        android:textAlignment="center"/>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/addtion_inst_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/payment_options_credit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.8">
+                <ImageView
+                    android:id="@+id/img_cerdit_select"
+                    android:layout_weight="0.2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/check_light"
+                    />
+                <TextView
+                    android:id="@+id/txt_credit"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.8"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="30dp"
+                    android:textSize="18sp"
+                    android:text="Credit Card"/>
+
+            </LinearLayout>
+            <View
+                style="@style/LineViewStyle" />
+            <LinearLayout
+                android:id="@+id/payment_options_layout_netbanking"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.8">
+                <ImageView
+                    android:id="@+id/img_netbanking_select"
+                    android:layout_weight="0.2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/check_light"
+                    />
+                <TextView
+                    android:id="@+id/txt_netbanking"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.8"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="30dp"
+                    android:textSize="18sp"
+                    android:text="Net Banking"/>
+
+            </LinearLayout>
+            <View
+
+                style="@style/LineViewStyle" />
+            <LinearLayout
+                android:id="@+id/payment_options_layout_paytm"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.8">
+                <ImageView
+                    android:id="@+id/img_paytm_select"
+                    android:layout_weight="0.2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/check_light"
+                    />
+                <TextView
+                    android:id="@+id/txt_paytm"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.8"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="30dp"
+                    android:textSize="18sp"
+                    android:text="Paytm"/>
+
+            </LinearLayout>
+            <View
+
+                style="@style/LineViewStyle" />
+            <LinearLayout
+                android:id="@+id/payment_options_layout_cash"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.8">
+                <ImageView
+                    android:id="@+id/img_cash_select"
+                    android:layout_weight="0.2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/checkgreen"
+                    />
+                <TextView
+                    android:id="@+id/txt_cash"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.8"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="30dp"
+                    android:textSize="18sp"
+                    android:text="Cash After Service"/>
+
+            </LinearLayout>
+            <View
+
+                style="@style/LineViewStyle" />
+
+            <Button
+                android:id="@+id/place_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Place Order"
+                android:shadowColor="#00ccff"
+                android:shadowRadius="0.75"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                style="@style/ButtonStylePositiveBlue2"
+                />
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+    </LinearLayout>
+
+</ScrollView>

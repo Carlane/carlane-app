@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -32,6 +33,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -87,7 +89,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             setContentView(R.layout.order_parent_layout);
             Toolbar toolbar = (Toolbar) findViewById(R.id.order_toolbar);
             setSupportActionBar(toolbar);
-            Bundle bundle = getIntent().getExtras();
+
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.order_drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,9 +109,10 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
                     if(nav_back!= null)
                     {
                         if(navImg == null) {
-                            LoadProfileImage lfi = new LoadProfileImage(nav_back);
+                            LoadProfileImage lfi = new LoadProfileImage(nav_back , true);
                             if (lfi != null) {
-                                lfi.execute();
+                                String userimageurl =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+                                lfi.execute(userimageurl);
                             }
                         }
                         RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
@@ -132,6 +135,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.order_nav_view);
             navigationView.setNavigationItemSelectedListener(this);
+            RegisterSignout();
             // HandleBundleDataForUI(bundle);
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,6 +149,23 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             InitCarDetailsInfoReq();
         }
         activity_creation_first = true;
+    }
+
+    public void RegisterSignout()
+    {
+        Button sign_out = (Button)findViewById(R.id.order_signout);
+        sign_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedData.DeleteAllUser();
+                SharedData.DeleteAllUserCar();
+                //SharedData.SignOutGoogle();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -190,7 +211,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     }
 
     public void UpdateJointLocation() {
-        TextView joint_location_text = (TextView) findViewById(R.id.textview_jointLocation_key_value);
+        ImageView joint_location_text = (ImageView) findViewById(R.id.map);
         joint_location_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +234,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     }
 
     public void UpdateDriverMobile(final String driver_mobile) {
-        TextView driver_mobile_text = (TextView) findViewById(R.id.driver_phone_value);
+        ImageView driver_mobile_text = (ImageView) findViewById(R.id.driver_call);
         driver_mobile_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,7 +252,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(intent);
             }
         });
-        driver_mobile_text.setText(driver_mobile);
+      //  driver_mobile_text.setText(driver_mobile);
     }
 
     public  void UpdateCarRegText()
@@ -310,6 +331,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             {
                 if(current_task == AsyncActivities.UPDATE_STATUS) {
                     PostStatusUpdateOperation();
+                    GetDriverPhoto();
                     hideProgressDialog();
                 }
                 if(current_task == AsyncActivities.CANCEL_REQUEST)
@@ -712,18 +734,57 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
 
     }
 
-    private class LoadProfileImage extends AsyncTask<Void, Void, Bitmap> {
-        ImageView bmImage;
+    public void GetDriverPhoto()
+    {
+        ImageView driver_pic = (ImageView)findViewById(R.id.driver_photo);
+        driver_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        public LoadProfileImage(ImageView bmImage) {
+            }
+        });
+        Bitmap navImg = SharedData.GetDriverpic();
+        if(driver_pic!= null)
+        {
+            if(navImg == null)
+            {
+                LoadProfileImage lfi = new LoadProfileImage(driver_pic , false);
+                if (lfi != null) {
+                    lfi.execute("https://s3-us-west-2.amazonaws.com/carlane-driver/3552075.jpg");
+                }
+            }
+            else
+            {
+                driver_pic.setVisibility(View.VISIBLE);
+                ProgressBar mProgressView = (ProgressBar)findViewById(R.id.loadingdata_progress);
+                mProgressView.setVisibility(View.INVISIBLE);
+            }
+
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
+            drawable.setCircular(true);
+            driver_pic.setImageDrawable(drawable);
+            //bmImage.setImageBitmap(result);
+        }
+    }
+
+    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+        Boolean fetchuser;
+
+        public LoadProfileImage(ImageView bmImage , boolean user) {
             if(bmImage!= null)
             {
                 this.bmImage = bmImage;
             }
+            fetchuser = user;
         }
 
-        protected Bitmap doInBackground(Void...params) {
-            String urldisplay = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+        protected Bitmap doInBackground(String...params) {
+            String urldisplay = params[0]; //PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+            if(fetchuser)
+            {
+                urldisplay = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("IMGURL", "defaultStringIfNothingFound");
+            }
             Bitmap user_pic = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
@@ -732,7 +793,13 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            SharedData.SetUserpic(user_pic);
+            if(fetchuser)
+            {
+                SharedData.SetUserpic(user_pic);
+            }
+            else {
+                SharedData.SetDriverpic(user_pic);
+            }
             return user_pic;
         }
 
@@ -742,13 +809,15 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
                 RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),result);
                 drawable.setCircular(true);
                 bmImage.setImageDrawable(drawable);
-                TextView txt = (TextView)findViewById(R.id.userNameText);
-                if(txt != null)
-                {
-                    txt.setText(SharedData.GetUserName());
-                }
+
+
                 invalidateOptionsMenu();
-                //bmImage.setImageBitmap(result);
+                if(!fetchuser) {
+                    ProgressBar mProgressView = (ProgressBar) findViewById(R.id.loadingdata_progress);
+                    bmImage.setVisibility(View.VISIBLE);
+                    mProgressView.setVisibility(View.INVISIBLE);//bmImage.setImageBitmap(result);
+                }
+
             }
         }
 

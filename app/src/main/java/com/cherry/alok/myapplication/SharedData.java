@@ -16,6 +16,10 @@ import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -58,6 +62,7 @@ public class SharedData {
     private static String USER_NAME;
     private static String USER_EMAIL;
     private static Bitmap USER_PIC;
+    private static Bitmap DRIVER_PIC;
     private static int SERVICE_TYPE;
     private static String USER_TOKEN;
     private static LatLng USER_SERVICE_LATLNG;
@@ -66,9 +71,32 @@ public class SharedData {
     private static String USER_DEFAULT_CAR_BRAND = null;
     private static int REQUEST_TIME_SLOT = -1;
 
+
+    private static GoogleApiClient mGoogleApiClient;
+
     public static void ReInitSlots() {
         for (int i = 0; i < 10; i++) {
             slotsInfo[i] = false;
+        }
+    }
+
+    public static void SetGoogleApiClient(GoogleApiClient client)
+    {
+        mGoogleApiClient = client;
+    }
+    public static GoogleApiClient GetGoogleApiClient()
+    {
+        return  mGoogleApiClient;
+    }
+
+    public static void SignOutGoogle()
+    {
+        if(mGoogleApiClient != null) {
+            try {
+                Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -117,6 +145,14 @@ public class SharedData {
 
     public static Bitmap GetUserpic() {
         return USER_PIC;
+    }
+
+    public static void SetDriverpic(Bitmap pic) {
+        DRIVER_PIC = pic;
+    }
+
+    public static Bitmap GetDriverpic() {
+        return DRIVER_PIC;
     }
 
     public static int GetService() {

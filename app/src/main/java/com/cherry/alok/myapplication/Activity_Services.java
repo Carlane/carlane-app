@@ -244,14 +244,13 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             @Override
             public void onItemClick(View view, int position) {
                 TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
-                TextView services_user_notice = (TextView)findViewById(R.id.services_user_notice);
+                //TextView services_user_notice = (TextView)findViewById(R.id.services_user_notice);
                 Button next_button = (Button)findViewById(R.id.service_select_next);
                 switch (position) {
                     case 0:
                         //view.animate().translationY(view.getHeight()*1).setDuration(500).start();
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                        service_cost_small_btmsheet.setText("BASIC INR 400");
                         {
                             next_button.setEnabled(true);
                         }
@@ -263,10 +262,8 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     case 1:
                         //SharedData.SetService(position+1);
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        service_cost_small_btmsheet.setText("PREMIUM INR 500");
                         {
                             next_button.setEnabled(true);
-                            services_user_notice.setText(services_status.get(position+1));
                         }
                         {
 
@@ -276,7 +273,6 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                         break;
                     case 2:
                        // behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                        service_cost_small_btmsheet.setText("PLATINUM INR 600");
                         {
                             next_button.setEnabled(true);
                         }
@@ -388,7 +384,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             TextView internal_text3 = (TextView)findViewById(R.id.text_3);
             TextView internal_text4 = (TextView)findViewById(R.id.text_4);
             TextView internal_text5 = (TextView)findViewById(R.id.text_5);
-            TextView internal_text6 = (TextView)findViewById(R.id.text_5);
+            TextView internal_text6 = (TextView)findViewById(R.id.text_6);
 
 
             TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
@@ -404,18 +400,32 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
             TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
             TextView text_cost_suv = (TextView)findViewById(R.id.cost_text_suv);
-
+            TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
+            service_cost_small_btmsheet.setText( attributes.getString("cost"));
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_cost" ,  attributes.getString("cost")).commit();
             switch(i)
             {
                 case 0:
                 {
                     service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
                     internal_text1.setText("1. "+ attributes.getString("attribute_1"));
+                    internal_text2.setText("");
+                    internal_text3.setText("");
+                    internal_text4.setText("");
+                    internal_text5.setText("");
+                    internal_text6.setText("");
+
+
                     external_text1.setText("1. " + attributes.getString("attribute_11"));
                     external_text2.setText("2. " + attributes.getString("attribute_12"));
                     external_text3.setText("3. " + attributes.getString("attribute_13"));
                     external_text4.setText("4. " + attributes.getString("attribute_14"));
                     external_text5.setText("5. " + attributes.getString("attribute_15"));
+
+                    external_text6.setText("");
+                    external_text7.setText("");
+                    external_text8.setText("");
+                    external_text9.setText("");
                     washlogo.setImageResource(R.drawable.lightening);
 
                 }
@@ -426,11 +436,20 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     internal_text1.setText("1. " + attributes.getString("attribute_1"));
                     internal_text2.setText("2. " + attributes.getString("attribute_2"));
                     internal_text3.setText("3. " + attributes.getString("attribute_3"));
+                    internal_text4.setText("");
+                    internal_text5.setText("");
+                    internal_text6.setText("");
+
+
                     external_text1.setText("1. " + attributes.getString("attribute_11"));
                     external_text2.setText("2. " + attributes.getString("attribute_12"));
                     external_text3.setText("3. " + attributes.getString("attribute_13"));
                     external_text4.setText("4. " + attributes.getString("attribute_14"));
                     external_text5.setText("5. " + attributes.getString("attribute_15"));
+                    external_text6.setText("");
+                    external_text7.setText("");
+                    external_text8.setText("");
+                    external_text9.setText("");
                     washlogo.setImageResource(R.drawable.balance);
 
                 }
@@ -454,6 +473,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     external_text6.setText("6. " + attributes.getString("attribute_16"));
                     external_text7.setText("7. " + attributes.getString("attribute_17"));
                     external_text8.setText("8. " + attributes.getString("attribute_18"));
+                    external_text9.setText("");
                     washlogo.setImageResource(R.drawable.star);
 
 

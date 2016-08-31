@@ -16,6 +16,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
         <LinearLayout
             style="@style/LinearLayoutStyleVerticalNoPadding"
             android:layout_width="match_parent" >
@@ -152,60 +153,81 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
+
             <LinearLayout
                 android:id="@+id/textview_transactionline1"
-                style="@style/LinearLayoutStyleHorizontalReview" >
+                style="@style/LinearLayoutStyleHorizontalReview"
+                android:textAlignment="center"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                >
 
                 <TextView
                     android:id="@+id/textview_transactionline1_key"
-                    style="@style/TextViewStyleReviewLabel"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5"
-                    android:text="Driver"/>
+                    style="@style/TextViewStyleReviewLabel2"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:text="Driver" />
 
                 <TextView
                     android:id="@+id/driver_name_text"
-                    style="@style/TextViewStyleReviewValue"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5" />
+                    style="@style/TextViewStyleReviewValue3"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="50dp"
+                    android:text="                  "
+                    android:visibility="invisible"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3">
+
+                            <ImageView
+                                android:id="@+id/driver_photo"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:visibility="invisible"
+                                />
+                            <ProgressBar
+                                android:id="@+id/loadingdata_progress"
+                                style="?android:attr/progressBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal|center_vertical"
+
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:id="@+id/driver_call"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="4dp"
+                            android:src="@drawable/blkphone"
+                            />
+                        <ImageView
+                            android:id="@+id/map"
+                            android:layout_marginLeft="4dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_vertical"
+
+                            android:src="@drawable/map"
+                            />
+
+
+                </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/textview_transactionline2"
-                style="@style/LinearLayoutStyleHorizontalReview" >
-
-                <TextView
-                    android:id="@+id/textview_transactionline2_key"
-                    style="@style/TextViewStyleReviewLabel"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5"
-                    android:text="Driver Phone"/>
-
-                <TextView
-                    android:id="@+id/driver_phone_value"
-                    style="@style/TextViewStyleReviewValue"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_jointLocation"
-                style="@style/LinearLayoutStyleHorizontalReview" >
-
-                <TextView
-                    android:id="@+id/textview_jointLocation_key"
-                    style="@style/TextViewStyleReviewLabel"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5"
-                    android:text="Joint Location"/>
-
-                <TextView
-                    android:id="@+id/textview_jointLocation_key_value"
-                    style="@style/TextViewStyleReviewValue"
-                    android:layout_width="0dp"
-                    android:layout_weight=".5"
-                    android:text="Open Location On Map"/>
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -551,7 +573,10 @@
         android:src="@android:drawable/ic_menu_delete"
        />
 
+
+
 </LinearLayout>
+
 
 
 

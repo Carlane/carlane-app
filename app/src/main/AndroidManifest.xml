@@ -49,9 +49,11 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.cherry.alok.myapplication.LocationActivityMap" />
+                android:value="com.cherry.alok.myapplication.Activity_Services" />
         </activity>
-        <activity android:name=".OrderActivity" android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".OrderReview" />
 
         <service android:name=".FirebaseMessagingService">
@@ -70,6 +72,12 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".FabHideActivity" />
+        <activity android:name=".Activity_Payment">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cherry.alok.myapplication.SelectSlotActivity" />
+        </activity>
+        <activity android:name=".Activity_LargeImage" android:theme="@android:style/Theme.Holo.Dialog"></activity>
     </application>
 
 </manifest>

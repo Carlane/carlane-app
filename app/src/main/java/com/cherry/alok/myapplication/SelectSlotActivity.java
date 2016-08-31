@@ -226,19 +226,23 @@ public class SelectSlotActivity extends AppCompatActivity {
         };
 
         confirm_request = (Button)findViewById(R.id.confirm_request);
-        confirm_request.setText("REQUEST YOUR "+ SharedData.GetServiceName().toUpperCase()+ " WASH");  ;
+        confirm_request.setText("CHECKOUT ");  ;
         confirm_request.setEnabled(false);
         confirm_request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+               HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
                 int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
                 if(userStatus > SharedData.UserStatus.CarProfile.getID())
                 {
                     showSettingsAlert("Request Ongoing Already","Sorry ! Currently we support only one active request at a time");
                     return;
                 }
-                InitRequest();
+                /*InitRequest();*/
+                Intent intent =  new Intent(getApplicationContext() , Activity_Payment.class);
+                String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&latt=%s&longg=%s&inst=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude,GetAddtionalInstructions());
+                intent.putExtra("request_param",urlParameters);
+                startActivity(intent);
             }
         });
         GetSlotInformation();
