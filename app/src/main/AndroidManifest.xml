@@ -7,8 +7,14 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+
 
     <application
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:label"
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -77,7 +83,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cherry.alok.myapplication.SelectSlotActivity" />
         </activity>
-        <activity android:name=".Activity_LargeImage" android:theme="@android:style/Theme.Holo.Dialog"></activity>
     </application>
 
 </manifest>

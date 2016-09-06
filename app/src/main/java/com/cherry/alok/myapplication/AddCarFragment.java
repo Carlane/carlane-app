@@ -1,17 +1,26 @@
 package com.cherry.alok.myapplication;
 
+import android.*;
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +32,25 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.msg91.sendotp.library.SendOtpVerification;
+import com.msg91.sendotp.library.Verification;
+import com.msg91.sendotp.library.VerificationListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-
+import android.util.Base64;
+import android.util.Log;import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ListIterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +60,7 @@ import java.util.List;
  * Use the {@link AddCarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddCarFragment extends Fragment {
+public class AddCarFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback, VerificationListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,6 +71,14 @@ public class AddCarFragment extends Fragment {
     private String mParam2;
 
     UniversalAsyncTask uniTask = null;
+    enum AsyncActivities
+    {
+        NONE,
+        GETCARS_MODELS,
+        SAVEPROFILE,
+    };
+    private Verification mVerification;//OTP
+
     String[] items = new String[]{"Brand","Maruti", "Hyundai"};//, "Chevrolet","Renault","Fiat","Datsun","BMW","Volkswagon","Mercedes"};
     String[] marutiModels = new String[]{"Model","Swift Dezire" , "Swift","Baleno","Celerio","Alto 800"};
 
@@ -80,7 +109,7 @@ public class AddCarFragment extends Fragment {
     public AddCarFragment() {
         // Required empty public constructor
 
-        carbrandList.add("Brand");
+       /* carbrandList.add("Brand");
         carbrandList.add("Chevrolet");
         carbrandList.add("Fiat");
         carbrandList.add("Ford");
@@ -92,7 +121,7 @@ public class AddCarFragment extends Fragment {
         carbrandList.add("Tata");
         carbrandList.add("Toyota");
         carbrandList.add("Skoda");
-        carbrandList.add("Volkswagen");
+        carbrandList.add("Volkswagen");*/
 
 
         /////// MARUTI   ////////
@@ -252,10 +281,10 @@ public class AddCarFragment extends Fragment {
 
 
     private ProgressDialog mProgressDialog;
-    private void showProgressDialog() {
+    private void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage("Saving User Details");
+            mProgressDialog.setMessage("message");
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setIndeterminate(true);
         }
@@ -268,6 +297,8 @@ public class AddCarFragment extends Fragment {
             mProgressDialog.hide();
         }
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -289,11 +320,13 @@ public class AddCarFragment extends Fragment {
         list.add("list 1");
         list.add("list 2");
         list.add("list 3");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(addCarView.getContext(),
+       /* ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(addCarView.getContext(),
                 android.R.layout.simple_spinner_item, carbrandList);
         dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         carbrand.setAdapter(dataAdapter);
-        carbrand.setSelection(1);
+        carbrand.setSelection(1);*/
+
+
         AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
         registrationNumberText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         //Obtain the User Id which is passed from parent activity
@@ -306,7 +339,7 @@ public class AddCarFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
                 //If the selection is Legit , populate the second spiner with data and display it to user
-                if(position > 0)
+                if(position >= 0)
                 {
                     final Spinner carmodel = (Spinner)addCarView.findViewById(R.id.CarModel);
                     //SetCarModelSpinnerVisibility(View.VISIBLE);
@@ -343,10 +376,113 @@ public class AddCarFragment extends Fragment {
             }
 
         });
+       /* if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
+        {
+            InitiatePermissionsForLocation(false);
+            return null;
+        }*/
+        RegisterInitiateSMSVerification();
+        tryAndPrefillPhoneNumber();
+        RegisterSubmitOtpVerfication();
+/*        MessageDigest md = null;
+        try {
+            PackageInfo info = getContext().getPackageManager().getPackageInfo(
+                    getContext().getPackageName(),
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+            }
+        } catch (PackageManager.NameNotFoundException e) {
 
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+        Log.i("SecretKey = ",Base64.encodeToString(md.digest(), Base64.DEFAULT));*/
+        GetCarBrandsAndModels();
         return addCarView;
     }
 
+    public void GetCarBrandsAndModels()
+    {
+        String url = "getcars/"+SharedData.GetUserId()+"/";
+
+        uniTask = new UniversalAsyncTask(url,"GET","",handler);
+
+        ArrayList<String> dummy = new ArrayList<String>();
+        current_task =  AsyncActivities.GETCARS_MODELS;
+        uniTask.execute(dummy);
+        showProgressDialog("Fetching Cars");
+    }
+
+    final int READPHONESTATE = 1;
+    final int READSMS =2;
+    private void tryAndPrefillPhoneNumber() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            TelephonyManager manager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            AutoCompleteTextView mPhoneNumber = (AutoCompleteTextView)addCarView.findViewById(R.id.mobile);
+            mPhoneNumber.setText(manager.getLine1Number());
+        } else {
+            InitiatePermissionsForREADINGPHONESTATE(false);
+        }
+    }
+
+
+    private void InitiatePermissionsForREADINGPHONESTATE(boolean showRationale)
+    {
+
+        if (showRationale) {
+
+           // ShowPermissionAlertDialog();
+
+        } else {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.READ_PHONE_STATE},
+                    READPHONESTATE);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch(requestCode)
+        {
+            case READPHONESTATE:
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    tryAndPrefillPhoneNumber();
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                        Snackbar.make(addCarView, "MyCarLane needs this info for autofilling your form", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                }
+            }
+            break;
+            case READSMS:
+            {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[0])) {
+                        Toast.makeText(getActivity(), "This application needs permission to read your SMS to automatically verify your "
+                                + "phone, you may disable the permission once you have been verified.", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                }
+                initiateVerificationAndSuppressPermissionCheck();
+            }
+            break;
+        }
+
+
+
+    }
+
+
+
+
+
+    AsyncActivities current_task = AsyncActivities.NONE;
     public void RegisterButtonClickHandler()
     {
         Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
@@ -371,11 +507,7 @@ public class AddCarFragment extends Fragment {
                                     .setAction("Action", null).show();
                             return;
                         }
-                        showProgressDialog();
-                        String url = "CarInfo/" + userId + "/";
-                        String urlParameters = String.format("carbrand=%s&carmodel=%s&registration_number=%s&mobile_number=%s", selecteditem.get(0).toLowerCase(), selecteditem.get(1), selecteditem.get(2).toUpperCase(),selecteditem.get(3));
-                        uniTask = new UniversalAsyncTask(url, "POST", urlParameters, handler);
-                        uniTask.execute(selecteditem);
+                        SaveProfile();
                     }
                     else
                     {
@@ -393,6 +525,16 @@ public class AddCarFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public void SaveProfile()
+    {
+        showProgressDialog("Saving Profile");
+        current_task = AsyncActivities.SAVEPROFILE;
+        String url = "CarInfo/" + userId + "/";
+        String urlParameters = String.format("carbrand=%s&carmodel=%s&registration_number=%s&mobile_number=%s", selecteditem.get(0), selecteditem.get(1), selecteditem.get(2).toUpperCase(),selecteditem.get(3));
+        uniTask = new UniversalAsyncTask(url, "POST", urlParameters, handler);
+        uniTask.execute(selecteditem);
     }
 
     public boolean ValidateMobileInfo()
@@ -442,7 +584,10 @@ public class AddCarFragment extends Fragment {
 
     public ArrayAdapter<String> GetCarModelAdapter(int carmodels)
     {
-        switch(carmodels)
+        //Get The Car Model Adapter Here
+        String carbrand = carbrandList.get(carmodels);
+        carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, GetCaModelFromBrand(carbrand));
+/*        switch(carmodels)
         {
             case 1:
             {
@@ -514,7 +659,7 @@ public class AddCarFragment extends Fragment {
             }
             break;
 
-        }
+        }*/
 
         return carmodeladapter;
     }
@@ -557,50 +702,239 @@ public class AddCarFragment extends Fragment {
 
     }
 
+
+    /*Verify BY OTP*/
+    public void RegisterInitiateSMSVerification()
+    {
+        Button sms_verification = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
+        sms_verification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createVerification(GetMobileNumber(),false,"91");
+            }
+        });
+    }
+
+    public void RegisterSubmitOtpVerfication()
+    {
+        /*
+         if (mVerification != null) {
+                mVerification.verify(code);
+        * */
+        Button verify_otp_btn = (Button)addCarView.findViewById(R.id.codeInputButton);
+        verify_otp_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mVerification != null) {
+                    String code = ((EditText) addCarView.findViewById(R.id.inputCode_text)).getText().toString();
+                    mVerification.verify(code);
+                }
+            }
+        });
+    }
+
+
+
+    void createVerification(String phoneNumber, boolean skipPermissionCheck, String countryCode) {
+        if (!skipPermissionCheck && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) ==
+                PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_SMS}, READSMS);
+
+        } else {
+            mVerification = SendOtpVerification.createSmsVerification(getContext(), phoneNumber, this, countryCode, true);
+            mVerification.initiate();
+        }
+    }
+
+    void initiateVerificationAndSuppressPermissionCheck() {
+        createVerification(GetMobileNumber(), true, "+91");
+    }
+
+    @Override
+    public void onInitiated(String response) {
+      Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
+        codeInputButton.setEnabled(true);
+        Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
+        btn_init_verify_getOTP.setEnabled(false);
+        Toast.makeText(getContext(), "You will receive OTP by SMS", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onInitiationFailed(Exception exception) {
+        /*Log.e(TAG, "Verification initialization failed: " + exception.getMessage());
+        hideProgressBarAndShowMessage(R.string.failed);*/
+        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
+        codeInputButton.setEnabled(false);
+        Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
+        btn_init_verify_getOTP.setEnabled(true);
+        Toast.makeText(getContext(), "OTP Initialization Failed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onVerified(String response) {
+        /*Log.d(TAG, "Verified!\n" + response);
+        hideProgressBarAndShowMessage(R.string.verified);
+        showCompleted();*/
+        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
+        codeInputButton.setEnabled(false);
+        codeInputButton.setText("Verified");
+        Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
+        btn_init_verify_getOTP.setEnabled(false);
+        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
+        addButton.setEnabled(true);
+        Toast.makeText(getContext(), "Mobile Number Verification Successful", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onVerificationFailed(Exception exception) {
+        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
+        codeInputButton.setEnabled(false);
+        codeInputButton.setText("Verified");
+        Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
+        btn_init_verify_getOTP.setEnabled(true);
+        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
+        addButton.setEnabled(false);
+        Toast.makeText(getContext(), "Mobile Number Verification Failed . Try Again", Toast.LENGTH_LONG).show();
+    }
+
+    /**/
+
     private final Handler handler = new Handler() {
 
         public void handleMessage(Message msg) {
 
             String aResponse = msg.getData().getString("taskstatus");
             hideProgressDialog();
-            if ((null != aResponse)) {
-                PostRequestOperation();
-
-                if(uniTask != null)
+            switch(current_task)
+            {
+                case SAVEPROFILE:
                 {
-                    if(!uniTask.IsSuccess())
-                    {
+                    if ((null != aResponse)) {
+                        PostRequestOperation();
 
-                        String reason = uniTask.ResultReason();
-                        Toast.makeText(getContext(), "Failed to Add Car - "+reason, Toast.LENGTH_LONG).show();
+                        if(uniTask != null)
+                        {
+                            if(!uniTask.IsSuccess())
+                            {
 
+                                String reason = uniTask.ResultReason();
+                                Toast.makeText(getContext(), "Failed to Add Car - "+reason, Toast.LENGTH_LONG).show();
+
+                            }
+                            else
+                            {
+                                if(!SharedData.InsertUserCar(selecteditem.get(1),selecteditem.get(0),selecteditem.get(2),"2015"))
+                                {
+                                    Snackbar.make(addCarView, "Failed To Add Car Info In App", Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null).show();
+                                }
+                                //Update User Car and User Phone Number in DB
+                                if(phoneupdate)
+                                {
+                                    SharedData.UpdateUserPhone(selecteditem.get(3));
+                                }
+
+                                SharedData.HandleNavigation(R.id.nav_location,getActivity());
+
+                            }
+                        }
                     }
                     else
                     {
-                        if(!SharedData.InsertUserCar(selecteditem.get(1),selecteditem.get(0),selecteditem.get(2),"2015"))
-                        {
-                            Snackbar.make(addCarView, "Failed To Add Car Info In App", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
-                        }
-                        //Update User Car and User Phone Number in DB
-                        if(phoneupdate)
-                        {
-                            SharedData.UpdateUserPhone(selecteditem.get(3));
-                        }
-
-                        SharedData.HandleNavigation(R.id.nav_location,getActivity());
-
+                        Toast.makeText(getContext(), "Not Got Response From Server.", Toast.LENGTH_SHORT).show();
                     }
                 }
+                break;
+                case GETCARS_MODELS:
+                {
+                    if ((null != aResponse)) {
+                        PostGetCarOperation();
+                    }
+                }
+                break;
             }
-            else
-            {
-                Toast.makeText(getContext(), "Not Got Response From Server.", Toast.LENGTH_SHORT).show();
-            }
+
+
 
 
         }
     };
+
+    public void PostGetCarOperation() {
+
+
+        JSONArray reposnejSonArray = uniTask.GetOutputResult();
+
+        int count = reposnejSonArray.length();
+        for (int i = 0; i < count; i++) {
+            JSONObject jsonresponseObject = null;
+            try {
+                jsonresponseObject = reposnejSonArray.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Iterator<?> keys = jsonresponseObject.keys();
+
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                carbrandList.add(key);
+
+
+                String value = null;
+                try {
+                    value = jsonresponseObject.getString(key);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //key contains both name and id
+            }
+
+            Collections.sort(carbrandList, String.CASE_INSENSITIVE_ORDER);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(addCarView.getContext(),
+                    android.R.layout.simple_spinner_item, carbrandList);
+            dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+            carbrand.setAdapter(dataAdapter);
+            carbrand.setSelection(0);
+        }
+    }
+
+    public List<String> GetCaModelFromBrand(String key) {
+
+
+        JSONArray reposnejSonArray = uniTask.GetOutputResult();
+        List<String> carModels = new ArrayList<String>() ;
+        int count = reposnejSonArray.length();
+        for (int i = 0; i < count; i++) {
+            JSONObject jsonresponseObject = null;
+            try {
+                jsonresponseObject = reposnejSonArray.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String value = null;
+            try {
+                value = jsonresponseObject.getString(key);
+                //Get all models from this but remove the first [ and last ] symbol
+                String newValue = value.substring(1, value.length()-1);
+                String[] allmodels = newValue.split(",");
+                for(int ii= 0; ii< allmodels.length ; ii++)
+                {
+                    carModels.add(allmodels[ii].substring(1,allmodels[ii].length()-1));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //key contains both name and id
+        }
+
+            Collections.sort(carModels, String.CASE_INSENSITIVE_ORDER);
+        return carModels;
+
+
+    }
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

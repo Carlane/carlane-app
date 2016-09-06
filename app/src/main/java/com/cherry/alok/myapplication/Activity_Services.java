@@ -112,9 +112,11 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                     txt.setText(SharedData.GetUserName());
                 }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                HideOnGoingRequestIfRequired();
             }
 
         };
+        RegisterSignOut();
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -319,6 +321,25 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
     }
 
+    public void RegisterSignOut()
+    {
+        Button singoutBtn = (Button)findViewById(R.id.services_signout);
+        singoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedData.DeleteAllUser();
+                SharedData.DeleteAllUserCar();
+                SharedData.SignOutGoogle();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+            }
+        });
+
+    }
+
     public void SetRecyclerAdapter()
     {
         if(serviceRecyclerAdapter != null && recyclerView != null)
@@ -516,7 +537,19 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-    @Override
+    public void HideOnGoingRequestIfRequired() {
+        NavigationView nav = (NavigationView) findViewById(R.id.services_nav_view);
+        Menu nav_Menu = nav.getMenu();
+        HashMap<String, String> userdetailsFromDB = SharedData.FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if (userStatus == SharedData.UserStatus.RequestPending.getID()) {
+            nav_Menu.findItem(R.id.nav_order).setVisible(true);
+        } else {
+            nav_Menu.findItem(R.id.nav_order).setVisible(false);
+        }
+    }
+
+        @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 

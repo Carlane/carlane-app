@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.support.v7.graphics.Palette;
 import android.widget.TextView;
@@ -89,11 +90,14 @@ public class UserCar_CollapseHeader extends AppCompatActivity implements Navigat
                         txt.setText(SharedData.GetUserName());
                     }
                     invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    HideOnGoingRequestIfRequired();
                 }
+
 
             };
             drawer.setDrawerListener(toggle);
             toggle.syncState();
+            RegisterSignOut();
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.user_car_nav_view);
             navigationView.setNavigationItemSelectedListener(this);
@@ -169,6 +173,25 @@ public class UserCar_CollapseHeader extends AppCompatActivity implements Navigat
             InitCarDetailsInfoReq();
         }
         SetRecyclerViewAdapter();
+    }
+
+    public void RegisterSignOut()
+    {
+        //
+        Button singoutBtn = (Button)findViewById(R.id.usercar_signout);
+        singoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedData.DeleteAllUser();
+                SharedData.DeleteAllUserCar();
+                SharedData.SignOutGoogle();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+            }
+        });
     }
 
     public void InitCarDetailsInfoReq()
@@ -258,6 +281,23 @@ public class UserCar_CollapseHeader extends AppCompatActivity implements Navigat
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.usercar_collapse_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void HideOnGoingRequestIfRequired()
+    {
+        NavigationView nav = (NavigationView) findViewById(R.id.user_car_nav_view);
+        Menu nav_Menu = nav.getMenu();
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if(userStatus == SharedData.UserStatus.RequestPending.getID())
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(true);
+        }
+        else
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(false);
+        }
+
     }
 
     @Override

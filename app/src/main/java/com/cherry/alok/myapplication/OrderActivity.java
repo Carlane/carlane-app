@@ -149,6 +149,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             InitCarDetailsInfoReq();
         }
         activity_creation_first = true;
+        HideOnGoingRequestIfRequired();
     }
 
     public void RegisterSignout()
@@ -159,13 +160,32 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             public void onClick(View v) {
                 SharedData.DeleteAllUser();
                 SharedData.DeleteAllUserCar();
-                //SharedData.SignOutGoogle();
+                SharedData.SignOutGoogle();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
+    }
+
+
+
+    public void HideOnGoingRequestIfRequired()
+    {
+        NavigationView nav = (NavigationView) findViewById(R.id.order_nav_view);
+        Menu nav_Menu = nav.getMenu();
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if(userStatus == SharedData.UserStatus.RequestPending.getID())
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(true);
+        }
+        else
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(false);
+        }
+
     }
 
 

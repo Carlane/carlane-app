@@ -173,47 +173,26 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         SharedData.HandleNavigation(id,this);
-/*
-        if (id == R.id.nav_add_car) {
-            AddCarFragment newFragment = new AddCarFragment();
-            Bundle data = new Bundle();
-            data.putInt("CURRENT_USER_ID", SharedData.GetUserId());
-            newFragment.setArguments(data);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,newFragment).commit();
-
-            // Handle the camera action
-        } else if (id == R.id.nav_location) {
-            Intent mapintent = new Intent(this, LocationActivityMap.class);
-            startActivity(mapintent);
-
-
-        } else if (id == R.id.nav_manage) {
-            UserCarListFragment carListFrag = new UserCarListFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,carListFrag).commit();
-
-
-        } else if (id == R.id.nav_service_request) {
-            Intent mapintent = new Intent(this, Activity_Services.class);
-            startActivity(mapintent);
-            *//*RequestServiceFrag newFragment = new RequestServiceFrag();
-            Bundle data = new Bundle();
-            data.putInt("CURRENT_USER_ID", SharedData.GetUserId());
-            newFragment.setArguments(data);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,newFragment).commit();*//*
-
-        } else if (id == R.id.nav_share) {
-            Intent introIntent = new Intent(this, PagerActivity.class);
-            startActivity(introIntent);
-
-        } else if (id == R.id.nav_send) {
-            Intent introIntent = new Intent(this, UserCar_CollapseHeader.class);
-            startActivity(introIntent);
-
-        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void HideOnGoingRequestIfRequired()
+    {
+        MenuItem item = (MenuItem)findViewById(R.id.nav_order);
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if(userStatus == SharedData.UserStatus.RequestPending.getID())
+        {
+            item.setVisible(false);
+        }
+        else
+        {
+            item.setVisible(true);
+        }
+
     }
 
     private final Handler mainhandler = new Handler() {

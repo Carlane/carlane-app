@@ -53,7 +53,7 @@ import java.util.Objects;
  * create an instance of this fragment.
  */
 public class SignInFragment extends Fragment implements
-        GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener,View.OnClickListener ,GoogleApiClient.ConnectionCallbacks{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -120,6 +120,18 @@ public class SignInFragment extends Fragment implements
         }
     }
     @Override
+    public  void onConnected (Bundle connectionHint)
+    {
+        Log.d(TAG, "onConnectionFailed:");
+    }
+
+    @Override
+    public  void onConnectionSuspended(int cause)
+    {
+        Log.d(TAG, "onConnectionFailed:" );
+    }
+
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -136,7 +148,9 @@ public class SignInFragment extends Fragment implements
         mGoogleApiClient = SharedData.GetGoogleApiClient();
         if(mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                    .enableAutoManage(getActivity() /* FragmentActivity */, (GoogleApiClient.OnConnectionFailedListener) this /* OnConnectionFailedListener */)
+                    //.enableAutoManage(getActivity() /* FragmentActivity */, (GoogleApiClient.OnConnectionFailedListener) this /* OnConnectionFailedListener */)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
                     .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                     .build();
         }
@@ -193,14 +207,51 @@ public class SignInFragment extends Fragment implements
         }*/
     }
 
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     @Override
     public void onStart()
     {
         super.onStart();
+        if(mGoogleApiClient.isConnected() ==false) mGoogleApiClient.connect();
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+/*
         if (opr.isDone()) {
+
+        }*/
+             /*
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
+            try {
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                // [START_EXCLUDE]
+                                //SharedData.DeleteAllUser();
+                               // updateUI(false);
+                                // [END_EXCLUDE]
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Log.d(TAG, "Got cached sign-in");
             GoogleSignInResult result = opr.get();
             handleSignInResult(result);
@@ -226,7 +277,8 @@ public class SignInFragment extends Fragment implements
             ArrayList<String> newParams = new ArrayList<String>();
             uniTask.execute(newParams);
            // updateUI(false);
-        } else {
+        } else*/
+        {
             // If the user has not previously signed in on this device or the sign-in has expired,
             // this asynchronous branch will attempt to sign in the user silently.  Cross-device
             // single sign-on will occur in this branch.`
@@ -240,6 +292,7 @@ public class SignInFragment extends Fragment implements
             });
         }
     }
+
     // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
@@ -262,22 +315,26 @@ public class SignInFragment extends Fragment implements
 
     // [START signOut]
     private void signOut() {
-        userGoogAcct = null;
+       /* userGoogAcct = null;
         Message msgObj = sendMessageToMain.obtainMessage();
         Bundle b = new Bundle();
         b.putString("picsatusremove", "RemovePic");
         msgObj.setData(b);
-        sendMessageToMain.sendMessage(msgObj);
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        //SharedData.DeleteAllUser();
-                        updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
+        sendMessageToMain.sendMessage(msgObj);*/
+        try {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            // [START_EXCLUDE]
+                            //SharedData.DeleteAllUser();
+                            updateUI(false);
+                            // [END_EXCLUDE]
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showProgressDialog() {
@@ -351,6 +408,8 @@ public class SignInFragment extends Fragment implements
                 {
                     SharedData.SetGoogleApiClient(mGoogleApiClient);
                 }
+
+
                 GoogleSignInAccount acct = result.getSignInAccount();
                 userGoogAcct = acct;
                 updateUI(true);

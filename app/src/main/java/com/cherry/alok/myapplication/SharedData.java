@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
@@ -272,6 +273,29 @@ public class SharedData {
 
     public static void SetRequestLocation(LatLng address) {
         USER_SERVICE_LATLNG = address;
+        double lat = address.latitude;
+        double longg = address.longitude;
+
+
+    }
+
+    public static void SaveCordInPref(Context context)
+    {
+        if(USER_SERVICE_LATLNG != null) {
+            SaveOrUpdateSharedPreference(context, "LAT", (float) USER_SERVICE_LATLNG.latitude);
+            SaveOrUpdateSharedPreference(context, "LONGG", (float) USER_SERVICE_LATLNG.longitude);
+        }
+    }
+
+    public static LatLng GetLocationFromPref(Context context)
+    {
+        float latt = PreferenceManager.getDefaultSharedPreferences(context).getFloat("LAT" , (float)0);
+        float longg = PreferenceManager.getDefaultSharedPreferences(context).getFloat("LONGG" , (float)0);
+        if(latt != (float)0 && longg != (float)0)
+        {
+            return new LatLng((latt) , (longg));
+        }
+        return null;
     }
 
     public static LatLng GetRequestLocation() {
@@ -620,6 +644,13 @@ public class SharedData {
     {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(key , "");
     }
+
+    public static void SaveOrUpdateSharedPreference(Context context , String key , float value)
+    {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putFloat (key , value).commit();
+    }
+
+
 
 
     public static ArrayList<Integer> GetSortedServicesFromSharedPrefs(Context context)

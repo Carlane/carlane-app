@@ -16,6 +16,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -31,6 +32,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -45,6 +47,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +154,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                     txt.setText(SharedData.GetUserName());
                 }
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                HideOnGoingRequestIfRequired();
             }
 
         };
@@ -245,6 +249,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                 LatLng center = mMap.getCameraPosition().target;
                // LatLng center = center  = new LatLng(17.436922,78.384738);//mMap.getCameraPosition().target;//only for simulartor
                 SharedData.SetRequestLocation(center);
+                SharedData.SaveCordInPref(getApplicationContext());
                 SetNavigation();
                 /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
                 startActivity(selectSlot);*/
@@ -261,6 +266,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             public void onClick(View v) {
                 LatLng center = mMap.getCameraPosition().target;//only for simulartor
                 SharedData.SetRequestLocation(center);
+                SharedData.SaveCordInPref(getApplicationContext());
                 /*Intent selectSlot = new Intent(getApplicationContext(), SelectSlotActivity.class);
                 startActivity(selectSlot);*/
                 SetNavigation();
@@ -337,7 +343,7 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         }
 
 
-
+        RegisterSignOut();
     }
 
     public void SetNavigation()
@@ -449,14 +455,20 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         try {
             List<android.location.Address> address = geoCoder.getFromLocation(loc.latitude, loc.longitude, 1);
             int maxLines = address.get(0).getMaxAddressLineIndex();
-            for (int i=0; i<maxLines; i++) {
+            for (int i=0; i<1; i++) {
                 TextView addressText = (TextView)findViewById(R.id.location_address_text_btmsheet);
                 addressText.setText(address.get(0).getSubLocality() );
                 String addressStr = address.get(0).getAddressLine(i);
                 String locality = address.get(0).getLocality();
-
-
-                ServiceAvailable(locality.equalsIgnoreCase("hyderabad"));
+                LatLng hitech_centre =  new LatLng(17.446469, 78.377552 );
+                double distance = getDistance(hitech_centre , loc);
+                if(distance > 10000) {
+                    ServiceUnAvailable(true);
+                }
+                else
+                {
+                    ServiceUnAvailable(false);
+                }
 
                 builder.append(addressStr);
                 builder.append(" ");
@@ -469,17 +481,28 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         }
         catch (NullPointerException e) {}
     }
+    public double getDistance(LatLng LatLng1, LatLng LatLng2) {
+        double distance = 0;
+        Location locationA = new Location("A");
+        locationA.setLatitude(LatLng1.latitude);
+        locationA.setLongitude(LatLng1.longitude);
+        Location locationB = new Location("B");
+        locationB.setLatitude(LatLng2.latitude);
+        locationB.setLongitude(LatLng2.longitude);
+        distance = locationA.distanceTo(locationB);
+        return distance;
 
-    public void ServiceAvailable(boolean value)
+    }
+
+    public void ServiceUnAvailable(boolean value)
     {
         if(value)
+            locationText.setText(getResources().getString(R.string.ServiceNotAvailable));
+        else
         {
-            locationText.setText("Set Pin As PickUp Location -->");
+            locationText.setText(getResources().getString(R.string.PinAsLocation));// "Apologies , Our Services Are Not Avaialble in Your Area Right Now");
         }
-        else {
-            locationText.setText("Apologies , Our Services Are Not Avaialble in Your Area Right Now");
-        }
-            locationText.setEnabled(value);
+
     }
 
     public void UiChangeOnNoLocation(boolean gpsOff)
@@ -575,8 +598,15 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                     AnimateCameraToLocation(loc);
 
                 }
-                placeSelectorCausedPause = false;
+
                 UiChangeOnNoLocation(false);
+                if(placeSelectorCausedPause == false){GetCity(new LatLng(loc.getLatitude(),loc.getLongitude()));}
+
+                placeSelectorCausedPause = false;
+            }
+            else
+            {
+                startTimer();
             }
 
         }
@@ -614,6 +644,23 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();
         CameraUpdateFactory.newCameraPosition(cameraPosition);
+    }
+
+    public void RegisterSignOut()
+    {
+        Button singoutbtn = (Button)findViewById(R.id.map_signout);
+        singoutbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedData.DeleteAllUser();
+                SharedData.DeleteAllUserCar();
+                SharedData.SignOutGoogle();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -659,6 +706,17 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         LatLng userLocation= place.getLatLng();
         GetCity(userLocation);
         placeSelectorCausedPause = true;
+        {
+            LatLng hitech_centre =  new LatLng(17.446469, 78.377552 );
+            double distance = getDistance(hitech_centre , userLocation);
+            if(distance > 10000) {
+                ServiceUnAvailable(true);
+            }
+            else
+            {
+                ServiceUnAvailable(false);
+            }
+        }
        // mapMarker.setPosition(userLocation);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(userLocation)      // Sets the center of the map to Mountain View
@@ -701,66 +759,32 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
 
     }
 
-/*    @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
 
-        switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                locationText.setVisibility(View.GONE);
-                // touch down code
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                locationText.setVisibility(View.GONE);
-                // touch move code
-                break;
-
-            case MotionEvent.ACTION_UP:
-                // touch up code
-                locationText.setVisibility(View.VISIBLE);
-                break;
-        }
-        return true;
-    }*/
 
     final int MY_PERMISSIONS_LOCATION = 1;
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng hyd = new LatLng(17.361637, 78.374630);
-        /*mapMarker = mMap.addMarker(new MarkerOptions().//icon(BitmapDescriptorFactory.fromResource(R.drawable.flag3)).
-                position(hyd).draggable(true).title("Car Lane Pick Up"));*/
-      /*  if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                    ShowPermissionAlertDialog();
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION ,Manifest.permission.ACCESS_COARSE_LOCATION },
-                        MY_PERMISSIONS_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+        Location loc = getLocation();
+        LatLng startCord = null;
+        if(loc != null)
+        {
+            startCord = new LatLng(loc.getLatitude() , loc.getLongitude());
+        }
+        else
+        {
+            startCord = SharedData.GetLocationFromPref(getApplicationContext());
+            if(startCord == null)
+            {
+                startCord = new LatLng(17.361637, 78.374630);
             }
-            return;
-        }*/
+        }
+        //= new LatLng(17.361637, 78.374630);
+
        // mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(hyd));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(startCord));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
@@ -774,8 +798,51 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         }
 
     }
+    CountDownTimer locationTimer;
+    private void startTimer() {
 
+        locationTimer = new CountDownTimer(4000, 1000) {
+            int secondsLeft = 0;
 
+            public void onTick(long ms) {
+                if (Math.round((float) ms / 1000.0f) != secondsLeft) {
+                    secondsLeft = Math.round((float) ms / 1000.0f);
+
+                }
+            }
+
+            public void onFinish() {
+                FloatingActionButton submit_locationfab = (FloatingActionButton) findViewById(R.id.accept_location_fab);
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.map_fab);
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.animation_grow);
+
+                if(locationPermissionsStatus)
+                {
+                    Location loc = getLocation();
+                    if(loc != null)
+                    {
+                        //GetCity(loc);
+                        if(gpsOffDlg != null){
+                            gpsOffDlg.cancel();
+                            gpsOffDlg = null;
+                        }
+                        if(placeSelectorCausedPause == false) {
+                            AnimateCameraToLocation(loc);
+
+                        }
+                        placeSelectorCausedPause = false;
+                        UiChangeOnNoLocation(false);
+                        GetCity(new LatLng(loc.getLatitude(),loc.getLongitude()));
+                    }
+
+                }
+                submit_locationfab.startAnimation(animation);
+                fab.startAnimation(animation);
+
+            }
+        }.start();
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -884,6 +951,23 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.map_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void HideOnGoingRequestIfRequired()
+    {
+        NavigationView nav = (NavigationView) findViewById(R.id.map_nav_view);
+        Menu nav_Menu = nav.getMenu();
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if(userStatus == SharedData.UserStatus.RequestPending.getID())
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(true);
+        }
+        else
+        {
+            nav_Menu.findItem(R.id.nav_order).setVisible(false);
+        }
+
     }
 
     public void GetServicesForUserLocation()
@@ -1296,4 +1380,3 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
     }
 
 }
-

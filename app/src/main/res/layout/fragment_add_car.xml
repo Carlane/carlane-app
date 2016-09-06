@@ -3,16 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cherry.alok.myapplication.AddCarFragment"
-    android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+    android:orientation="vertical"
+>
+
+
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -38,22 +32,19 @@
                                     android:orientation="vertical"
                                     card_view:cardCornerRadius="4dp"
                                     card_view:cardElevation="4dp"
-                                    android:focusable="true"
-                                    android:focusableInTouchMode="true"
                                     >
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:gravity="center_horizontal"
                                         android:orientation="vertical"
                                         android:layout_height="match_parent"
-                                        android:focusable="true"
-                                        android:focusableInTouchMode="true"
                                         >
                                         <LinearLayout
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:orientation="horizontal"
                                             android:layout_weight="0.4"
+                                            android:layout_gravity="center_horizontal"
                                             >
                                             <Spinner
                                                 android:id="@+id/CarBrand"
@@ -99,7 +90,7 @@
                                                     android:hint="Registration Number e.g. AP09AB1234"
                                                     android:maxLines="1"
                                                     android:singleLine="true"
-                                                    android:textSize="14sp"
+                                                    android:textSize="20sp"
                                                     android:nextFocusDown="@+id/mobile"
                                                     android:nextFocusLeft="@+id/mobile"
                                                     android:nextFocusRight="@+id/mobile"
@@ -107,37 +98,95 @@
                                                     android:nextFocusForward="@+id/mobile"
                                                     />
                                             </android.support.design.widget.TextInputLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/phone_number_verification_layout"
+    android:orientation="horizontal">
                                             <android.support.design.widget.TextInputLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginLeft="10dp"
                                                 android:layout_marginRight="10dp"
-                                                android:layout_marginTop="20dp">
+                                                android:layout_marginTop="20dp"
+                                                android:layout_weight="0.5"
+                                                >
 
                                                 <AutoCompleteTextView
                                                     android:id="@+id/mobile"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
                                                     android:hint="Mobile"
-                                                    android:textSize="14sp"
+                                                    android:textSize="20sp"
                                                     android:inputType="phone"
                                                     android:maxLines="1"
                                                     android:singleLine="true" />
                                             </android.support.design.widget.TextInputLayout>
+    <Button
+        android:layout_weight="0.5"
+        android:id="@+id/btn_init_verify_getOTP"
+        style="@style/ButtonStylePositiveBlue2"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        android:enabled="true"
+        android:layout_alignParentBottom="true"/>
+</LinearLayout>
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:id="@+id/otp_verification_layout"
+                                                android:orientation="horizontal">
+
+                                            <EditText
+                                                android:id="@+id/inputCode_text"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginLeft="10dp"
+                                                android:layout_marginTop="20dp"
+                                                android:layout_weight="0.5"
+                                                android:textSize="20sp"
+                                                android:hint="OTP"
+                                                android:inputType="number"/>
+
+
+                                            <Button
+                                                android:id="@+id/codeInputButton"
+                                                android:layout_width="match_parent"
+                                                android:layout_gravity="center_horizontal"
+                                                android:layout_marginBottom="10dp"
+                                                style="@style/ButtonStylePositiveBlue2"
+                                                android:text="Submit OTP"
+                                                android:layout_weight="0.5"
+                                                android:enabled="false"
+
+                                                />
+                                                </LinearLayout>
+
+
                                         </LinearLayout>
                                     </LinearLayout>
                                 </android.support.v7.widget.CardView>
 
-                            </LinearLayout>
-                <Button
-                    style="@style/ButtonStylePositive"
 
-                    android:text="Save Profile"
-                    android:id="@+id/addCarbutton"
-                    />
 
-            </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/addCarbutton"
+            style="@style/ButtonStylePositiveBlue2"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:text="Save Profile"
+            android:enabled="false"
+            android:layout_alignParentBottom="true">
+        </Button>
+    </RelativeLayout>
 
 
 

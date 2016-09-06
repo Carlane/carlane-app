@@ -34,4 +34,6 @@
     <string name="title_activity_user_cars_activty">UserCarsActivty</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name = "PinAsLocation">Set Pin As PickUp Location</string>
+    <string name="ServiceNotAvailable">Apologies , Our Services Are Not Avaialble in Your Area Right Now</string>
 </resources>

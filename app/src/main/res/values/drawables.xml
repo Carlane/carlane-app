@@ -5,4 +5,9 @@
     <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
     <item name="ic_menu_share" type="drawable">@android:drawable/ic_menu_share</item>
     <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
+    <item name="ic_menu_placeorder" type="drawable">@drawable/nav_placeorder</item>
+    <item name="ic_menu_myrequests" type="drawable">@drawable/nav_purchase_order</item>
+    <item name="ic_menu_mygarage" type="drawable">@drawable/nav_garage</item>
+    <item name="ic_menu_packages" type="drawable">@drawable/nav_cargear</item>
+    <item name="ic_menu_ongoing" type="drawable">@drawable/nav_ongoing</item>
 </resources>
