@@ -782,6 +782,8 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
 
             RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
             drawable.setCircular(true);
+            driver_pic.setMaxWidth(drawable.getIntrinsicWidth());
+            driver_pic.setPadding(0, 0, 0, 0);
             driver_pic.setImageDrawable(drawable);
             //bmImage.setImageBitmap(result);
         }
