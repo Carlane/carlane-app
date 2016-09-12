@@ -72,7 +72,7 @@ public class SelectSlot_TabFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    String[] slotArray = {"9 AM -12 PM ","12 PM - 2 PM","2PM - 4PM","4PM - 6PM"};
+    String[] slotArray = {"9 AM - 12 PM ","12 PM - 2 PM","2 PM - 4 PM","4 PM - 6 PM"};
 
     Integer[] imageId = {
             R.drawable.check_light,
