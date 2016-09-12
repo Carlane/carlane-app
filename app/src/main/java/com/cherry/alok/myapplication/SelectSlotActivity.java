@@ -120,6 +120,7 @@ public class SelectSlotActivity extends AppCompatActivity {
 
 
          /*Set up the Bottom Sheet containing types of services*/
+        /*
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
         final View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
@@ -153,22 +154,24 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
 
         });
+        */
+
         final EditText editText = (EditText)findViewById(R.id.addinst_editText);
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus)
                 {
-                    bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
+                    //bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
                 }
                 else
                 {
-                    bottomSheet.animate().translationY(slotsView.getHeight()*1).setDuration(1000).start();
+                    //bottomSheet.animate().translationY(slotsView.getHeight()*1).setDuration(1000).start();
                 }
             }
         });
 
-
+/*
         TextView atv = (TextView)findViewById(R.id.text_add_inst);
 
         atv.setOnClickListener(new View.OnClickListener() {
@@ -188,7 +191,7 @@ public class SelectSlotActivity extends AppCompatActivity {
 
             }
         });
-
+*/
 
         ((LinearLayout)findViewById(R.id.toplayout)).
                 setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
@@ -298,19 +301,19 @@ public class SelectSlotActivity extends AppCompatActivity {
     public void RollDowntheUi()
     {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
+        //View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
         slotsView.animate().translationY(slotsView.getHeight()*-1).setDuration(700).start();
-        bottomSheet.animate().translationY(bottomSheet.getHeight()*1).setDuration(1500).start();
+        //bottomSheet.animate().translationY(bottomSheet.getHeight()*1).setDuration(1500).start();
     }
 
     public void RollUpTheUi()
     {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
+        //View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
         slotsView.animate().translationY(slotsView.getHeight()*0).setDuration(500).start();
         // behavior.setPeekHeight(0);
         //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
+        //bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
     }
 
     public void AddtionalInstructions_Clicked()
