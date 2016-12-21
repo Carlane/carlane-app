@@ -75,13 +75,29 @@
                                             android:layout_weight="0.6"
                                             android:orientation="vertical"
                                             android:focusable="false">
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:id="@+id/car_reg_layout"
+                                                android:orientation="horizontal">
+                                                <ImageView
+                                                    android:id="@+id/img_carreg"
+                                                    android:layout_marginLeft="4dp"
+                                                    android:layout_width="64dp"
+                                                    android:layout_height="64dp"
+                                                    android:layout_marginRight="4dp"
+                                                    android:layout_marginTop="20dp"
+                                                    android:layout_weight="0.5"
+
+                                                    android:src="@drawable/carreg"
+                                                    />
                                             <android.support.design.widget.TextInputLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginTop="20dp"
                                                 android:layout_marginLeft="10dp"
                                                 android:layout_marginRight="10dp"
-
+                                                android:layout_weight="0.5"
                                                 >
                                                 <AutoCompleteTextView
                                                     android:layout_width="match_parent"
@@ -91,18 +107,26 @@
                                                     android:maxLines="1"
                                                     android:singleLine="true"
                                                     android:textSize="20sp"
-                                                    android:nextFocusDown="@+id/mobile"
-                                                    android:nextFocusLeft="@+id/mobile"
-                                                    android:nextFocusRight="@+id/mobile"
-                                                    android:nextFocusUp="@+id/mobile"
-                                                    android:nextFocusForward="@+id/mobile"
                                                     />
                                             </android.support.design.widget.TextInputLayout>
+                                                </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/phone_number_verification_layout"
     android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/img_mobile"
+        android:layout_marginLeft="4dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="0.5"
+
+        android:src="@drawable/mobiles"
+        />
                                             <android.support.design.widget.TextInputLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
@@ -120,29 +144,32 @@
                                                     android:textSize="20sp"
                                                     android:inputType="phone"
                                                     android:maxLines="1"
+                                                    android:textColorHint="@color/cast_intro_overlay_button_background_color"
+                                                    android:textColorHighlight="@color/deep_orange"
                                                     android:singleLine="true" />
                                             </android.support.design.widget.TextInputLayout>
-    <Button
-        android:layout_weight="0.5"
-        android:id="@+id/btn_init_verify_getOTP"
-        style="@style/ButtonStylePositiveBlue2"
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:text="Verify"
-        android:enabled="true"
-        android:layout_alignParentBottom="true"/>
+
 </LinearLayout>
                                             <LinearLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:id="@+id/otp_verification_layout"
                                                 android:orientation="horizontal">
+                                                <ImageView
+                                                    android:id="@+id/img_otps"
+                                                    android:layout_marginLeft="14dp"
+                                                    android:layout_width="50dp"
+                                                    android:layout_height="50dp"
+                                                    android:layout_marginRight="4dp"
+                                                    android:layout_marginTop="20dp"
+                                                    android:layout_weight="0.5"
 
+                                                    android:src="@drawable/otps"
+                                                    />
                                             <EditText
                                                 android:id="@+id/inputCode_text"
                                                 android:layout_width="match_parent"
-                                                android:layout_height="match_parent"
+                                                android:layout_height="wrap_content"
                                                 android:layout_marginLeft="10dp"
                                                 android:layout_marginTop="20dp"
                                                 android:layout_weight="0.5"
@@ -151,17 +178,7 @@
                                                 android:inputType="number"/>
 
 
-                                            <Button
-                                                android:id="@+id/codeInputButton"
-                                                android:layout_width="match_parent"
-                                                android:layout_gravity="center_horizontal"
-                                                android:layout_marginBottom="10dp"
-                                                style="@style/ButtonStylePositiveBlue2"
-                                                android:text="Submit OTP"
-                                                android:layout_weight="0.5"
-                                                android:enabled="false"
 
-                                                />
                                                 </LinearLayout>
 
 
@@ -170,25 +187,43 @@
                                 </android.support.v7.widget.CardView>
 
 
-
-
-    <RelativeLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <ProgressBar
+        android:id="@+id/my_progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:theme="@style/ProgressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:id="@+id/addCarbutton"
-            style="@style/ButtonStylePositiveBlue2"
-            android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_height="50dp"
-            android:text="Save Profile"
-            android:enabled="false"
-            android:layout_alignParentBottom="true">
-        </Button>
-    </RelativeLayout>
+        android:indeterminate="true"
+        android:layout_weight="0.5"
+        android:visibility="invisible"/>
 
+    <Button
+        android:id="@+id/btn_init_verify_getOTP"
+        style="@style/ButtonStylePositiveBlue2"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        android:enabled="true"
+        android:layout_weight="0.3"
+        />
 
+<!--    <Button
+        android:id="@+id/codeInputButton"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_gravity="right"
+        android:layout_marginBottom="10dp"
+        android:text="Submit OTP"
+        android:enabled="false"
+        android:layout_weight="0.5"
+        />-->
+</LinearLayout>
 
 
 

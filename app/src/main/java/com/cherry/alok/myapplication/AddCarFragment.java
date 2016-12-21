@@ -1,6 +1,5 @@
 package com.cherry.alok.myapplication;
 
-import android.*;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -9,18 +8,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -41,16 +36,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import android.util.Base64;
-import android.util.Log;import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ListIterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,26 +67,12 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
     };
     private Verification mVerification;//OTP
 
-    String[] items = new String[]{"Brand","Maruti", "Hyundai"};//, "Chevrolet","Renault","Fiat","Datsun","BMW","Volkswagon","Mercedes"};
-    String[] marutiModels = new String[]{"Model","Swift Dezire" , "Swift","Baleno","Celerio","Alto 800"};
+   // String[] items = new String[]{"Brand","Maruti", "Hyundai"};//, "Chevrolet","Renault","Fiat","Datsun","BMW","Volkswagon","Mercedes"};
 
     List<String> carbrandList = new ArrayList<String>();
-    List<String> carMarutiList = new ArrayList<String>();
-    List<String> carChevroletList = new ArrayList<String>();
-    List<String> carFiatList = new ArrayList<String>();
-    List<String> carFordList = new ArrayList<String>();
-    List<String> carHondaList = new ArrayList<String>();
-    List<String> carHyundList = new ArrayList<String>();
-    List<String> carMahindraList = new ArrayList<String>();
-    List<String> carNissanList = new ArrayList<String>();
-    List<String> carTataList = new ArrayList<String>();
-    List<String> carToyotaList = new ArrayList<String>();
-    List<String> carSkotaList = new ArrayList<String>();
-    List<String> carVWaList = new ArrayList<String>();
 
 
-    String[] hyundaiModels = new String[]{"Model","i20" ,"i10" ,"Creta","Verna"};
-    ArrayAdapter<String> adapter = null;//new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
+
     ArrayAdapter<String> carmodeladapter = null;//new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, marutiModels);
     int userId =0;
     ArrayList<String> selecteditem = new ArrayList<>();
@@ -107,158 +81,6 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
     private OnFragmentInteractionListener mListener;
 
     public AddCarFragment() {
-        // Required empty public constructor
-
-       /* carbrandList.add("Brand");
-        carbrandList.add("Chevrolet");
-        carbrandList.add("Fiat");
-        carbrandList.add("Ford");
-        carbrandList.add("Honda");
-        carbrandList.add("Hyundai");
-        carbrandList.add("Mahindra");
-        carbrandList.add("Maruti");
-        carbrandList.add("Nissan");
-        carbrandList.add("Tata");
-        carbrandList.add("Toyota");
-        carbrandList.add("Skoda");
-        carbrandList.add("Volkswagen");*/
-
-
-        /////// MARUTI   ////////
-        carMarutiList.add("Models");
-        carMarutiList.add("A-Star");
-        carMarutiList.add("Alto");
-        carMarutiList.add("Alto K10");
-        carMarutiList.add("Baleno");
-        carMarutiList.add("Celerio");
-        carMarutiList.add("Estilo");
-        carMarutiList.add("Ertiga");
-        carMarutiList.add("Gypsy");
-        carMarutiList.add("Maruti Suzuki 800");
-        carMarutiList.add("Maruti Suzuki Omni");
-        carMarutiList.add("Swift");
-        carMarutiList.add("Swift Dezire");
-        carMarutiList.add("SX4");
-        carMarutiList.add("Wagon R");
-        carMarutiList.add("Ritz");
-
-
-        /////// HYNDAI   ///////
-
-        carHyundList.add("Models");
-        carHyundList.add("Creta");
-        carHyundList.add("Eon");
-        carHyundList.add("Elantra");
-        carHyundList.add("i20");
-        carHyundList.add("i20 Active");
-        carHyundList.add("i20 Elite");
-        carHyundList.add("Sante Fe");
-        carHyundList.add("Verna");
-        carHyundList.add("Verna 4S Fluidic");
-        carHyundList.add("Xcent");
-        ////////////////CHEVROLET///////////////////////
-
-        carChevroletList.add("Models");
-        carChevroletList.add("Aveo UVA");
-        carChevroletList.add("Beat");
-        carChevroletList.add("Captiva");
-        carChevroletList.add("Cruze");
-        carChevroletList.add("Enjoy");
-        carChevroletList.add("Sail");
-        carChevroletList.add("Sail Hatchback");
-        carChevroletList.add("Spark");
-        carChevroletList.add("Tavera");
-
-        ///////////////   FIAT ///////////////////////
-
-        carFiatList.add("Models");
-        carFiatList.add("Avventura");
-        carFiatList.add("Punto");
-        carFiatList.add("Punto Abarth");
-        carFiatList.add("Punto Evo");
-        carFiatList.add("Linea");
-        carFiatList.add("Linea Classic");
-
-        //////////////////////    FORD    /////////////////////
-
-        carFordList.add("Models");
-        carFordList.add("Classic");
-        carFordList.add("Ecosport");
-        carFordList.add("Endeavour");
-        carFordList.add("Fiesta");
-        carFordList.add("Figo");
-
-        //////// HONDA ////////
-        carHondaList.add("Models");
-        carHondaList.add("Accord");
-        carHondaList.add("Amaze");
-        carHondaList.add("Brio");
-        carHondaList.add("City");
-        carHondaList.add("CR-V");
-
-
-        ///////   MAHINDRA ///////
-
-        carMahindraList.add("Models");
-        carMahindraList.add("Bolero");
-        carMahindraList.add("E20");
-        carMahindraList.add("KUV / TUV");
-        carMahindraList.add("Quantro");
-        carMahindraList.add("Scorpio");
-        carMahindraList.add("Scorpio Getaway");
-        carMahindraList.add("Thar");
-        carMahindraList.add("Verito");
-        carMahindraList.add("Verito Vibe CS");
-        carMahindraList.add("XUV 500");
-        carMahindraList.add("Xylo");
-
-
-
-        /////////  NISSAN ///////
-        carNissanList.add("Models");
-        carNissanList.add("Datsun");
-
-        ////// TATA
-        carTataList.add("Models");
-        carTataList.add("Aria");
-        carTataList.add("Bolt");
-        carTataList.add("Indica");
-        carTataList.add("Indica V2");
-        carTataList.add("Indica eV2");
-        carTataList.add("Indigo");
-        carTataList.add("Nano");
-        carTataList.add("Sumo");
-        carTataList.add("Safari");
-        carTataList.add("Safari Storme");
-        carTataList.add("Tiago");
-        carTataList.add("Zest");
-
-        /////TOYOTA
-        carToyotaList.add("Models");
-        carToyotaList.add("Camry");
-        carToyotaList.add("Corolla Altis");
-        carToyotaList.add("Etios");
-        carToyotaList.add("Etios Liva");
-        carToyotaList.add("Fortuner");
-        carToyotaList.add("Innova");
-
-        /////// SKODA
-        carSkotaList.add("Models");
-        carSkotaList.add("Laura");
-        carSkotaList.add("Octavia");
-        carSkotaList.add("Rapid");
-        carSkotaList.add("Superb");
-        ///// Volkswagen
-
-        carVWaList.add("Models");
-        carVWaList.add("Ameo");
-        carVWaList.add("Beetle");
-        carVWaList.add("Jetta");
-        carVWaList.add("Polo");
-        carVWaList.add("Polo Cross");
-        carVWaList.add("Vento");
-
-
     }
 
     /**
@@ -316,23 +138,10 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
 
         carbrand = (Spinner)addCarView.findViewById(R.id.CarBrand);
-        List<String> list = new ArrayList<String>();
-        list.add("list 1");
-        list.add("list 2");
-        list.add("list 3");
-       /* ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(addCarView.getContext(),
-                android.R.layout.simple_spinner_item, carbrandList);
-        dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-        carbrand.setAdapter(dataAdapter);
-        carbrand.setSelection(1);*/
-
 
         AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
         registrationNumberText.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
-        //Obtain the User Id which is passed from parent activity
 
-/*        carbrand.setAdapter(new ArrayAdapter<String>(addCarView.getContext(), android.R.layout.simple_spinner_dropdown_item, items));*/
-        RegisterButtonClickHandler();
         //Evetn Handler for the first spinner for Car Brands
         carbrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -342,9 +151,6 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
                 if(position >= 0)
                 {
                     final Spinner carmodel = (Spinner)addCarView.findViewById(R.id.CarModel);
-                    //SetCarModelSpinnerVisibility(View.VISIBLE);
-                    //SetAddButtonVisibility(View.INVISIBLE);
-                    //SetCarRegistrationTextVisibility(View.INVISIBLE);
                     carmodeladapter  = (GetCarModelAdapter(position));
                     carmodel.setAdapter(carmodeladapter);
 
@@ -355,8 +161,6 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
                         public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                             if(position > 0)
                             {
-
-                                //SetAddButtonVisibility(View.VISIBLE);
                                 SetCarRegistrationTextVisibility(View.VISIBLE);
                             }
                         }
@@ -376,30 +180,28 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
             }
 
         });
-       /* if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED)
-        {
-            InitiatePermissionsForLocation(false);
-            return null;
-        }*/
+
         RegisterInitiateSMSVerification();
         tryAndPrefillPhoneNumber();
-        RegisterSubmitOtpVerfication();
-/*        MessageDigest md = null;
-        try {
-            PackageInfo info = getContext().getPackageManager().getPackageInfo(
-                    getContext().getPackageName(),
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-        Log.i("SecretKey = ",Base64.encodeToString(md.digest(), Base64.DEFAULT));*/
         GetCarBrandsAndModels();
+
+        SmsReceiver.bindListener(new SmsListener() {
+            @Override
+            public void messageReceived(SmsMessage message) {
+                String sender = message.getDisplayOriginatingAddress();
+                String messageBody = message.getMessageBody();
+                if(sender.contains("MCLOTP"))
+                {
+                    //inputCode_text
+                    String text[] = messageBody.split("\\s+");
+                    EditText textbox = (EditText) addCarView.findViewById(R.id.inputCode_text);
+                    textbox.setText(text[0]);
+                    if (mVerification != null) {
+                        mVerification.verify(text[0]);
+                    }
+                }
+            }
+        });
         return addCarView;
     }
 
@@ -483,48 +285,40 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
 
     AsyncActivities current_task = AsyncActivities.NONE;
-    public void RegisterButtonClickHandler()
-    {
-        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
-        addButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v)
-            {
-                AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
-                registrationNumberText.clearFocus();
-                //Validate Registration
-                RegistrationNumberValidator numberValidator = new RegistrationNumberValidator();
-                if(numberValidator.validate(registrationNumberText.getText().toString()))
-                {
-
-                    if(ValidateMobileInfo()) {
-                        SetBrandInSelectedArray();
-                        SetModelInSelectedArray();
-                        selecteditem.add(registrationNumberText.getText().toString());
-                        selecteditem.add(GetMobileNumber());
-                        if(selecteditem.get(0).toLowerCase().equals("brand") || selecteditem.get(1).toLowerCase().equals("models"))
-                        {
-                            Snackbar.make(addCarView, "Car Brand and Model selection is not finished", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
-                            return;
-                        }
-                        SaveProfile();
-                    }
-                    else
-                    {
-                        Snackbar.make(addCarView, "Invalid Mobile Number", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
 
 
-                }
-                else
-                {
-                    Snackbar.make(addCarView, "Invalid Registration Number .. ?", Snackbar.LENGTH_LONG)
+    public boolean ProfileCheck() {
+        AutoCompleteTextView registrationNumberText = (AutoCompleteTextView) addCarView.findViewById(R.id.registration_text);
+        registrationNumberText.clearFocus();
+        //Validate Registration
+        RegistrationNumberValidator numberValidator = new RegistrationNumberValidator();
+        if (numberValidator.validate(registrationNumberText.getText().toString())) {
+
+            if (ValidateMobileInfo()) {
+                SetBrandInSelectedArray();
+                SetModelInSelectedArray();
+                selecteditem.add(registrationNumberText.getText().toString());
+                selecteditem.add(GetMobileNumber());
+                if (selecteditem.get(0).toLowerCase().equals("brand") || selecteditem.get(1).toLowerCase().equals("models")) {
+                    Snackbar.make(addCarView, "Car Brand and Model selection is not finished", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                    //Toast.makeText(getContext(),"Invalid RegistraionNumber",Toast.LENGTH_SHORT).show();
+                    return false;
                 }
+                //
+            } else {
+                Snackbar.make(addCarView, "Invalid Mobile Number", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return false;
             }
-        });
+
+
+        } else {
+            Snackbar.make(addCarView, "Invalid Registration Number .. ?", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            return false;
+        }
+        return true;
     }
 
     public void SaveProfile()
@@ -570,16 +364,17 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
         AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
         registrationNumberText.setVisibility(visibility);
     }
-    public void SetCarModelSpinnerVisibility(int visibility)
+
+    public void SetCarRegistrationTextEditable(boolean allow)
     {
-        Spinner carmodel = (Spinner)addCarView.findViewById(R.id.CarModel);
-        carmodel.setVisibility(visibility);
+        AutoCompleteTextView registrationNumberText = (AutoCompleteTextView)addCarView.findViewById(R.id.registration_text);
+        registrationNumberText.setEnabled(allow);
     }
 
-    public void SetAddButtonVisibility(int visibility)
+    public void SetMobileTextEditable(boolean allow)
     {
-        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
-        addButton.setVisibility(visibility);
+        AutoCompleteTextView mPhoneNumber = (AutoCompleteTextView)addCarView.findViewById(R.id.mobile);
+        mPhoneNumber.setEnabled(allow);
     }
 
     public ArrayAdapter<String> GetCarModelAdapter(int carmodels)
@@ -587,88 +382,9 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
         //Get The Car Model Adapter Here
         String carbrand = carbrandList.get(carmodels);
         carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, GetCaModelFromBrand(carbrand));
-/*        switch(carmodels)
-        {
-            case 1:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carChevroletList);
-            }
-            break;
-            case 2:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carFiatList);
-            }
-            break;
-            case 3:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carFordList);
-
-            }
-            break;
-            case 4:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carHondaList);
-
-            }
-            break;
-            case 5:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carHyundList);
-            }
-            break;
-            case 6:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carMahindraList);
-
-            }
-            break;
-            case 7:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carMarutiList);
-
-            }
-            break;
-            case 8:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carNissanList);
-
-            }
-            break;
-            case 9:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carTataList);
-
-            }
-            break;
-            case 10:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carToyotaList);
-
-            }
-            break;
-            case 11:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carSkotaList);
-
-            }
-            break;
-            case 12:
-            {
-                carmodeladapter= new ArrayAdapter<String>(getActivity(), R.layout.custom_spinner_dropdown_item, carVWaList);
-
-            }
-            break;
-
-        }*/
-
         return carmodeladapter;
     }
 
-    public ArrayAdapter<String> GetCarBrandAdapter()
-    {
-        carmodeladapter= new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.custom_spinner_dropdown_item, items);
-        return carmodeladapter;
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -710,24 +426,14 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
         sms_verification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createVerification(GetMobileNumber(),false,"91");
-            }
-        });
-    }
 
-    public void RegisterSubmitOtpVerfication()
-    {
-        /*
-         if (mVerification != null) {
-                mVerification.verify(code);
-        * */
-        Button verify_otp_btn = (Button)addCarView.findViewById(R.id.codeInputButton);
-        verify_otp_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mVerification != null) {
-                    String code = ((EditText) addCarView.findViewById(R.id.inputCode_text)).getText().toString();
-                    mVerification.verify(code);
+                if(ProfileCheck())
+                {
+                    SetProgressBarVisibility(true);
+                    SetCarRegistrationTextEditable(false);
+                    SetMobileTextEditable(false);
+
+                    createVerification(GetMobileNumber(),false,"91");
                 }
             }
         });
@@ -752,8 +458,6 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
     @Override
     public void onInitiated(String response) {
-      Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
-        codeInputButton.setEnabled(true);
         Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
         btn_init_verify_getOTP.setEnabled(false);
         Toast.makeText(getContext(), "You will receive OTP by SMS", Toast.LENGTH_LONG).show();
@@ -761,12 +465,11 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
     @Override
     public void onInitiationFailed(Exception exception) {
-        /*Log.e(TAG, "Verification initialization failed: " + exception.getMessage());
-        hideProgressBarAndShowMessage(R.string.failed);*/
-        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
-        codeInputButton.setEnabled(false);
+        SetProgressBarVisibility(true);
         Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
         btn_init_verify_getOTP.setEnabled(true);
+        SetCarRegistrationTextEditable(true);
+        SetMobileTextEditable(true);
         Toast.makeText(getContext(), "OTP Initialization Failed", Toast.LENGTH_LONG).show();
     }
 
@@ -775,25 +478,15 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
         /*Log.d(TAG, "Verified!\n" + response);
         hideProgressBarAndShowMessage(R.string.verified);
         showCompleted();*/
-        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
-        codeInputButton.setEnabled(false);
-        codeInputButton.setText("Verified");
-        Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
-        btn_init_verify_getOTP.setEnabled(false);
-        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
-        addButton.setEnabled(true);
+        SaveProfile();
         Toast.makeText(getContext(), "Mobile Number Verification Successful", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onVerificationFailed(Exception exception) {
-        Button codeInputButton = (Button)addCarView.findViewById(R.id.codeInputButton);
-        codeInputButton.setEnabled(false);
-        codeInputButton.setText("Verified");
+
         Button btn_init_verify_getOTP = (Button)addCarView.findViewById(R.id.btn_init_verify_getOTP);
         btn_init_verify_getOTP.setEnabled(true);
-        Button addButton = (Button)addCarView.findViewById(R.id.addCarbutton);
-        addButton.setEnabled(false);
         Toast.makeText(getContext(), "Mobile Number Verification Failed . Try Again", Toast.LENGTH_LONG).show();
     }
 
@@ -859,6 +552,21 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
         }
     };
+
+    public void SetProgressBarVisibility(boolean value)
+    {
+        ProgressBar bar = (ProgressBar)addCarView.findViewById(R.id.my_progressBar);
+        if(value)
+        {
+            bar.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            bar.setVisibility(View.INVISIBLE);
+
+        }
+
+    }
 
     public void PostGetCarOperation() {
 

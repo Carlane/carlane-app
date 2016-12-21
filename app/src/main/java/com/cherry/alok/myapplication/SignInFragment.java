@@ -81,6 +81,7 @@ public class SignInFragment extends Fragment implements
         {
             try {
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
             } catch (Exception e) {
                 e.printStackTrace();
             }

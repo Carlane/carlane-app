@@ -65,7 +65,9 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/bg_light</item>
     </style>
-
+    <style name = "ProgressBarStyle" parent ="Widget.AppCompat.ProgressBar.Horizontal" >
+        <item name="colorAccent">@color/cyan</item>
+    </style>
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
 
         <item name="tabIndicatorColor">?attr/colorAccent</item>

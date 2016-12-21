@@ -94,7 +94,9 @@ public class SharedData {
     {
         if(mGoogleApiClient != null) {
             try {
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+                mGoogleApiClient = null;
             } catch (Exception e) {
                 e.printStackTrace();
             }

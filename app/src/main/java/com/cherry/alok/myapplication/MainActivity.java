@@ -1,6 +1,9 @@
 package com.cherry.alok.myapplication;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -127,6 +130,9 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        getEmiailID(getApplicationContext());
+
+
     }
 
     public void CreateDataBase()
@@ -193,6 +199,29 @@ public class MainActivity extends AppCompatActivity
             item.setVisible(true);
         }
 
+    }
+
+    private String getEmiailID(Context context) {
+        AccountManager accountManager = AccountManager.get(context);
+        Account account = getAccount(accountManager);
+        if (account == null) {
+            Toast.makeText(getApplicationContext(), "NO ACCOUNT", Toast.LENGTH_SHORT).show();
+            return null;
+        } else {
+            Toast.makeText(getApplicationContext(), "account " + account.name, Toast.LENGTH_SHORT).show();
+            return account.name;
+        }
+    }
+
+    private static Account getAccount(AccountManager accountManager) {
+        Account[] accounts = accountManager.getAccountsByType("com.google");
+        Account account;
+        if (accounts.length > 0) {
+            account = accounts[0];
+        } else {
+            account = null;
+        }
+        return account;
     }
 
     private final Handler mainhandler = new Handler() {
