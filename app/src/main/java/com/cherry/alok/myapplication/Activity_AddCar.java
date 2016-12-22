@@ -89,20 +89,20 @@ public class Activity_AddCar extends AppCompatActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.user_addcar_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.addcar_collapsing_toolbar);
-        collapsingToolbar.setTitle("Add Your Car");
+        //collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.addcar_collapsing_toolbar);
+        //collapsingToolbar.setTitle("Add Your Car");
 
-        ImageView header = (ImageView) findViewById(R.id.addcar_header);
+       // ImageView header = (ImageView) findViewById(R.id.addcar_header);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.header2);
 
-        if(header != null)
+        //if(header != null)
         {
-            header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.header2));
+          //  header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.header2));
         }
 
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+        /*Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @SuppressWarnings("ResourceType")
             @Override
             public void onGenerated(Palette palette) {
@@ -111,7 +111,7 @@ public class Activity_AddCar extends AppCompatActivity implements NavigationView
                 collapsingToolbar.setContentScrimColor(mutedColor);
                 collapsingToolbar.setStatusBarScrimColor(R.color.black_trans80);
             }
-        });
+        });*/
         if(findViewById(R.id.addcar_fragment_container) != null)
         {
             if(savedInstanceState != null)

@@ -150,7 +150,7 @@
     </style>
     <style name="ButtonStylePositiveBlue2">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">45dp</item>
         <item name="android:background">@drawable/button_background_blue</item>
         <item name="android:textAppearance">@style/TextAppearanceButton</item>
         <item name="android:textColor">#FFFFFF</item>

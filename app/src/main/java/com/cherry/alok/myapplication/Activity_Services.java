@@ -123,28 +123,28 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.services_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.services_collapsing_toolbar);
-        collapsingToolbar.setTitle("Select A Packages");
+       /* collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.services_collapsing_toolbar);
+        collapsingToolbar.setTitle("Select A Packages");*/
 
-        ImageView header = (ImageView) findViewById(R.id.services_header);
+        //ImageView header = (ImageView) findViewById(R.id.services_header);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.header2);
 
-        if(header != null)
+       // if(header != null)
 
         {
             if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.LOLLIPOP)
             {
-                header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.welcome , getApplicationContext().getTheme()));
+             //   header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.welcome , getApplicationContext().getTheme()));
             }
             else
             {
-                header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.welcome));
+             //   header.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.welcome));
             }
         }
 
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+        /*Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @SuppressWarnings("ResourceType")
             @Override
             public void onGenerated(Palette palette) {
@@ -153,7 +153,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                 collapsingToolbar.setContentScrimColor(mutedColor);
                 collapsingToolbar.setStatusBarScrimColor(R.color.black_trans80);
             }
-        });
+        });*/
 
         recyclerView = (RecyclerView) findViewById(R.id.services_scrollableview);
 
@@ -245,7 +245,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         serviceRecyclerAdapter.SetOnItemClickListener(new ServiceRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
+                //TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
                 //TextView services_user_notice = (TextView)findViewById(R.id.services_user_notice);
                 Button next_button = (Button)findViewById(R.id.service_select_next);
                 switch (position) {
@@ -421,8 +421,8 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
             TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
             TextView text_cost_suv = (TextView)findViewById(R.id.cost_text_suv);
-            TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
-            service_cost_small_btmsheet.setText( attributes.getString("cost"));
+            //TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
+           // service_cost_small_btmsheet.setText( attributes.getString("cost"));
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_cost" ,  attributes.getString("cost")).commit();
             switch(i)
             {

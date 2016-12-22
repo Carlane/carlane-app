@@ -456,8 +456,8 @@ public class LocationActivityMap extends AppCompatActivity implements OnMapReady
             List<android.location.Address> address = geoCoder.getFromLocation(loc.latitude, loc.longitude, 1);
             int maxLines = address.get(0).getMaxAddressLineIndex();
             for (int i=0; i<1; i++) {
-                TextView addressText = (TextView)findViewById(R.id.location_address_text_btmsheet);
-                addressText.setText(address.get(0).getSubLocality() );
+                //TextView addressText = (TextView)findViewById(R.id.location_address_text_btmsheet);
+                //addressText.setText(address.get(0).getSubLocality() );
                 String addressStr = address.get(0).getAddressLine(i);
                 String locality = address.get(0).getLocality();
                 LatLng hitech_centre =  new LatLng(17.446469, 78.377552 );
