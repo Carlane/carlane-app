@@ -340,6 +340,8 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
     }
 
+
+
     public void SetRecyclerAdapter()
     {
         if(serviceRecyclerAdapter != null && recyclerView != null)
@@ -525,17 +527,17 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        SharedData.HandleNavigation(id,this);
+        @SuppressWarnings("StatementWithEmptyBody")
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            // Handle navigation view item clicks here.
+            int id = item.getItemId();
+            SharedData.HandleNavigation(id,this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
 
     public void HideOnGoingRequestIfRequired() {
         NavigationView nav = (NavigationView) findViewById(R.id.services_nav_view);

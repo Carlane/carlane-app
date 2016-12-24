@@ -66,6 +66,7 @@ public class SelectSlotActivity extends AppCompatActivity {
     CountDownTimer progressBarTimer;
     Button confirm_request;
     UniversalAsyncTask uniTask;
+    BottomSheetBehavior behavior_smallbottomsheet;
     enum AsyncActivities
     {
       NONE,
@@ -117,44 +118,6 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
         });
 
-
-
-         /*Set up the Bottom Sheet containing types of services*/
-        /*
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
-        final View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
-        behavior = BottomSheetBehavior.from(bottomSheet);
-        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                switch (newState) {
-
-                    case BottomSheetBehavior.STATE_DRAGGING:
-
-                        break;
-
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-
-                        break;
-
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        break;
-
-
-                }
-
-            }
-
-            @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-
-            }
-
-        });
-        */
 
         final EditText editText = (EditText)findViewById(R.id.addinst_editText);
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -228,7 +191,7 @@ public class SelectSlotActivity extends AppCompatActivity {
             }
         };
 
-        confirm_request = (Button)findViewById(R.id.confirm_request);
+       confirm_request = (Button)findViewById(R.id.confirm_request);
         confirm_request.setText("CHECKOUT ");  ;
         confirm_request.setEnabled(false);
         confirm_request.setOnClickListener(new View.OnClickListener() {
@@ -241,7 +204,7 @@ public class SelectSlotActivity extends AppCompatActivity {
                     showSettingsAlert("Request Ongoing Already","Sorry ! Currently we support only one active request at a time");
                     return;
                 }
-                /*InitRequest();*/
+                //InitRequest();
                 Intent intent =  new Intent(getApplicationContext() , Activity_Payment.class);
                 String urlParameters = String.format("serviceid=%s&timeslot_id=%s&carno=%s&daysahead=%s&latt=%s&longg=%s&inst=%s" ,Integer.toString(SharedData.GetService()) , Integer.toString(SharedData.GetTimeSlot()) ,SharedData.GetDefaultCarNo(),currentTabPosition,SharedData.GetRequestLocation().latitude , SharedData.GetRequestLocation().longitude,GetAddtionalInstructions());
                 intent.putExtra("request_param",urlParameters);
@@ -294,7 +257,11 @@ public class SelectSlotActivity extends AppCompatActivity {
         }
         else
         {
-            NavUtils.navigateUpFromSameTask(this);
+            Bundle services_screen_data = new Bundle();
+            services_screen_data.putBoolean("shownext",true);
+            SharedData.clearStackOfLastActivity = true;
+            SharedData.HandleNavigation(R.id.nav_services,this,services_screen_data);
+            //NavUtils.navigateUpFromSameTask(this);
         }
     }
 

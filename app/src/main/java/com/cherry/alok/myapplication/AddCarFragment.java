@@ -429,10 +429,11 @@ public class AddCarFragment extends Fragment implements ActivityCompat.OnRequest
 
                 if(ProfileCheck())
                 {
+                    //SaveProfile(); //uncomment for simularor
+                    //uncomment below of real device
                     SetProgressBarVisibility(true);
                     SetCarRegistrationTextEditable(false);
                     SetMobileTextEditable(false);
-
                     createVerification(GetMobileNumber(),false,"91");
                 }
             }

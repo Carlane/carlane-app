@@ -466,6 +466,12 @@ public class SharedData {
                             intent_ServicePackages = new Intent(currentActivity , Activity_Services.class);
 
                         }
+                        if(clearStackOfLastActivity)
+                        {
+                            clearStackOfLastActivity = false;
+                            intent_ServicePackages.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent_ServicePackages.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        }
                         if(dataToSend != null)
                         {
                             intent_ServicePackages.putExtras(dataToSend);
@@ -519,7 +525,7 @@ public class SharedData {
         sharedDataHandler.sendMessageDelayed(msgObj, 400);
     }
 
-    public static void HandleNavigation(int id, Activity object , Bundle bundle) {
+    public static void HandleNavigation(int id, Activity object , Bundle bundle ) {
         currentActivity = object;
         Message msgObj = sharedDataHandler.obtainMessage();
         Bundle b = new Bundle();

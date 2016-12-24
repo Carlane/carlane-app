@@ -3,12 +3,14 @@
     <color name="colorPrimary">#5e35b1</color>
     <color name="colorPrimaryDark">#4527a0</color>
     <color name="colorAccent">#4527a0</color><!--text color-->
+    <color name="color_primary_disabled">#d1c4e9</color>
     <color name="blue_grey_500">#607D8B</color>
     <color name="blue_grey_600">#546E7A</color>
     <color name="blue_grey_700">#455A64</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
     <color name="primary_500">#3F51B5</color>
+
     <!--Indigo 700-->
     <color name="primary_700">#303F9F</color>
     <!--Pink 500-->
