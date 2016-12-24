@@ -184,7 +184,7 @@ public class FabHideActivity extends AppCompatActivity implements NavigationView
 
     }
     public void HideOnGoingRequestIfRequired() {
-        NavigationView nav = (NavigationView) findViewById(R.id.services_nav_view);
+        NavigationView nav = (NavigationView) findViewById(R.id.past_order_nav_view);
         Menu nav_Menu = nav.getMenu();
         HashMap<String, String> userdetailsFromDB = SharedData.FetchUser();
         int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
