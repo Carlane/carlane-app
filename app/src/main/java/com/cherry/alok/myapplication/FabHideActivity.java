@@ -121,9 +121,10 @@ public class FabHideActivity extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
 
       //  toolbarContainer = (LinearLayout) findViewById(R.id.fabhide_toolbar_container);
-        recyclerView = (RecyclerView) findViewById
-                (R.id.pastorder_recyclerview);
-
+        recyclerView = (RecyclerView) findViewById(R.id.pastorder_recyclerview);
+        toolbarHeight = (int)getApplicationContext().getResources().getDimension(R.dimen.abc_action_bar_default_height_material);
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), toolbarHeight,
+                recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
         /* Set top padding= toolbar height.
          So there is no overlap when the toolbar hides.
          Avoid using 0 for the other parameters as it resets padding set via XML!*/

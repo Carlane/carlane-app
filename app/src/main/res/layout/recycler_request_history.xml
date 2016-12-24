@@ -10,7 +10,7 @@
     android:layout_marginTop="5dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
-    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardBackgroundColor="@color/color_primary_disabled"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="@dimen/cardview_default_elevation">
 
@@ -23,14 +23,31 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="8dp">
-        <TextView
-            android:id="@+id/service_servicetype"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:text=""
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_subhead_material" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/service_servicetype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text=""
+                android:textColor="@color/primary_text_default_material_light"
+                android:textSize="@dimen/abc_text_size_subhead_material" />
+            <TextView
+                android:id="@+id/service_ongoing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:layout_gravity="right"
+                android:background="@color/colorPrimaryDark"
+                android:text="On going"
+                android:textColor="@color/amber"
+                android:textAlignment="center"
+                android:visibility="invisible"
+                android:textSize="@dimen/abc_text_size_subhead_material" />
+        </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:orientation="horizontal">

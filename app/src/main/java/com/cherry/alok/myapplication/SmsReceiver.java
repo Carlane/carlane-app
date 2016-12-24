@@ -13,28 +13,33 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle data  = intent.getExtras();
+        try {
+            Bundle data  = intent.getExtras();
 
-        Object[] pdus = (Object[]) data.get("pdus");
-        SmsMessage smsMessage;
-        for(int i=0;i<pdus.length;i++){
+            Object[] pdus = (Object[]) data.get("pdus");
+            SmsMessage smsMessage;
+            for(int i=0;i<pdus.length;i++){
 
-            String format = data.getString("format");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i] , format);
+                String format = data.getString("format");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i] , format);
+                }
+                else
+                {
+                     smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                }
+
+                String sender = smsMessage.getDisplayOriginatingAddress();
+                //You must check here if the sender is your provider and not another one with same text.
+
+                String messageBody = smsMessage.getMessageBody();
+
+                //Pass on the text to our listener.
+                if(mListener!= null)mListener.messageReceived(smsMessage);
             }
-            else
-            {
-                 smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-            }
-
-            String sender = smsMessage.getDisplayOriginatingAddress();
-            //You must check here if the sender is your provider and not another one with same text.
-
-            String messageBody = smsMessage.getMessageBody();
-
-            //Pass on the text to our listener.
-            mListener.messageReceived(smsMessage);
+        } catch (Exception e) {
+            //suppressing it for now
+            e.printStackTrace();
         }
 
     }

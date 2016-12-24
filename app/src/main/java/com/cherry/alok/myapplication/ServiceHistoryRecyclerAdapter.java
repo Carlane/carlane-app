@@ -94,6 +94,10 @@ public class ServiceHistoryRecyclerAdapter extends RecyclerView.Adapter<ServiceH
                 versionViewHolder.service_subdetails.setText(currentDetail.get("drivername"));
                 //service_statusdetails
                 versionViewHolder.service_statusdetails.setText(SharedData.GetRequestStatus(status));
+                if(status < 10)
+                {
+                    versionViewHolder.service_ongoing.setVisibility(View.VISIBLE);
+                }
 
             }
         }
@@ -110,6 +114,7 @@ public class ServiceHistoryRecyclerAdapter extends RecyclerView.Adapter<ServiceH
     class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView car_details;
         TextView service_type;
+        TextView service_ongoing;
         TextView car_regno;
         TextView service_heading;
         TextView service_subdetails;
@@ -119,6 +124,7 @@ public class ServiceHistoryRecyclerAdapter extends RecyclerView.Adapter<ServiceH
         public VersionViewHolder(View itemView) {
             super(itemView);
             service_type = (TextView) itemView.findViewById(R.id.service_servicetype);
+            service_ongoing = (TextView)itemView.findViewById(R.id.service_ongoing);
             car_details = (TextView) itemView.findViewById(R.id.service_cardetails);
             car_regno = (TextView) itemView.findViewById(R.id.service_car_reg);
             service_heading = (TextView) itemView.findViewById(R.id.service_heading);
