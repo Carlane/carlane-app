@@ -27,9 +27,15 @@
             <Button
                 android:id="@+id/services_signout"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:text="SignOut"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
+                style="@style/ButtonStylePositiveBlue2"
+                android:background="@color/color_primary_button"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
             </Button>
         </RelativeLayout>
     </android.support.design.widget.NavigationView>

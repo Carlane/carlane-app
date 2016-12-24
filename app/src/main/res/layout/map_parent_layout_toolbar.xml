@@ -30,7 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/arrow_next_3"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/map_fab"
@@ -40,7 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="top|end"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="70dp"
         android:src="@android:drawable/ic_dialog_map"
         app:layout_anchor="@id/dummy_fab"
         app:layout_anchorGravity="top" />

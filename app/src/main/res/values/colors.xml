@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#4527a0</color>
     <color name="colorAccent">#4527a0</color><!--text color-->
     <color name="color_primary_disabled">#d1c4e9</color>
+    <color name = "color_primary_button">#7c4dff</color>
     <color name="blue_grey_500">#607D8B</color>
     <color name="blue_grey_600">#546E7A</color>
     <color name="blue_grey_700">#455A64</color>

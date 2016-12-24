@@ -21,15 +21,22 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" >
+        <!--android:background="@color/color_primary_button"-->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <Button
                 android:id="@+id/usercar_signout"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:text="SignOut"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
+                style="@style/ButtonStylePositiveBlue2"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
             </Button>
         </RelativeLayout>
         </android.support.design.widget.NavigationView>
