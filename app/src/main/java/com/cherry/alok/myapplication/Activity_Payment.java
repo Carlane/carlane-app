@@ -42,6 +42,8 @@ public class Activity_Payment extends AppCompatActivity {
     {
         TextView final_cost = (TextView)findViewById(R.id.final_cost);
         TextView service_cost = (TextView)findViewById(R.id.service_cost_value);
+        TextView textview_serviceType = (TextView)findViewById(R.id.textview_serviceType);
+        textview_serviceType.setText(SharedData.GetServiceName().toUpperCase() + " " +"Car Wash");
         TextView total_cost = (TextView)findViewById(R.id.total_value) ;
         String cost =  PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("service_cost" , "0.0000");
         final_cost.setText("INR " + cost);
@@ -54,7 +56,7 @@ public class Activity_Payment extends AppCompatActivity {
     public void RegisterOrderPlacement()
     {
         Button order_confirm = (Button)findViewById(R.id.place_order) ;
-        order_confirm.setText("PLACE YOUR "+ SharedData.GetServiceName().toUpperCase()+ "ORDER");
+        order_confirm.setText("PLACE YOUR ORDER");
         order_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

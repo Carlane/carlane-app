@@ -96,6 +96,7 @@ public class SelectSlot_TabFragment extends Fragment {
          listView.setAdapter(new_adapter);
         confirm_request = (Button)getActivity().findViewById(R.id.confirm_request);
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

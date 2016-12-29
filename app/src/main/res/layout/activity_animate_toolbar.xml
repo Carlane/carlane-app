@@ -55,7 +55,7 @@
         android:clickable="true"
         android:src="@drawable/ic_action_add"
         app:layout_anchor="@+id/appbar"
-
+        android:visibility="gone"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>

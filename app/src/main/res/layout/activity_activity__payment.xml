@@ -60,8 +60,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="You Need To Pay"
-            android:textAlignment="center"/>
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:id="@+id/textview_serviceType"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -197,7 +198,7 @@
                             style="@style/TextViewStyleReviewLabel"
                             android:layout_width="0dp"
                             android:layout_weight=".5"
-                            android:text="Total"/>
+                            android:text="Total Amount To Pay"/>
 
                         <TextView
                             android:id="@+id/total_value"

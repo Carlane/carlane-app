@@ -102,7 +102,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         {
                     if(usercarDetailsMap != null) {
                         HashMap<String, String> currentDetail = usercarDetailsMap.get(i);
-                        versionViewHolder.brand.setText(currentDetail.get("brand"));
+                        versionViewHolder.brand.setText(currentDetail.get("brand") +" " + currentDetail.get("model"));
                         versionViewHolder.model.setText(currentDetail.get("model"));
                         versionViewHolder.regNo.setText(currentDetail.get("regno"));
                         String model = versionViewHolder.model.getText().toString();
@@ -664,7 +664,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         public VersionViewHolder(View itemView) {
             super(itemView);
 
-            cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
+            //cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
 
             brand = (TextView) itemView.findViewById(R.id.carbrand_label_clps);
             model = (TextView) itemView.findViewById(R.id.carmodel_label_clps);

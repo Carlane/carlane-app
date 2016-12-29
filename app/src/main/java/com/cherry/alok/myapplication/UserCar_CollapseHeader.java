@@ -103,7 +103,7 @@ public class UserCar_CollapseHeader extends AppCompatActivity implements Navigat
             navigationView.setNavigationItemSelectedListener(this);
 
             collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle("Select Yours");
+            collapsingToolbar.setTitle("Your Vehicle");
 
             ImageView header = (ImageView) findViewById(R.id.header);
 

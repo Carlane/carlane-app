@@ -267,17 +267,17 @@ public class SelectSlotActivity extends AppCompatActivity {
 
     public void RollDowntheUi()
     {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
+        //CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
         //View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
-        slotsView.animate().translationY(slotsView.getHeight()*-1).setDuration(700).start();
+        //slotsView.animate().translationY(slotsView.getHeight()*-1).setDuration(700).start();
         //bottomSheet.animate().translationY(bottomSheet.getHeight()*1).setDuration(1500).start();
     }
 
     public void RollUpTheUi()
     {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
+       // CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.selectslot_cordlayout);
         //View bottomSheet = coordinatorLayout.findViewById(R.id.selectslot_bottom_sheet);
-        slotsView.animate().translationY(slotsView.getHeight()*0).setDuration(500).start();
+       // slotsView.animate().translationY(slotsView.getHeight()*0).setDuration(500).start();
         // behavior.setPeekHeight(0);
         //behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         //bottomSheet.animate().translationY(slotsView.getHeight()*0).setDuration(1000).start();
