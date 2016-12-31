@@ -137,11 +137,13 @@ public class SharedData {
     }
 
     public static String GetUserName() {
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
+        USER_NAME = userdetailsFromDB.get("name");
         return USER_NAME;
     }
 
     public static int GetUserId() {
-
+        HashMap<String , String> userdetailsFromDB = SharedData.FetchUser();
         USER_LOG_ID = myDbHelper.GetUserId();
         return USER_LOG_ID;
     }

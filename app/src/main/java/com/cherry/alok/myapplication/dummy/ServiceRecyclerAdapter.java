@@ -1,6 +1,9 @@
 package com.cherry.alok.myapplication.dummy;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +21,9 @@ import com.cherry.alok.myapplication.SharedData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -97,6 +103,20 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
         return service_id_list.size();
     }
 
+    private void loadImageFromStorage(int i ,  ImageView imgView) {
+
+        try {
+            ContextWrapper cw = new ContextWrapper(context);
+            File path1 = cw.getDir("profile", Context.MODE_PRIVATE);
+            File f = new File(path1, i+".png");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            imgView.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public void onBindViewHolder(VersionViewHolder versionViewHolder, int i) {
         {
@@ -105,7 +125,7 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
             try {
                 String name = attributes.getString("name");
                 versionViewHolder.service_name.setText(name);
-
+                loadImageFromStorage(i , versionViewHolder.service_logo);
                 versionViewHolder.services_description_small.setText(attributes.getString("description"));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -179,6 +199,7 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
 
     class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView service_selected;
+        ImageView service_logo;
         TextView service_name;
         TextView services_description_small;
 
@@ -190,6 +211,7 @@ public class ServiceRecyclerAdapter extends RecyclerView.Adapter<ServiceRecycler
             super(itemView);
             service_name = (TextView) itemView.findViewById(R.id.service_name);
             service_selected = (ImageView) itemView.findViewById(R.id.services_select_icon);
+            service_logo = (ImageView) itemView.findViewById(R.id.service_logo);
             services_description_small = (TextView) itemView.findViewById(R.id.services_description_small);
             text_moredetails = (TextView)itemView.findViewById(R.id.text_moredetails);
 

@@ -2,9 +2,11 @@ package com.cherry.alok.myapplication;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +28,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +88,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             shownext = bundle.getBoolean("shownext");
         }
 
-
+        //SetImageOnDrawer();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.services_collapse_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -96,21 +102,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                ImageView nav_back = (ImageView)findViewById(R.id.imageView);
-                Bitmap navImg = SharedData.GetUserpic();
-                if(nav_back!= null)
-                {
-                    RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
-                    drawable.setCircular(true);
-                    nav_back.setImageDrawable(drawable);
-                    //bmImage.setImageBitmap(result);
-                }
-
-                TextView txt = (TextView)findViewById(R.id.userNameText);
-                if(txt != null)
-                {
-                    txt.setText(SharedData.GetUserName());
-                }
+                SetImageOnDrawer(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
                 HideOnGoingRequestIfRequired();
             }
@@ -317,6 +309,27 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
             }
         });
+
+
+    }
+
+    public void SetImageOnDrawer(View drawerView)
+    {
+        ImageView nav_back = (ImageView)drawerView.findViewById(R.id.imageView);
+        Bitmap navImg = SharedData.GetUserpic();
+        if(nav_back!= null)
+        {
+            RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),navImg);
+            drawable.setCircular(true);
+            nav_back.setImageDrawable(drawable);
+            //bmImage.setImageBitmap(result);
+        }
+
+        TextView txt = (TextView)findViewById(R.id.userNameText);
+        if(txt != null)
+        {
+            txt.setText(SharedData.GetUserName());
+        }
 
 
     }
@@ -585,9 +598,15 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                                 if(IsUpdateRequired())
                                 {
                                     PostOperation();
+                                    GetServicesFromSharedPrefs();
+                                    GetImagesFromData();
                                 }
-                                SetRecyclerAdapter();
-                                GetServicesFromSharedPrefs();
+                                else
+                                {
+                                    GetServicesFromSharedPrefs();
+                                    SetRecyclerAdapter();
+                                }
+
                             }
                             break;
 
@@ -607,6 +626,27 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
         }
     };
+
+    public void GetImagesFromData()
+    {
+        try {
+            //GetServicesFromSharedPrefs();
+            for (int i = 0; i < service_id_list.size(); i++) {
+                JSONObject attributes = GetServiceAttributes(i);
+                String logo = attributes.getString("logo");
+                int j=0;
+                j++;
+                LoadProfileImage lfi =  new LoadProfileImage(i);
+                if(lfi != null) {
+                    lfi.execute(logo);
+                }
+
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     String updatedVersion = "";
     public boolean IsUpdateRequired()
@@ -636,7 +676,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         return false;
     }
 
-
+    static int count = 0;
 
     public void PostOperation()
     {
@@ -723,6 +763,69 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
     {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("saved_service_ids" , "").commit();
 
+    }
+
+    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+        int service_id;
+
+        public LoadProfileImage(int i) {
+            service_id = i;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap user_pic = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                user_pic = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            SavePhoto(user_pic , service_id);
+            return user_pic;
+        }
+
+        public void SavePhoto(Bitmap resizedbitmap , int i)
+        {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File directory = cw.getDir("profile", Context.MODE_PRIVATE);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            File mypath = new File(directory, i + ".png");
+
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(mypath);
+                resizedbitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                Log.e("SAVE_IMAGE", e.getMessage(), e);
+            }
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            count++;
+            if(count == service_id_list.size())
+            {
+                SetRecyclerAdapter();
+
+            }
+           /* if(bmImage!= null)
+            {
+                RoundedBitmapDrawable drawable = RoundedBitmapDrawableFactory.create(getResources(),result);
+                drawable.setCircular(true);
+                bmImage.setImageDrawable(drawable);
+                TextView txt = (TextView)findViewById(R.id.userNameText);
+                if(txt != null)
+                {
+                    txt.setText(SharedData.GetUserName());
+                }
+                invalidateOptionsMenu();
+                //bmImage.setImageBitmap(result);
+            }*/
+        }
     }
 
 }
