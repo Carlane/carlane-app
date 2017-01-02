@@ -2,6 +2,7 @@ package com.cherry.alok.myapplication;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -22,6 +23,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,11 +129,33 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
         }
     }
+    private boolean loadImageFromStorage(String model ,  ImageView imgView) {
+
+        try {
+            ContextWrapper cw = new ContextWrapper(context);
+            File path1 = cw.getDir("carimages", Context.MODE_PRIVATE);
+            File f = new File(path1, model+".png");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            imgView.setImageBitmap(b);
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public void SetImage(VersionViewHolder versionViewHolder , String model)
         {
+            if(loadImageFromStorage(model , versionViewHolder.carImage ) == false)
+            {
+                LoadProfileImage lfi =  new LoadProfileImage(versionViewHolder.carImage , model);
+                if(lfi != null) {
+                    lfi.execute("https://s3.ap-south-1.amazonaws.com/carlane-misc/icon_premium.png");
+                }
 
-            switch(model)
+            }
+            return;
+            /*switch(model)
             {
                 case "A-Star":
                 {
@@ -257,11 +284,11 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                 break;
                 case "Aveo UVA":
                 {
-                  /*  LoadProfileImage lfi =  new LoadProfileImage(versionViewHolder.carImage);
+                  *//*  LoadProfileImage lfi =  new LoadProfileImage(versionViewHolder.carImage);
                     if(lfi != null) {
                         String aResponse = "https://doc-00-8c-docs.googleusercontent.com/docs/securesc/0jkq71fpli9a695n1bef14hh97r2t073/4hbnqhuvuesqv7knoenomj4sp6q7t3hs/1471255200000/11634506716492073008/11634506716492073008/0B-r8xPUnEGoEeF9OTkp2NDBpUzQ?e=download&nonce=vu5u80g55soa0&user=11634506716492073008&hash=94coasc651tailnpheohfrohi7hmam24";
                         lfi.execute(aResponse);
-                    }*/
+                    }*//*
                     versionViewHolder.carImage.setImageResource(R.drawable.chevy_aveo);
                 }
                 break;
@@ -572,7 +599,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                 }
                 break;
 
-            }
+            }*/
         }
 
     private final Handler mainhandler = new Handler() {
@@ -609,11 +636,16 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
         ImageView bmImage;
         Bitmap bitmap;
         Handler uiHandler = null;
+        String carModel;
 
-        public LoadProfileImage(ImageView bmImage) {
+        public LoadProfileImage(ImageView bmImage , String model) {
             if(bmImage!= null)
             {
                 this.bmImage = bmImage;
+            }
+            if(model != null)
+            {
+                carModel = model;
             }
         }
 
@@ -627,8 +659,27 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            SharedData.SetUserpic(user_pic);
+            SavePhoto(user_pic , carModel);
             return user_pic;
+        }
+
+        public void SavePhoto(Bitmap resizedbitmap , String model)
+        {
+            ContextWrapper cw = new ContextWrapper(context);
+            File directory = cw.getDir("carimages", Context.MODE_PRIVATE);
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            File mypath = new File(directory, carModel + ".png");
+
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(mypath);
+                resizedbitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (Exception e) {
+                Log.e("SAVE_IMAGE", e.getMessage(), e);
+            }
         }
 
         protected void onPostExecute(Bitmap result) {
@@ -638,7 +689,8 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
                // drawable.setCircular(true);
                 bitmap = result;
 
-                bmImage.setImageBitmap(result);
+                //bmImage.setImageBitmap(result);
+                loadImageFromStorage(carModel , bmImage);
             }
 
         }
