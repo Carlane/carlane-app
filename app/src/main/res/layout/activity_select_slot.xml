@@ -16,20 +16,71 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/rel_checkout"
-    android:layout_alignParentBottom="true">
-    <Button
-        android:id="@+id/confirm_request"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="5dp"
-        android:shadowColor="#00ccff"
-        android:shadowRadius="1.5"
-        android:shadowDx="1"
-        android:shadowDy="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/toplayout"
+        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        style="@style/ButtonStylePositiveBlue2"
-        />
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            >
+            <ImageView
+                android:id="@+id/carlogo"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.2"
+                android:src="@drawable/hyundai_cars"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat"
+                android:textSize="20sp"
+                android:shadowColor="#00ccff"
+                android:shadowRadius="1.5"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:id="@+id/request_car_text"
+                android:layout_weight="0.6" />
+            <Button
+                android:id="@+id/carselect"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.2"
+                android:background="@drawable/car_option_garage"/>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/confirm_request"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="5dp"
+            android:shadowColor="#00ccff"
+            android:shadowRadius="1.5"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:layout_alignParentBottom="true"
+            style="@style/ButtonStylePositiveBlue2"
+            />
+
+
+    </LinearLayout>
+
 </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
@@ -38,6 +89,7 @@
         tools:context="com.cherry.alok.myapplication.OrderActivity"
         tools:showIn="@layout/order_parent"
         android:id="@+id/scroll"
+        android:layout_marginBottom="50dp"
         android:scrollbars="vertical|horizontal">
 
     <LinearLayout
@@ -64,7 +116,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/tabdate_viewpager"
                 android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_height="250dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>
@@ -72,7 +124,7 @@
         <View
             android:id="@+id/line_slot"
             style="@style/LineViewStyleLight"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
@@ -88,56 +140,7 @@
             android:layout_gravity="center_horizontal"
             android:maxLength="500"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/toplayout"
-            android:layout_gravity="bottom"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="25dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                >
-                <ImageView
-                    android:id="@+id/carlogo"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="0.2"
-                    android:src="@drawable/hyundai_cars"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat"
-                    android:textSize="20sp"
-                    android:shadowColor="#00ccff"
-                    android:shadowRadius="1.5"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:id="@+id/request_car_text"
-                    android:layout_weight="0.6" />
-                <Button
-                    android:id="@+id/carselect"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.2"
-                    android:background="@drawable/car_option_garage"/>
-
-            </LinearLayout>
-
-
-
-
-
-        </LinearLayout>
        <!-- <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -45,6 +45,8 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -240,7 +242,22 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
                 //TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
                 //TextView services_user_notice = (TextView)findViewById(R.id.services_user_notice);
                 Button next_button = (Button)findViewById(R.id.service_select_next);
-                switch (position) {
+                if(position < SharedData.GetSharedPrefValue(getApplicationContext() , "service_count"))
+                {
+                    next_button.setEnabled(true);
+                    SetTexts(position);
+                    SharedData.SetService(position+1);
+                }
+                else if(position < 999+ SharedData.GetSharedPrefValue(getApplicationContext() , "service_count"))
+                {
+                    SetTexts(position - 999);
+                    behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                else
+                {
+                    Toast.makeText(getBaseContext(), "Undefined Click!", Toast.LENGTH_SHORT).show();
+                }
+/*                switch (position) {
                     case 0:
                         //view.animate().translationY(view.getHeight()*1).setDuration(500).start();
                       //  behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -299,7 +316,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
 
                     default:
                         Toast.makeText(getBaseContext(), "Undefined Click!", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                /* String url = "CarInfo/"+SharedData.GetUserId()+"/";
                 uniTask = new UniversalAsyncTask(url,"GET","" ,handler);
 
@@ -414,24 +431,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         try {
             JSONObject attributes = GetServiceAttributes(i);
             TextView service_name_bottomsheet = (TextView)findViewById(R.id.service_name_bottomsheet);
-            ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
-            TextView internal_text1 = (TextView)findViewById(R.id.text_1);
-            TextView internal_text2 = (TextView)findViewById(R.id.text_2);
-            TextView internal_text3 = (TextView)findViewById(R.id.text_3);
-            TextView internal_text4 = (TextView)findViewById(R.id.text_4);
-            TextView internal_text5 = (TextView)findViewById(R.id.text_5);
-            TextView internal_text6 = (TextView)findViewById(R.id.text_6);
 
-
-            TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
-            TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
-            TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
-            TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
-            TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
-            TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
-            TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
-            TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
-            TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
 
 
             TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
@@ -439,88 +439,126 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             //TextView service_cost_small_btmsheet = (TextView)findViewById(R.id.service_cost_small_btmsheet);
            // service_cost_small_btmsheet.setText( attributes.getString("cost"));
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("service_cost" ,  attributes.getString("cost")).commit();
-            switch(i)
-            {
-                case 0:
-                {
-                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
-                    internal_text1.setText("1. "+ attributes.getString("attribute_1"));
-                    internal_text2.setText("");
-                    internal_text3.setText("");
-                    internal_text4.setText("");
-                    internal_text5.setText("");
-                    internal_text6.setText("");
+            ClearTexts();
+            SetTheText(attributes);
+            ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
+
+            service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
+            loadImageFromStorage( i , washlogo);
 
 
-                    external_text1.setText("1. " + attributes.getString("attribute_11"));
-                    external_text2.setText("2. " + attributes.getString("attribute_12"));
-                    external_text3.setText("3. " + attributes.getString("attribute_13"));
-                    external_text4.setText("4. " + attributes.getString("attribute_14"));
-                    external_text5.setText("5. " + attributes.getString("attribute_15"));
-
-                    external_text6.setText("");
-                    external_text7.setText("");
-                    external_text8.setText("");
-                    external_text9.setText("");
-                    washlogo.setImageResource(R.drawable.lightening);
-
-                }
-                break;
-                case 1:
-                {
-                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
-                    internal_text1.setText("1. " + attributes.getString("attribute_1"));
-                    internal_text2.setText("2. " + attributes.getString("attribute_2"));
-                    internal_text3.setText("3. " + attributes.getString("attribute_3"));
-                    internal_text4.setText("");
-                    internal_text5.setText("");
-                    internal_text6.setText("");
-
-
-                    external_text1.setText("1. " + attributes.getString("attribute_11"));
-                    external_text2.setText("2. " + attributes.getString("attribute_12"));
-                    external_text3.setText("3. " + attributes.getString("attribute_13"));
-                    external_text4.setText("4. " + attributes.getString("attribute_14"));
-                    external_text5.setText("5. " + attributes.getString("attribute_15"));
-                    external_text6.setText("");
-                    external_text7.setText("");
-                    external_text8.setText("");
-                    external_text9.setText("");
-                    washlogo.setImageResource(R.drawable.balance);
-
-                }
-                break;
-                case 2:
-                {
-                    service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
-                    internal_text1.setText("1. " + attributes.getString("attribute_1"));
-                    internal_text2.setText("2. " + attributes.getString("attribute_2"));
-                    internal_text3.setText("3. " + attributes.getString("attribute_3"));
-                    internal_text4.setText("4. " + attributes.getString("attribute_4"));
-                    internal_text5.setText("5. " + attributes.getString("attribute_5"));
-                    internal_text6.setText("6. " + attributes.getString("attribute_6"));
-
-                    external_text1.setText("1. " + attributes.getString("attribute_11"));
-                    external_text2.setText("2. " + attributes.getString("attribute_12"));
-                    external_text3.setText("3. " + attributes.getString("attribute_13"));
-                    external_text4.setText("");
-                    external_text4.setText("4. " + attributes.getString("attribute_14"));
-                    external_text5.setText("5. " + attributes.getString("attribute_15"));
-                    external_text6.setText("6. " + attributes.getString("attribute_16"));
-                    external_text7.setText("7. " + attributes.getString("attribute_17"));
-                    external_text8.setText("8. " + attributes.getString("attribute_18"));
-                    external_text9.setText("");
-                    washlogo.setImageResource(R.drawable.star);
-
-
-                }
-                break;
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    private void loadImageFromStorage(int i ,  ImageView imgView) {
+
+        try {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            File path1 = cw.getDir("profile", Context.MODE_PRIVATE);
+            File f = new File(path1, i+".png");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            imgView.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void ClearTexts()
+    {
+        ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
+        TextView internal_text1 = (TextView)findViewById(R.id.text_1);
+        TextView internal_text2 = (TextView)findViewById(R.id.text_2);
+        TextView internal_text3 = (TextView)findViewById(R.id.text_3);
+        TextView internal_text4 = (TextView)findViewById(R.id.text_4);
+        TextView internal_text5 = (TextView)findViewById(R.id.text_5);
+        TextView internal_text6 = (TextView)findViewById(R.id.text_6);
+
+
+        TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
+        TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
+        TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
+        TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
+        TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
+        TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
+        TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
+        TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
+        TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
+
+        internal_text1.setText("");
+        internal_text2.setText("");
+        internal_text3.setText("");
+        internal_text4.setText("");
+        internal_text5.setText("");
+        internal_text6.setText("");
+        external_text1.setText("");
+        external_text2.setText("");
+        external_text3.setText("");
+        external_text4.setText("");
+        external_text4.setText("");
+        external_text5.setText("");
+        external_text6.setText("");
+        external_text7.setText("");
+        external_text8.setText("");
+        external_text9.setText("");
+
+    }
+
+    public void SetTheText(JSONObject attributes) {
+
+        TextView internal_text1 = (TextView)findViewById(R.id.text_1);
+        TextView internal_text2 = (TextView)findViewById(R.id.text_2);
+        TextView internal_text3 = (TextView)findViewById(R.id.text_3);
+        TextView internal_text4 = (TextView)findViewById(R.id.text_4);
+        TextView internal_text5 = (TextView)findViewById(R.id.text_5);
+        TextView internal_text6 = (TextView)findViewById(R.id.text_6);
+
+
+        TextView external_text1 = (TextView)findViewById(R.id.text_external_1);
+        TextView external_text2 = (TextView)findViewById(R.id.text_external_2);
+        TextView external_text3 = (TextView)findViewById(R.id.text_external_3);
+        TextView external_text4 = (TextView)findViewById(R.id.text_external_4);
+        TextView external_text5 = (TextView)findViewById(R.id.text_external_5);
+        TextView external_text6 = (TextView)findViewById(R.id.text_external_6);
+        TextView external_text7 = (TextView)findViewById(R.id.text_external_7);
+        TextView external_text8 = (TextView)findViewById(R.id.text_external_8);
+        TextView external_text9 = (TextView)findViewById(R.id.text_external_9);
+        try {
+
+        if(attributes.getString("attribute_1").isEmpty() == false)internal_text1.setText("1. "+ attributes.getString("attribute_1"));
+
+        if(attributes.getString("attribute_2").isEmpty() == false) internal_text2.setText("2. "+ attributes.getString("attribute_2"));
+        if(attributes.getString("attribute_3").isEmpty() == false) internal_text3.setText("3. "+ attributes.getString("attribute_3"));
+        if(attributes.getString("attribute_4").isEmpty() == false) internal_text4.setText("4. "+ attributes.getString("attribute_4"));
+        if(attributes.getString("attribute_5").isEmpty() == false) {
+            internal_text5.setText("5. " + attributes.getString("attribute_5"));
+        }
+        if(attributes.getString("attribute_6").isEmpty() == false)
+        {
+            internal_text6.setText("6. "+ attributes.getString("attribute_6"));
+        }
+
+
+        if(attributes.getString("attribute_11").isEmpty() == false)external_text1.setText("1. " + attributes.getString("attribute_11"));
+        if(attributes.getString("attribute_12").isEmpty() == false)external_text2.setText("2. " + attributes.getString("attribute_12"));
+        if(attributes.getString("attribute_13").isEmpty() == false)external_text3.setText("3. " + attributes.getString("attribute_13"));
+        if(attributes.getString("attribute_14").isEmpty() == false)external_text4.setText("4. " + attributes.getString("attribute_14"));
+        if(attributes.getString("attribute_15").isEmpty() == false)external_text5.setText("5. " + attributes.getString("attribute_15"));
+
+        if(attributes.getString("attribute_16").isEmpty() == false)external_text6.setText("6. " + attributes.getString("attribute_16"));
+        if(attributes.getString("attribute_17").isEmpty() == false)external_text7.setText("7. " + attributes.getString("attribute_17"));;
+        if(attributes.getString("attribute_18").isEmpty() == false)external_text8.setText("8. " + attributes.getString("attribute_18"));;
+        if(attributes.getString("attribute_19").isEmpty() == false)
+        {
+            external_text5.setText("9. " + attributes.getString("attribute_19"));
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
