@@ -431,7 +431,7 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
         try {
             JSONObject attributes = GetServiceAttributes(i);
             TextView service_name_bottomsheet = (TextView)findViewById(R.id.service_name_bottomsheet);
-
+            TextView service_cost_bottomsheet = (TextView)findViewById(R.id.service_cost_bottomsheet);
 
 
             TextView text_cost_hatch_Sedan = (TextView)findViewById(R.id.cost_text_hatch_sedan);
@@ -443,7 +443,8 @@ public class Activity_Services extends AppCompatActivity implements NavigationVi
             SetTheText(attributes);
             ImageView washlogo = (ImageView)findViewById(R.id.wash_logo);
 
-            service_name_bottomsheet.setText(attributes.getString("name") + "WASH");
+            service_name_bottomsheet.setText(attributes.getString("name") + " WASH");
+            service_cost_bottomsheet.setText("INR "+attributes.getString("cost"));
             loadImageFromStorage( i , washlogo);
 
 
