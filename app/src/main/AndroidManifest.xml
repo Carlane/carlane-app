@@ -37,6 +37,7 @@
         </activity>
         <activity
             android:name=".LocationActivityMap"
+            android:label="Pick Up Location"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PagerActivity"
@@ -46,13 +47,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity_Services"
+            android:label="MyCarLane Packages"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity_AddCar"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".SelectSlotActivity">
+        <activity android:name=".SelectSlotActivity" android:label="Pick Up Date And Time">
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cherry.alok.myapplication.Activity_Services" />
@@ -76,9 +77,9 @@
         <activity
             android:name=".TransparentActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".FeedbackActivity" android:label="Order Feedback" />
         <activity android:name=".FabHideActivity" android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity_Payment">
+        <activity android:name=".Activity_Payment" android:label="Order Summary">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cherry.alok.myapplication.SelectSlotActivity" />

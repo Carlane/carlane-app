@@ -45,7 +45,7 @@ public class SharedData {
       NewProfile(1),
       CarProfile(2),
       RequestPending(3),
-      FeedbackPending(4);
+      FeedbackPending(5);
         private int id;
 
         UserStatus(int id){
@@ -168,6 +168,25 @@ public class SharedData {
     {
         String name="Basic";
         switch (GetService())
+        {
+            case 1:
+                name = "Basic";
+                break;
+            case 2:
+                name ="Premium";
+                break;
+            case 3:
+                name="Platinum";
+                break;
+        }
+        return name;
+
+    }
+
+    public static String GetServiceName(int id)
+    {
+        String name="Basic";
+        switch (id)
         {
             case 1:
                 name = "Basic";

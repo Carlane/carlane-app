@@ -517,7 +517,7 @@ public class SignInFragment extends Fragment implements
                         }
                         else if(Objects.equals(profile,"FeedbackPending"))
                         {
-                            SharedData.UpdateUserStatusInDb(4);
+                            SharedData.UpdateUserStatusInDb(5);
                             SharedData.HandleNavigation(R.id.nav_feedback,getActivity(),true);
                         }
                         hideProgressDialog();

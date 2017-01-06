@@ -141,7 +141,7 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             e.printStackTrace();
         }
 
-        setTitle("Order");
+        setTitle("Ongoing Order ");
 
         if (SharedData.GetDefaultCarNo() != null) {
             Init_StatusUpdate();
@@ -326,7 +326,8 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     {
        // showProgressDialog("Fetching Order Details");
         String url = "requestatusinfo/"+SharedData.GetUserId()+"/";
-        String urlParameters = String.format("car_reg=%s" ,SharedData.GetDefaultCarNo());
+        int request_status = 7;
+        String urlParameters = String.format("car_reg=%s&request_status=%s" ,SharedData.GetDefaultCarNo(),Integer.toString(request_status));
         current_task = AsyncActivities.UPDATE_STATUS;
         uniTask = new UniversalAsyncTask(url,"POST",urlParameters ,orderScreenHandler);
         uniTask.execute();

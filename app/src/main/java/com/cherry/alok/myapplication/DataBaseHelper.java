@@ -291,7 +291,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.insert("usercar", null, contentValues);
         int number = numberOfRows();
         //as soon as you insert a car user status should be updated to CarProfile
-        UpdateUserStatus(2);
+        HashMap<String , String> userdetailsFromDB = FetchUser();
+        int userStatus = Integer.parseInt(userdetailsFromDB.get("status"));
+        if (userStatus < 2) {
+            UpdateUserStatus(2);
+
+        }
         return true;
 
     }

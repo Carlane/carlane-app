@@ -7,21 +7,48 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/deep_purple"
-    tools:context="com.cherry.alok.myapplication.FeedbackActivity">
+    android:background="@color/color_primary_disabled"
+    tools:context="com.cherry.alok.myapplication.FeedbackActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_brand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_gravity="center_horizontal|center_vertical">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
+            <TextView
+                android:id="@+id/label_orderdetails"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+                style="@style/TextViewStyleXVerySmall"
+                android:theme="@style/Base.CardView"/>
+            <View
+                android:id="@+id/line_recipient2"
+                style="@style/LineViewStyle"
+                android:layout_marginTop="@dimen/activity_margin_quarter"
+                android:layout_marginBottom="@dimen/activity_margin_quarter"
+   />
+
+
         <TextView
             android:id="@+id/label_washrating"
             android:layout_width="fill_parent"
@@ -36,19 +63,19 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:numStars="9"
+            android:numStars="5"
             android:stepSize="1"
             android:rating="1.0"
-            android:scaleX="0.25"
-            android:scaleY="0.25"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
             />
                     <View
                         android:id="@+id/line_recipient"
                         style="@style/LineViewStyle"
                         android:layout_marginTop="@dimen/activity_margin_quarter"
-                        android:layout_marginBottom="@dimen/activity_margin_quarter"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                        android:layout_marginBottom="@dimen/activity_margin_quarter" />
+
+
             <TextView
                 android:id="@+id/label_driverrating"
                 android:layout_width="fill_parent"
@@ -59,10 +86,10 @@
                 style="@style/TextViewStyleXVerySmall"/>
             <RatingBar
                 android:id="@+id/driverrating"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:numStars="4"
+                android:numStars="5"
                 android:stepSize="1"
                 android:rating="1.0"
                 android:scaleX="0.75"
@@ -73,8 +100,6 @@
                             <View
 
                                 style="@style/LineViewStyle"
-                                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                                android:layout_marginRight="@dimen/activity_horizontal_margin"
                                 android:layout_marginTop="@dimen/activity_margin_quarter"
                                 android:layout_marginBottom="@dimen/activity_margin_quarter"/>
             <TextView
@@ -88,10 +113,10 @@
                 style="@style/TextViewStyleXVerySmall"/>
             <RatingBar
                 android:id="@+id/overallrating"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:numStars="4"
+                android:numStars="5"
                 android:stepSize="1.0"
                 android:rating="1.0"
                 android:scaleX="0.75"
@@ -104,15 +129,13 @@
             <View
 
                                     style="@style/LineViewStyle"
-                                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                                    android:layout_marginTop="@dimen/activity_margin_quarter"
+                android:layout_marginTop="@dimen/activity_margin_quarter"
                                     android:layout_marginBottom="@dimen/activity_margin_quarter"/>
 
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:inputType="textMultiLine"
                 android:ems="10"
                 android:id="@+id/feedback_editText"
@@ -120,6 +143,7 @@
                 android:scrollbars="vertical"
                 android:hint="Leave a Comment. Thanks !"
                 android:layout_gravity="center_horizontal"
+
                 android:maxLength="500"/>
 
             <Button
@@ -131,7 +155,7 @@
                 android:shadowColor="#00ccff"
                 android:shadowDx="1"
                 android:shadowDy="1"
-                style="@style/ButtonStylePositiveFull"
+                style="@style/ButtonStylePositiveBlue2"
                 />
 
 
