@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/arrow_next_3"
         android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -55,7 +54,6 @@
         android:layout_gravity="top|end"
         android:background="@color/red"
         android:layout_marginBottom="170dp"
-        android:src="@drawable/arrow_next_2"
         app:layout_anchor="@id/map_fab"
         app:layout_anchorGravity="top"
         android:visibility="gone"/>

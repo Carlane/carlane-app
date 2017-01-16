@@ -746,7 +746,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
                     }
                 }
-                checkImage.setImageResource(R.drawable.car_selected_check);
+                //checkImage.setImageResource(R.drawable.car_selected_check);
             }
             clickListener.onItemClick(v, getLayoutPosition());
         }
