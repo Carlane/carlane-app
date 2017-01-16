@@ -418,6 +418,13 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             //31july
             if(status_id ==8)
             {
+                String reason = jsonObject.optString("reason").toString();
+                if(reason.equals("No OnGoing Request"))
+                {
+                    SharedData.UpdateUserStatusInDb(2);// 2 means profile is saved , so he can place order
+                    SharedData.HandleNavigation(R.id.nav_location, this);
+                    return;
+                }
                 //Need to update user status in app db and switch to location map
                // SharedData.UpdateUserStatusInDb(2);
                 SharedData.HandleNavigation(R.id.nav_feedback, this);//move to feedback screen and not new request start

@@ -83,7 +83,6 @@
                 android:layout_width="match_parent"
                 android:gravity="bottom"
                 android:layout_height="match_parent"
-                android:src="@drawable/hyundai_cars"
                 android:layout_gravity="bottom"
                 android:baselineAlignBottom="false"
                 android:contentDescription="Image Of Car"
